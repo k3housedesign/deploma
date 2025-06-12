@@ -157,28 +157,68 @@
     }
 
     .word-card {
-        background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
-        padding: 25px;
-        border-radius: 15px;
+        background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+        padding: 20px 30px;
+        border-radius: 50px;
         text-align: center;
         color: white;
         font-weight: bold;
         font-size: 1.1rem;
-        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-        transition: transform 0.3s ease;
+        box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+        transition: all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
         cursor: pointer;
+        margin: 15px 0;
+        position: relative;
+        overflow: hidden;
+        transform: translateX(-100%);
+        opacity: 0;
+    }
+
+    .word-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+        transition: left 0.5s;
+    }
+
+    .word-card:hover::before {
+        left: 100%;
     }
 
     .word-card:hover {
-        transform: translateY(-5px);
+        transform: translateX(10px) scale(1.02);
+        box-shadow: 0 12px 35px rgba(0,0,0,0.4);
+    }
+
+    .word-card.animate {
+        animation: slideInFromLeft 0.8s ease-out forwards;
     }
 
     .word-card:nth-child(2n) {
-        background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+        background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
     }
 
     .word-card:nth-child(3n) {
-        background: linear-gradient(135deg, #fbc2eb 0%, #a6c1ee 100%);
+        background: linear-gradient(135deg, #9b59b6 0%, #8e44ad 100%);
+    }
+
+    .word-card:nth-child(4n) {
+        background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+    }
+
+    @keyframes slideInFromLeft {
+        0% {
+            transform: translateX(-100%);
+            opacity: 0;
+        }
+        100% {
+            transform: translateX(0);
+            opacity: 1;
+        }
     }
 
     /* ティップス */
@@ -257,7 +297,7 @@
                 <a href="#home">ホーム</a>
                 <a href="#words">行動の言葉</a>
                 <a href="#tips">実践ティップス</a>
-                <a href="notes.html">ノート</a>
+                <a href="notes.html" target="_blank">ノート</a>
             </nav>
         </div>
     </header>
@@ -330,6 +370,33 @@
 </div>
 
 <script>
+    // 言葉カードのスクロールアニメーション
+    function animateWordsOnScroll() {
+        const cards = document.querySelectorAll('.word-card');
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach((entry, index) => {
+                if (entry.isIntersecting) {
+                    setTimeout(() => {
+                        entry.target.classList.add('animate');
+                    }, index * 200); // 順次表示
+                }
+            });
+        }, {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        });
+
+        cards.forEach(card => {
+            observer.observe(card);
+        });
+    }
+
+    // ページ読み込み時にアニメーション設定
+    document.addEventListener('DOMContentLoaded', function() {
+        animateWordsOnScroll();
+    });
+
     function toggleMenu() {
         const menu = document.getElementById('navMenu');
         menu.classList.toggle('active');
@@ -348,9 +415,9 @@
     // 言葉カードクリック時のアニメーション
     document.querySelectorAll('.word-card').forEach(card => {
         card.addEventListener('click', function() {
-            this.style.transform = 'scale(0.95)';
+            this.style.transform = 'translateX(0) scale(0.95)';
             setTimeout(() => {
-                this.style.transform = 'translateY(-5px)';
+                this.style.transform = 'translateX(0) scale(1.02)';
             }, 150);
         });
     });
