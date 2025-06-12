@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>思考の破片たち - ノート</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+```
+    body {
+        font-family: 'Arial', sans-serif;
+        background: #1a1a1a;
+        color: #e0e0e0;
+        line-height: 1.8;
+        min-height: 100vh;
+    }
+
+    .container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 40px 20px;
+    }
+
+    /* ヘッダー */
+    .header {
+        text-align: center;
+        margin-bottom: 60px;
+        border-bottom: 1px solid #333;
+        padding-bottom: 40px;
+    }
+
+    .main-title {
+        font-size: 2.5rem;
+        color: #ffffff;
+        margin-bottom: 15px;
+        font-weight: 300;
+    }
+
+    .subtitle {
+        color: #888;
+        font-size: 1.1rem;
+        font-style: italic;
+    }
+
+    .back-link {
+        position: fixed;
+        top: 30px;
+        left: 30px;
+        background: rgba(255,255,255,0.1);
+        color: white;
+        padding: 12px 20px;
+        border-radius: 25px;
+        text-decoration: none;
+        backdrop-filter: blur(10px);
+        transition: all 0.3s ease;
+        border: 1px solid rgba(255,255,255,0.2);
+    }
+
+    .back-link:hover {
+        background: rgba(255,255,255,0.2);
+        transform: translateY(-2px);
+    }
+
+    /* ノートエントリー */
+    .note-entry {
+        background: rgba(255,255,255,0.05);
+        border-radius: 15px;
+        padding: 30px;
+        margin-bottom: 40px;
+        border-left: 4px solid #667eea;
+        backdrop-filter: blur(10px);
+        transition: all 0.3s ease;
+    }
+
+    .note-entry:hover {
+        background: rgba(255,255,255,0.08);
+        transform: translateX(5px);
+    }
+
+    .note-date {
+        color: #667eea;
+        font-size: 0.9rem;
+        margin-bottom: 15px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .note-title {
+        font-size: 1.4rem;
+        color: #ffffff;
+        margin-bottom: 20px;
+        font-weight: 500;
+    }
+
+    .note-content {
+        color: #cccccc;
+        line-height: 1.9;
+        margin-bottom: 15px;
+    }
+
+    .note-content p {
+        margin-bottom: 15px;
+    }
+
+    .note-tags {
+        margin-top: 20px;
+        padding-top: 15px;
+        border-top: 1px solid #333;
+    }
+
+    .tag {
+        display: inline-block;
+        background: rgba(102, 126, 234, 0.2);
+        color: #667eea;
+        padding: 5px 12px;
+        border-radius: 15px;
+        font-size: 0.8rem;
+        margin-right: 8px;
+        margin-bottom: 5px;
+    }
+
+    /* 波紋エフェクト */
+    .ripple-effect {
+        position: relative;
+        overflow: hidden;
+    }
+
+    .ripple-effect::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(102, 126, 234, 0.1), transparent);
+        transition: left 2s ease;
+    }
+
+    .ripple-effect:hover::before {
+        left: 100%;
+    }
+
+    /* 引用ブロック */
+    .quote {
+        background: rgba(102, 126, 234, 0.1);
+        border-left: 4px solid #667eea;
+        padding: 20px;
+        margin: 20px 0;
+        border-radius: 0 10px 10px 0;
+        font-style: italic;
+        color: #b0b0b0;
+    }
+
+    /* 新規ノート追加エリア */
+    .add-note-section {
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+    }
+
+    .add-note-btn {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        background: linear-gradient(45deg, #667eea, #764ba2);
+        border: none;
+        color: white;
+        font-size: 1.5rem;
+        cursor: pointer;
+        box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        transition: all 0.3s ease;
+    }
+
+    .add-note-btn:hover {
+        transform: scale(1.1);
+        box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+    }
+
+    /* レスポンシブ */
+    @media (max-width: 768px) {
+        .container {
+            padding: 20px 15px;
+        }
+        
+        .back-link {
+            position: static;
+            display: inline-block;
+            margin-bottom: 30px;
+        }
+        
+        .add-note-section {
+            bottom: 20px;
+            right: 20px;
+        }
+        
+        .note-entry {
+            padding: 20px;
+        }
+    }
+
+    /* アニメーション */
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .note-entry {
+        animation: fadeInUp 0.6s ease-out forwards;
+    }
+
+    .note-entry:nth-child(2) { animation-delay: 0.1s; }
+    .note-entry:nth-child(3) { animation-delay: 0.2s; }
+    .note-entry:nth-child(4) { animation-delay: 0.3s; }
+</style>
+```
+
+</head>
+<body>
+    <a href="javascript:history.back()" class="back-link">← 戻る</a>
+
+```
+<div class="container">
+    <header class="header">
+        <h1 class="main-title">思考の破片たち</h1>
+        <p class="subtitle">頭の中で喋っても、残念ながら人に届かない</p>
+    </header>
+
+    <main class="notes-content">
+        <article class="note-entry ripple-effect">
+            <div class="note-date">2025.06.12</div>
+            <h2 class="note-title">波紋という共有方法</h2>
+            <div class="note-content">
+                <p>「〇〇君は、頭の中では多弁だね」といわれたことがある。</p>
+                
+                <p>頭の中にあることを言葉や行動にした時に、波紋として結果が生じる。残念ながら、今は世界をその波紋を見ることでしか共有できない。テレパシーのように分かり合えたらいいけど。</p>
+                
+                <div class="quote">
+                    頭の中で一人で考え続ける以外に、ノートやウェブページに書き綴ったとしても、それを人が見ないのであれば伝わってない。ないのと一緒に近い。
+                </div>
+                
+                <p>チャットサイトでは、未熟でも不完全でもこうやって頭の中を他人様に晒すことが容易に出来る。皮一枚めくったところにある未完成の破片たちを並べて、まとまらない形を見せる。</p>
+            </div>
+            <div class="note-tags">
+                <span class="tag">思考</span>
+                <span class="tag">コミュニケーション</span>
+                <span class="tag">アウトプット</span>
+            </div>
+        </article>
+
+        <article class="note-entry ripple-effect">
+            <div class="note-date">2025.06.12</div>
+            <h2 class="note-title">議論のアーカイブという可能性</h2>
+            <div class="note-content">
+                <p>別チャットサイトで交わした議論をアーカイブ、発信する場所にしたい。作りながらフォーマットや機能を考えたい。</p>
+                
+                <p>リアルタイムの対話の中で生まれる思考の化学反応を、後から見返せる形で残していく。完成された論文ではなく、思考のプロセスそのものを。</p>
+                
+                <div class="quote">
+                    議論は生き物だ。その瞬間の文脈、相手との呼吸、偶然の閃き。全てを含めて保存したい。
+                </div>
+            </div>
+            <div class="note-tags">
+                <span class="tag">アーカイブ</span>
+                <span class="tag">議論</span>
+                <span class="tag">プロセス</span>
+            </div>
+        </article>
+
+        <article class="note-entry ripple-effect">
+            <div class="note-date">2025.06.11</div>
+            <h2 class="note-title">未完成の美学</h2>
+            <div class="note-content">
+                <p>完璧でないものを見せることの価値について。</p>
+                
+                <p>未完成だからこそ見える可能性。途中経過だからこそ感じられる生命力。完成品は美しいが、制作過程には別種の魅力がある。</p>
+                
+                <p>このノート自体も、そんな未完成の破片の一つ。誰かが見て、何かを感じてくれれば、それで波紋は生まれる。</p>
+            </div>
+            <div class="note-tags">
+                <span class="tag">美学</span>
+                <span class="tag">プロセス</span>
+                <span class="tag">価値観</span>
+            </div>
+        </article>
+    </main>
+</div>
+
+<div class="add-note-section">
+    <button class="add-note-btn" onclick="addNewNote()" title="新しいノートを追加">+</button>
+</div>
+
+<script>
+    // 新しいノート追加機能（プロトタイプ）
+    function addNewNote() {
+        const title = prompt('ノートのタイトルを入力してください：');
+        if (title) {
+            const content = prompt('内容を入力してください：');
+            if (content) {
+                createNoteEntry(title, content);
+            }
+        }
+    }
+
+    function createNoteEntry(title, content) {
+        const notesContainer = document.querySelector('.notes-content');
+        const today = new Date();
+        const dateStr = `${today.getFullYear()}.${String(today.getMonth() + 1).padStart(2, '0')}.${String(today.getDate()).padStart(2, '0')}`;
+        
+        const noteHTML = `
+            <article class="note-entry ripple-effect" style="animation: fadeInUp 0.6s ease-out;">
+                <div class="note-date">${dateStr}</div>
+                <h2 class="note-title">${title}</h2>
+                <div class="note-content">
+                    <p>${content}</p>
+                </div>
+                <div class="note-tags">
+                    <span class="tag">新規</span>
+                    <span class="tag">思考</span>
+                </div>
+            </article>
+        `;
+        
+        notesContainer.insertAdjacentHTML('afterbegin', noteHTML);
+    }
+
+    // スクロール時の視差効果
+    window.addEventListener('scroll', () => {
+        const scrolled = window.pageYOffset;
+        const parallax = document.querySelector('.header');
+        const speed = scrolled * 0.5;
+        
+        if (parallax) {
+            parallax.style.transform = `translateY(${speed}px)`;
+        }
+    });
+
+    // ページ読み込み時のアニメーション
+    document.addEventListener('DOMContentLoaded', function() {
+        const entries = document.querySelectorAll('.note-entry');
+        entries.forEach((entry, index) => {
+            entry.style.animationDelay = `${index * 0.1}s`;
+        });
+    });
+</script>
+```
+
+</body>
+</html>
