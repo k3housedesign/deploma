@@ -15,10 +15,42 @@
 ```
     body {
         font-family: 'Arial', sans-serif;
-        background: #1a1a1a;
+        background: 
+            radial-gradient(circle at 20% 80%, rgba(102, 126, 234, 0.15) 0%, transparent 50%),
+            radial-gradient(circle at 80% 20%, rgba(118, 75, 162, 0.15) 0%, transparent 50%),
+            radial-gradient(circle at 40% 40%, rgba(102, 126, 234, 0.1) 0%, transparent 50%),
+            linear-gradient(135deg, #0f1419 0%, #1a1a2e 50%, #16213e 100%);
         color: #e0e0e0;
         line-height: 1.8;
         min-height: 100vh;
+        position: relative;
+        overflow-x: hidden;
+    }
+
+    body::before {
+        content: '';
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-image: 
+            radial-gradient(circle at 30% 60%, rgba(102, 126, 234, 0.03) 0%, transparent 70%),
+            radial-gradient(circle at 70% 30%, rgba(118, 75, 162, 0.03) 0%, transparent 70%);
+        pointer-events: none;
+        z-index: -1;
+        animation: rippleFlow 8s ease-in-out infinite;
+    }
+
+    @keyframes rippleFlow {
+        0%, 100% { 
+            transform: scale(1) rotate(0deg);
+            opacity: 0.3;
+        }
+        50% { 
+            transform: scale(1.1) rotate(180deg);
+            opacity: 0.5;
+        }
     }
 
     .container {
@@ -31,8 +63,21 @@
     .header {
         text-align: center;
         margin-bottom: 60px;
-        border-bottom: 1px solid #333;
+        border-bottom: 1px solid rgba(102, 126, 234, 0.3);
         padding-bottom: 40px;
+        position: relative;
+    }
+
+    .header::after {
+        content: '';
+        position: absolute;
+        bottom: -1px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 100px;
+        height: 2px;
+        background: linear-gradient(90deg, transparent, rgba(102, 126, 234, 0.8), transparent);
+        border-radius: 2px;
     }
 
     .main-title {
@@ -40,12 +85,21 @@
         color: #ffffff;
         margin-bottom: 15px;
         font-weight: 300;
+        text-shadow: 0 0 20px rgba(102, 126, 234, 0.5);
     }
 
     .subtitle {
-        color: #888;
+        color: #a0a0a0;
         font-size: 1.1rem;
         font-style: italic;
+        position: relative;
+    }
+
+    .subtitle::before,
+    .subtitle::after {
+        content: '〜';
+        color: rgba(102, 126, 234, 0.6);
+        font-size: 1.5rem;
     }
 
     .back-link {
@@ -69,18 +123,47 @@
 
     /* ノートエントリー */
     .note-entry {
-        background: rgba(255,255,255,0.05);
-        border-radius: 15px;
+        background: 
+            linear-gradient(145deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%),
+            radial-gradient(circle at top left, rgba(102, 126, 234, 0.1) 0%, transparent 70%);
+        border-radius: 20px;
         padding: 30px;
         margin-bottom: 40px;
-        border-left: 4px solid #667eea;
-        backdrop-filter: blur(10px);
-        transition: all 0.3s ease;
+        border: 1px solid rgba(102, 126, 234, 0.2);
+        backdrop-filter: blur(15px);
+        transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        position: relative;
+        overflow: hidden;
+        box-shadow: 
+            0 8px 32px rgba(0,0,0,0.3),
+            inset 0 1px 0 rgba(255,255,255,0.1);
+    }
+
+    .note-entry::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: 
+            radial-gradient(circle, rgba(102, 126, 234, 0.1) 0%, transparent 70%);
+        transform: scale(0);
+        transition: transform 0.6s ease-out;
+        border-radius: 50%;
+    }
+
+    .note-entry:hover::before {
+        transform: scale(1);
     }
 
     .note-entry:hover {
-        background: rgba(255,255,255,0.08);
-        transform: translateX(5px);
+        transform: translateY(-5px) scale(1.02);
+        border-color: rgba(102, 126, 234, 0.4);
+        box-shadow: 
+            0 15px 45px rgba(0,0,0,0.4),
+            0 0 30px rgba(102, 126, 234, 0.2),
+            inset 0 1px 0 rgba(255,255,255,0.2);
     }
 
     .note-date {
@@ -131,30 +214,50 @@
         overflow: hidden;
     }
 
-    .ripple-effect::before {
+    .ripple-effect::after {
         content: '';
         position: absolute;
-        top: 0;
-        left: -100%;
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(90deg, transparent, rgba(102, 126, 234, 0.1), transparent);
-        transition: left 2s ease;
+        top: 50%;
+        left: 50%;
+        width: 10px;
+        height: 10px;
+        background: radial-gradient(circle, rgba(102, 126, 234, 0.3) 0%, transparent 70%);
+        border-radius: 50%;
+        transform: translate(-50%, -50%) scale(0);
+        transition: transform 0.8s ease-out;
+        pointer-events: none;
     }
 
-    .ripple-effect:hover::before {
-        left: 100%;
+    .ripple-effect:hover::after {
+        transform: translate(-50%, -50%) scale(20);
     }
 
     /* 引用ブロック */
     .quote {
-        background: rgba(102, 126, 234, 0.1);
-        border-left: 4px solid #667eea;
-        padding: 20px;
-        margin: 20px 0;
-        border-radius: 0 10px 10px 0;
+        background: 
+            linear-gradient(135deg, rgba(102, 126, 234, 0.15) 0%, rgba(118, 75, 162, 0.15) 100%);
+        border: none;
+        border-left: 4px solid rgba(102, 126, 234, 0.6);
+        padding: 25px;
+        margin: 25px 0;
+        border-radius: 0 15px 15px 0;
         font-style: italic;
-        color: #b0b0b0;
+        color: #d0d0d0;
+        position: relative;
+        backdrop-filter: blur(10px);
+        box-shadow: 
+            0 4px 15px rgba(102, 126, 234, 0.1),
+            inset 0 1px 0 rgba(255,255,255,0.1);
+    }
+
+    .quote::before {
+        content: '"';
+        position: absolute;
+        top: -10px;
+        left: 15px;
+        font-size: 3rem;
+        color: rgba(102, 126, 234, 0.3);
+        font-weight: bold;
     }
 
     /* 新規ノート追加エリア */
@@ -165,21 +268,52 @@
     }
 
     .add-note-btn {
-        width: 60px;
-        height: 60px;
+        width: 70px;
+        height: 70px;
         border-radius: 50%;
-        background: linear-gradient(45deg, #667eea, #764ba2);
-        border: none;
+        background: 
+            linear-gradient(145deg, rgba(102, 126, 234, 0.9) 0%, rgba(118, 75, 162, 0.9) 100%);
+        border: 2px solid rgba(255,255,255,0.2);
         color: white;
-        font-size: 1.5rem;
+        font-size: 2rem;
         cursor: pointer;
-        box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
-        transition: all 0.3s ease;
+        box-shadow: 
+            0 8px 25px rgba(102, 126, 234, 0.4),
+            inset 0 1px 0 rgba(255,255,255,0.3);
+        transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        backdrop-filter: blur(10px);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .add-note-btn::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 0;
+        height: 0;
+        background: rgba(255,255,255,0.3);
+        border-radius: 50%;
+        transform: translate(-50%, -50%);
+        transition: all 0.6s ease;
+    }
+
+    .add-note-btn:hover::before {
+        width: 200%;
+        height: 200%;
     }
 
     .add-note-btn:hover {
-        transform: scale(1.1);
-        box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+        transform: scale(1.15) translateY(-2px);
+        box-shadow: 
+            0 15px 35px rgba(102, 126, 234, 0.6),
+            0 0 20px rgba(102, 126, 234, 0.4),
+            inset 0 1px 0 rgba(255,255,255,0.4);
+    }
+
+    .add-note-btn:active {
+        transform: scale(1.05);
     }
 
     /* レスポンシブ */
@@ -246,7 +380,7 @@
 <div class="container">
     <header class="header">
         <h1 class="main-title">思考の破片たち</h1>
-        <p class="subtitle">頭の中で喋っても、残念ながら人に届かない</p>
+        <p class="subtitle">〜 水面に何か落としてみないと、波紋を見ることはできない 〜</p>
     </header>
 
     <main class="notes-content">
