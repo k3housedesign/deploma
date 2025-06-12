@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>思考の破片たち</title>
+    <title>HAMON</title>
     <style>
         * {
             margin: 0;
@@ -101,9 +101,7 @@
 
     .subtitle::before,
     .subtitle::after {
-        content: '〜';
-        color: rgba(102, 126, 234, 0.6);
-        font-size: 1.5rem;
+        display: none;
     }
 
     .back-link {
@@ -127,47 +125,54 @@
 
     /* ノートエントリー */
     .note-entry {
-        background: 
-            linear-gradient(145deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%),
-            radial-gradient(circle at top left, rgba(102, 126, 234, 0.1) 0%, transparent 70%);
-        border-radius: 20px;
-        padding: 30px;
+        background: transparent;
+        border-radius: 0;
+        padding: 30px 0;
         margin-bottom: 40px;
-        border: 1px solid rgba(102, 126, 234, 0.2);
-        backdrop-filter: blur(15px);
+        border: none;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        backdrop-filter: none;
         transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
         position: relative;
-        overflow: hidden;
-        box-shadow: 
-            0 8px 32px rgba(0,0,0,0.3),
-            inset 0 1px 0 rgba(255,255,255,0.1);
+        overflow: visible;
+        box-shadow: none;
     }
 
     .note-entry::before {
-        content: '';
-        position: absolute;
-        top: -50%;
-        left: -50%;
-        width: 200%;
-        height: 200%;
-        background: 
-            radial-gradient(circle, rgba(102, 126, 234, 0.1) 0%, transparent 70%);
-        transform: scale(0);
-        transition: transform 0.6s ease-out;
-        border-radius: 50%;
-    }
-
-    .note-entry:hover::before {
-        transform: scale(1);
+        display: none;
     }
 
     .note-entry:hover {
-        transform: translateY(-5px) scale(1.02);
-        border-color: rgba(102, 126, 234, 0.4);
-        box-shadow: 
-            0 15px 45px rgba(0,0,0,0.4),
-            0 0 30px rgba(102, 126, 234, 0.2),
-            inset 0 1px 0 rgba(255,255,255,0.2);
+        transform: none;
+        border-color: rgba(102, 126, 234, 0.3);
+        box-shadow: none;
+        padding-left: 20px;
+    }
+
+    .note-content {
+        color: #ffffff;
+        text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
+        background: rgba(0, 0, 0, 0.3);
+        padding: 20px;
+        border-radius: 10px;
+        backdrop-filter: blur(5px);
+    }
+
+    .note-title {
+        font-size: 1.4rem;
+        color: #ffffff;
+        margin-bottom: 20px;
+        font-weight: 500;
+        text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
+    }
+
+    .note-date {
+        color: rgba(102, 126, 234, 0.9);
+        font-size: 0.9rem;
+        margin-bottom: 15px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
     }
 
     .note-date {
@@ -238,20 +243,18 @@
 
     /* 引用ブロック */
     .quote {
-        background: 
-            linear-gradient(135deg, rgba(102, 126, 234, 0.15) 0%, rgba(118, 75, 162, 0.15) 100%);
+        background: rgba(0, 0, 0, 0.4);
         border: none;
-        border-left: 4px solid rgba(102, 126, 234, 0.6);
+        border-left: 4px solid rgba(102, 126, 234, 0.8);
         padding: 25px;
         margin: 25px 0;
         border-radius: 0 15px 15px 0;
         font-style: italic;
-        color: #d0d0d0;
+        color: #ffffff;
         position: relative;
-        backdrop-filter: blur(10px);
-        box-shadow: 
-            0 4px 15px rgba(102, 126, 234, 0.1),
-            inset 0 1px 0 rgba(255,255,255,0.1);
+        backdrop-filter: blur(8px);
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
     }
 
     .quote::before {
@@ -260,7 +263,7 @@
         top: -10px;
         left: 15px;
         font-size: 3rem;
-        color: rgba(102, 126, 234, 0.3);
+        color: rgba(102, 126, 234, 0.6);
         font-weight: bold;
     }
 
@@ -381,7 +384,11 @@
     <!-- 動画背景 -->
     <div class="video-background">
         <video autoplay muted loop playsinline>
-            <source src="hamon.mov" type="video/mp4">
+            <source src="hamon.mp4" type="video/mp4">
+            <source src="hamon.mov" type="video/quicktime">
+            <source src="hamon.webm" type="video/webm">
+            <!-- フォールバック用の静止画 -->
+            <img src="hamon-fallback.jpg" alt="波紋" style="width: 100%; height: 100%; object-fit: cover;">
         </video>
     </div>
 
@@ -391,7 +398,7 @@
 <div class="container">
     <header class="header">
         <h1 class="main-title">HAMON</h1>
-        <p class="subtitle">水面に落としてみないと、波紋を見ることはできない</p>
+        <p class="subtitle">水面に何か落としてみないと、波紋を見ることはできない</p>
     </header>
 
     <main class="notes-content">
