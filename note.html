@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>思考の破片たち - ノート</title>
+    <title>思考の破片たち</title>
     <style>
         * {
             margin: 0;
@@ -186,6 +186,7 @@
     @media (max-width: 768px) {
         .container {
             padding: 20px 15px;
+            padding-bottom: 100px; /* プラスボタンのスペース確保 */
         }
         
         .back-link {
@@ -195,12 +196,23 @@
         }
         
         .add-note-section {
-            bottom: 20px;
-            right: 20px;
+            bottom: 30px;
+            right: 30px;
         }
         
         .note-entry {
-            padding: 20px;
+            padding: 25px 20px;
+            margin-bottom: 30px;
+        }
+        
+        .main-title {
+            font-size: 2rem;
+            line-height: 1.3;
+        }
+        
+        .note-content {
+            font-size: 1rem;
+            line-height: 1.8;
         }
     }
 
