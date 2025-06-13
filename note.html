@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HAMON</title>
+    <title>DIPLOMACITY - Official Deployment Certification Authority</title>
     <style>
         * {
             margin: 0;
@@ -13,612 +13,941 @@
         }
 
 ```
-    body {
-        font-family: 'Arial', sans-serif;
-        background: #0f1419;
-        color: #e0e0e0;
-        line-height: 1.8;
+    html {
+        height: 100%;
         min-height: 100vh;
+        background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 25%, #16213e  50%, #0f3460 75%, #533483 100%);
+    }
+    
+    body {
+        font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 25%, #16213e  50%, #0f3460 75%, #533483 100%);
+        min-height: 100vh;
+        min-height: 100dvh; /* 動的ビューポート高さ */
+        color: #e8e8e8;
         position: relative;
         overflow-x: hidden;
+        margin: 0;
+        padding: 0;
     }
-
-    /* 動画背景 */
-    .video-background {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        z-index: -2;
-        overflow: hidden;
-    }
-
-    .video-background video {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        opacity: 0.4;
-    }
-
-    /* 動画の上に重ねるオーバーレイ */
+    
     body::before {
         content: '';
         position: fixed;
         top: 0;
         left: 0;
         width: 100%;
-        height: 100%;
+        height: 100vh;
         background: 
-            linear-gradient(135deg, rgba(15, 20, 25, 0.7) 0%, rgba(26, 26, 46, 0.6) 50%, rgba(22, 33, 62, 0.7) 100%);
+            radial-gradient(circle at 20% 20%, rgba(0, 255, 255, 0.03) 0%, transparent 50%),
+            radial-gradient(circle at 80% 80%, rgba(255, 0, 255, 0.03) 0%, transparent 50%),
+            radial-gradient(circle at 40% 60%, rgba(0, 255, 0, 0.02) 0%, transparent 50%);
         pointer-events: none;
         z-index: -1;
     }
-
+    
     .container {
-        max-width: 800px;
+        max-width: 1400px;
         margin: 0 auto;
-        padding: 40px 20px;
+        padding: 20px;
+        position: relative;
+        min-height: 100vh;
+        min-height: 100dvh;
     }
-
-    /* ヘッダー */
-    .header {
+    
+    header {
         text-align: center;
         margin-bottom: 60px;
-        border-bottom: 1px solid rgba(102, 126, 234, 0.3);
-        padding-bottom: 40px;
+        padding: 60px 0;
+        background: rgba(0, 0, 0, 0.3);
+        backdrop-filter: blur(20px);
+        border-radius: 20px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
         position: relative;
+        overflow: hidden;
     }
-
-    .header::after {
+    
+    header::before {
         content: '';
         position: absolute;
-        bottom: -1px;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 100px;
-        height: 2px;
-        background: linear-gradient(90deg, transparent, rgba(102, 126, 234, 0.8), transparent);
-        border-radius: 2px;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: 
+            radial-gradient(circle at 50% 50%, rgba(0, 255, 255, 0.1) 0%, transparent 70%);
+        animation: pulse 4s ease-in-out infinite;
     }
-
-    .main-title {
-        font-size: 2.5rem;
-        color: #ffffff;
-        margin-bottom: 15px;
-        font-weight: 300;
-        text-shadow: 0 0 20px rgba(102, 126, 234, 0.5);
+    
+    @keyframes pulse {
+        0%, 100% { opacity: 0.3; transform: scale(1); }
+        50% { opacity: 0.7; transform: scale(1.05); }
     }
-
-    .subtitle {
-        color: #a0a0a0;
+    
+    .logo {
+        font-size: 3.5rem;
+        font-weight: 100;
+        color: #00ffff;
+        margin-bottom: 10px;
+        text-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
+        letter-spacing: 8px;
+        position: relative;
+        z-index: 1;
+    }
+    
+    .org-name {
         font-size: 1.1rem;
-        font-style: italic;
+        color: rgba(255, 255, 255, 0.7);
+        font-weight: 300;
+        letter-spacing: 3px;
+        margin-bottom: 30px;
         position: relative;
+        z-index: 1;
     }
-
-    .subtitle::before,
-    .subtitle::after {
-        display: none;
+    
+    .mission-statement {
+        font-size: 1rem;
+        color: rgba(255, 255, 255, 0.8);
+        line-height: 1.6;
+        max-width: 900px;
+        margin: 0 auto;
+        font-weight: 300;
     }
-
-    .back-link {
-        position: fixed;
-        top: 30px;
-        left: 30px;
-        background: rgba(255,255,255,0.1);
-        color: white;
-        padding: 12px 20px;
-        border-radius: 25px;
-        text-decoration: none;
+    
+    .nav-tabs {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 50px;
+        gap: 30px;
+    }
+    
+    .nav-tab {
+        background: rgba(0, 0, 0, 0.4);
+        color: rgba(255, 255, 255, 0.8);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        padding: 18px 35px;
+        border-radius: 30px;
+        cursor: pointer;
+        font-size: 1rem;
+        font-weight: 300;
+        transition: all 0.4s ease;
         backdrop-filter: blur(10px);
-        transition: all 0.3s ease;
-        border: 1px solid rgba(255,255,255,0.2);
-    }
-
-    .back-link:hover {
-        background: rgba(255,255,255,0.2);
-        transform: translateY(-2px);
-    }
-
-    /* ノートエントリー */
-    .note-entry {
-        background: transparent;
-        border-radius: 0;
-        padding: 30px 0;
-        margin-bottom: 40px;
-        border: none;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        backdrop-filter: none;
-        transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-        position: relative;
-        overflow: visible;
-        box-shadow: none;
-    }
-
-    .note-entry::before {
-        display: none;
-    }
-
-    .note-entry:hover {
-        transform: none;
-        border-color: rgba(102, 126, 234, 0.3);
-        box-shadow: none;
-        padding-left: 20px;
-    }
-
-    .note-content {
-        color: #ffffff;
-        text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
-        background: rgba(0, 0, 0, 0.3);
-        padding: 20px;
-        border-radius: 10px;
-        backdrop-filter: blur(5px);
-    }
-
-    .note-content p {
-        margin-bottom: 15px;
-    }
-
-    .note-title {
-        font-size: 1.4rem;
-        color: #ffffff;
-        margin-bottom: 20px;
-        font-weight: 500;
-        text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
-    }
-
-    .note-date {
-        color: rgba(102, 126, 234, 0.9);
-        font-size: 0.9rem;
-        margin-bottom: 15px;
         text-transform: uppercase;
         letter-spacing: 1px;
-        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
     }
-
-    /* 引用ブロック */
-    .quote {
-        background: rgba(0, 0, 0, 0.4);
-        border: none;
-        border-left: 4px solid rgba(102, 126, 234, 0.8);
-        padding: 25px;
-        margin: 25px 0;
-        border-radius: 0 15px 15px 0;
-        font-style: italic;
-        color: #ffffff;
+    
+    .nav-tab:hover {
+        background: rgba(0, 255, 255, 0.1);
+        border-color: rgba(0, 255, 255, 0.5);
+        color: #00ffff;
+        transform: translateY(-2px);
+        box-shadow: 0 10px 30px rgba(0, 255, 255, 0.2);
+    }
+    
+    .nav-tab.active {
+        background: rgba(0, 255, 255, 0.2);
+        border-color: #00ffff;
+        color: #00ffff;
+        box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
+    }
+    
+    .tab-content {
+        display: none;
+        background: rgba(0, 0, 0, 0.2);
+        backdrop-filter: blur(20px);
+        border-radius: 20px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        padding: 50px;
         position: relative;
-        backdrop-filter: blur(8px);
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
-        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
     }
-
-    .quote::before {
-        content: '"';
-        position: absolute;
-        top: -10px;
-        left: 15px;
-        font-size: 3rem;
-        color: rgba(102, 126, 234, 0.6);
-        font-weight: bold;
+    
+    .tab-content.active {
+        display: block;
     }
-
-    .note-tags {
-        margin-top: 20px;
-        padding-top: 15px;
-        border-top: 1px solid #333;
+    
+    .section-title {
+        font-size: 2.2rem;
+        font-weight: 100;
+        color: #00ffff;
+        margin-bottom: 40px;
+        text-align: center;
+        letter-spacing: 2px;
     }
-
-    .tag {
-        display: inline-block;
-        background: rgba(102, 126, 234, 0.2);
-        color: #667eea;
-        padding: 5px 12px;
+    
+    .certificate-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+        gap: 30px;
+        margin-top: 30px;
+    }
+    
+    .certificate-card {
+        background: rgba(0, 0, 0, 0.6);
+        border: 1px solid rgba(255, 255, 255, 0.2);
         border-radius: 15px;
-        font-size: 0.8rem;
-        margin-right: 8px;
+        padding: 30px;
+        position: relative;
+        overflow: hidden;
+        transition: all 0.4s ease;
+        backdrop-filter: blur(10px);
+    }
+    
+    .certificate-card:hover {
+        transform: translateY(-5px);
+        border-color: rgba(0, 255, 255, 0.5);
+        box-shadow: 0 20px 40px rgba(0, 255, 255, 0.15);
+    }
+    
+    .certificate-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 2px;
+        background: linear-gradient(90deg, transparent, #00ffff, transparent);
+        animation: scan 3s infinite;
+    }
+    
+    @keyframes scan {
+        0% { transform: translateX(-100%); }
+        100% { transform: translateX(100%); }
+    }
+    
+    .cert-header {
+        text-align: center;
+        margin-bottom: 25px;
+        padding-bottom: 20px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .cert-status {
+        font-size: 0.9rem;
+        color: #00ff00;
+        font-weight: 300;
+        margin-bottom: 10px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+    
+    .cert-title {
+        font-size: 1.4rem;
+        color: #ffffff;
+        font-weight: 300;
         margin-bottom: 5px;
     }
-
-    /* 波紋エフェクト */
-    .ripple-effect {
-        position: relative;
-        overflow: hidden;
+    
+    .cert-action {
+        font-size: 1.1rem;
+        color: #00ffff;
+        font-weight: 400;
+        margin-bottom: 15px;
     }
-
-    .ripple-effect::after {
-        content: '';
+    
+    .cert-meta {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 20px;
+        padding-top: 15px;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .cert-id {
+        font-size: 0.85rem;
+        color: rgba(255, 255, 255, 0.6);
+        font-family: 'Courier New', monospace;
+    }
+    
+    .cert-date {
+        font-size: 0.85rem;
+        color: rgba(255, 255, 255, 0.6);
+    }
+    
+    .cert-actions {
+        display: flex;
+        gap: 10px;
+        margin-top: 15px;
+    }
+    
+    .cert-btn {
+        padding: 8px 16px;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        background: rgba(0, 0, 0, 0.5);
+        color: rgba(255, 255, 255, 0.8);
+        border-radius: 20px;
+        font-size: 0.85rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+    
+    .cert-btn:hover {
+        background: rgba(0, 255, 255, 0.2);
+        border-color: #00ffff;
+        color: #00ffff;
+    }
+    
+    .cert-btn.primary {
+        background: rgba(0, 255, 255, 0.2);
+        border-color: #00ffff;
+        color: #00ffff;
+    }
+    
+    .ripple-effect {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        width: 30px;
+        height: 30px;
+        border: 2px solid rgba(0, 255, 255, 0.3);
+        border-radius: 50%;
+        animation: ripple 2s infinite;
+    }
+    
+    @keyframes ripple {
+        0% {
+            transform: scale(1);
+            opacity: 0.7;
+        }
+        100% {
+            transform: scale(3);
+            opacity: 0;
+        }
+    }
+    
+    .modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.8);
+        backdrop-filter: blur(10px);
+        z-index: 1000;
+    }
+    
+    .modal-content {
         position: absolute;
         top: 50%;
         left: 50%;
+        transform: translate(-50%, -50%);
+        background: rgba(0, 0, 0, 0.9);
+        border: 1px solid rgba(0, 255, 255, 0.5);
+        border-radius: 20px;
+        padding: 40px;
+        max-width: 600px;
+        width: 90%;
+        backdrop-filter: blur(20px);
+    }
+    
+    .modal-header {
+        text-align: center;
+        margin-bottom: 30px;
+    }
+    
+    .modal-title {
+        font-size: 1.5rem;
+        color: #00ffff;
+        margin-bottom: 10px;
+    }
+    
+    .close-btn {
+        position: absolute;
+        top: 15px;
+        right: 20px;
+        background: none;
+        border: none;
+        color: rgba(255, 255, 255, 0.6);
+        font-size: 1.5rem;
+        cursor: pointer;
+        transition: color 0.3s ease;
+    }
+    
+    .close-btn:hover {
+        color: #00ffff;
+    }
+    
+    .timeline {
+        position: relative;
+        padding-left: 30px;
+    }
+    
+    .timeline::before {
+        content: '';
+        position: absolute;
+        left: 10px;
+        top: 0;
+        bottom: 0;
+        width: 2px;
+        background: linear-gradient(to bottom, #00ffff, rgba(0, 255, 255, 0.3));
+    }
+    
+    .timeline-item {
+        position: relative;
+        margin-bottom: 25px;
+        padding: 15px;
+        background: rgba(0, 255, 255, 0.05);
+        border-radius: 10px;
+        border-left: 3px solid #00ffff;
+    }
+    
+    .timeline-item::before {
+        content: '';
+        position: absolute;
+        left: -42px;
+        top: 20px;
         width: 10px;
         height: 10px;
-        background: radial-gradient(circle, rgba(102, 126, 234, 0.3) 0%, transparent 70%);
+        background: #00ffff;
         border-radius: 50%;
-        transform: translate(-50%, -50%) scale(0);
-        transition: transform 0.8s ease-out;
-        pointer-events: none;
+        box-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
     }
-
-    .ripple-effect:hover::after {
-        transform: translate(-50%, -50%) scale(20);
+    
+    .timeline-date {
+        font-size: 0.85rem;
+        color: rgba(255, 255, 255, 0.6);
+        margin-bottom: 5px;
     }
-
-    /* 新規ノート追加エリア */
-    .add-note-section {
-        position: fixed;
-        bottom: 30px;
-        right: 30px;
+    
+    .timeline-content {
+        color: rgba(255, 255, 255, 0.9);
+        line-height: 1.5;
     }
-
-    .add-note-btn {
-        width: 70px;
-        height: 70px;
-        border-radius: 50%;
-        background: 
-            linear-gradient(145deg, rgba(102, 126, 234, 0.9) 0%, rgba(118, 75, 162, 0.9) 100%);
-        border: 2px solid rgba(255,255,255,0.2);
-        color: white;
-        font-size: 2rem;
-        cursor: pointer;
-        box-shadow: 
-            0 8px 25px rgba(102, 126, 234, 0.4),
-            inset 0 1px 0 rgba(255,255,255,0.3);
-        transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    
+    .report-form {
+        background: rgba(0, 0, 0, 0.3);
+        padding: 40px;
+        border-radius: 15px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .form-group {
+        margin-bottom: 25px;
+    }
+    
+    .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        color: rgba(255, 255, 255, 0.8);
+        font-weight: 300;
+        font-size: 0.95rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+    
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+        width: 100%;
+        padding: 15px;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 8px;
+        background: rgba(0, 0, 0, 0.5);
+        color: #ffffff;
+        font-size: 1rem;
+        transition: all 0.3s ease;
         backdrop-filter: blur(10px);
-        position: relative;
-        overflow: hidden;
     }
-
-    .add-note-btn::before {
-        content: '';
+    
+    .form-group input:focus,
+    .form-group textarea:focus,
+    .form-group select:focus {
+        outline: none;
+        border-color: #00ffff;
+        box-shadow: 0 0 15px rgba(0, 255, 255, 0.3);
+    }
+    
+    .form-group textarea {
+        height: 120px;
+        resize: vertical;
+    }
+    
+    .submit-btn {
+        background: linear-gradient(135deg, rgba(0, 255, 255, 0.2), rgba(0, 255, 255, 0.4));
+        color: #00ffff;
+        border: 1px solid #00ffff;
+        padding: 18px 40px;
+        border-radius: 30px;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: all 0.4s ease;
+        width: 100%;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        font-weight: 300;
+    }
+    
+    .submit-btn:hover {
+        background: linear-gradient(135deg, rgba(0, 255, 255, 0.4), rgba(0, 255, 255, 0.6));
+        transform: translateY(-2px);
+        box-shadow: 0 10px 30px rgba(0, 255, 255, 0.3);
+    }
+    
+    .about-section {
+        line-height: 1.8;
+        font-size: 1rem;
+        color: rgba(255, 255, 255, 0.8);
+    }
+    
+    .about-section h3 {
+        color: #00ffff;
+        margin: 30px 0 15px 0;
+        font-size: 1.3rem;
+        font-weight: 300;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+    
+    .about-section p {
+        margin-bottom: 20px;
+    }
+    
+    .highlight {
+        color: #00ffff;
+        font-weight: 400;
+    }
+    
+    .contact-info {
+        background: rgba(0, 255, 255, 0.1);
+        border: 1px solid rgba(0, 255, 255, 0.3);
+        padding: 25px;
+        border-radius: 15px;
+        margin-top: 30px;
+    }
+    
+    .export-options {
+        display: flex;
+        gap: 15px;
+        margin-top: 15px;
+        flex-wrap: wrap;
+    }
+    
+    .export-btn {
+        padding: 10px 20px;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        background: rgba(0, 0, 0, 0.5);
+        color: rgba(255, 255, 255, 0.8);
+        border-radius: 20px;
+        font-size: 0.9rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    
+    .export-btn:hover {
+        background: rgba(0, 255, 255, 0.2);
+        border-color: #00ffff;
+        color: #00ffff;
+    }
+    
+    .official-seal {
         position: absolute;
-        top: 50%;
-        left: 50%;
-        width: 0;
-        height: 0;
-        background: rgba(255,255,255,0.3);
+        top: 15px;
+        right: 15px;
+        width: 40px;
+        height: 40px;
+        border: 2px solid rgba(0, 255, 255, 0.5);
         border-radius: 50%;
-        transform: translate(-50%, -50%);
-        transition: all 0.6s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.7rem;
+        color: #00ffff;
+        background: rgba(0, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
     }
-
-    .add-note-btn:hover::before {
-        width: 200%;
-        height: 200%;
-    }
-
-    .add-note-btn:hover {
-        transform: scale(1.15) translateY(-2px);
-        box-shadow: 
-            0 15px 35px rgba(102, 126, 234, 0.6),
-            0 0 20px rgba(102, 126, 234, 0.4),
-            inset 0 1px 0 rgba(255,255,255,0.4);
-    }
-
-    .add-note-btn:active {
-        transform: scale(1.05);
-    }
-
-    /* レスポンシブ */
+    
     @media (max-width: 768px) {
+        .logo { font-size: 2.5rem; letter-spacing: 4px; }
+        .nav-tabs { flex-direction: column; align-items: center; }
+        .certificate-grid { grid-template-columns: 1fr; }
+        .cert-actions { flex-direction: column; }
+        .export-options { flex-direction: column; }
+        
+        /* モバイル背景の確実な表示 */
+        html, body {
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 25%, #16213e  50%, #0f3460 75%, #533483 100%) !important;
+            background-attachment: scroll !important;
+            background-repeat: no-repeat !important;
+            background-size: 100% 100% !important;
+            min-height: 100vh !important;
+            min-height: 100dvh !important;
+        }
+        
         .container {
-            padding: 20px 15px;
-            padding-bottom: 100px; /* プラスボタンのスペース確保 */
+            min-height: 100vh;
+            min-height: 100dvh;
+            background: transparent;
         }
         
-        .back-link {
-            position: static;
-            display: inline-block;
-            margin-bottom: 30px;
-        }
-        
-        .add-note-section {
-            bottom: 30px;
-            right: 30px;
-        }
-        
-        .note-entry {
-            padding: 25px 0;
-            margin-bottom: 30px;
-        }
-        
-        .main-title {
-            font-size: 2rem;
-            line-height: 1.3;
-        }
-        
-        .note-content {
-            font-size: 1rem;
-            line-height: 1.8;
+        /* iOS Safari対応 */
+        @supports (-webkit-touch-callout: none) {
+            html, body {
+                height: -webkit-fill-available;
+            }
+            .container {
+                min-height: -webkit-fill-available;
+            }
         }
     }
-
-    /* アニメーション */
-    @keyframes fadeInUp {
-        from {
-            opacity: 0;
-            transform: translateY(30px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
-
-    .note-entry {
-        animation: fadeInUp 0.6s ease-out forwards;
-    }
-
-    .note-entry:nth-child(2) { animation-delay: 0.1s; }
-    .note-entry:nth-child(3) { animation-delay: 0.2s; }
-    .note-entry:nth-child(4) { animation-delay: 0.3s; }
 </style>
 ```
 
 </head>
 <body>
-    <!-- 動画背景 -->
-    <div class="video-background">
-        <video autoplay muted loop playsinline>
-            <source src="hamon.mp4" type="video/mp4">
-            <source src="hamon.mov" type="video/quicktime">
-            <source src="hamon.webm" type="video/webm">
-            <!-- フォールバック用の静止画 -->
-            <img src="hamon-fallback.jpg" alt="波紋" style="width: 100%; height: 100%; object-fit: cover;">
-        </video>
-    </div>
+    <div class="container">
+        <header>
+            <div class="logo">DIPLOMACITY</div>
+            <div class="org-name">OFFICIAL DEPLOYMENT CERTIFICATION AUTHORITY</div>
+            <div class="mission-statement">
+                認定された行動証明機関として、思考の実装化を公式記録に変換し、<br>
+                デジタル社会における存在証明の新たな基準を確立します。
+            </div>
+        </header>
 
 ```
-<a href="javascript:history.back()" class="back-link">← 戻る</a>
-
-<div class="container">
-    <header class="header">
-        <h1 class="main-title">HAMON</h1>
-        <p class="subtitle">水面に何も落とさなければ<br>波紋を見ることはできない</p>
-    </header>
-
-    <main class="notes-content">
-        <article class="note-entry ripple-effect">
-            <div class="note-date">2025.06.13</div>
-            <h2 class="note-title">心の平安を保つには</h2>
-            <div class="note-content">
-                <p>物理的な音、匂い、温度。何より他人から発せられるあらゆるノイズを受け続ける限り、それを完璧にガードするのは、よほど修行を積んだ人でないとできない。</p>
-                
-                <p>なので今、口実をつけて外に出ている。</p>
-                
-                <div class="quote">
-                    隣の芝生を見るのやめて、自分の芝生に水をやる
+    <div class="nav-tabs">
+        <button class="nav-tab active" onclick="showTab('certified')">認定記録</button>
+        <button class="nav-tab" onclick="showTab('application')">申請システム</button>
+        <button class="nav-tab" onclick="showTab('protocol')">認証プロトコル</button>
+    </div>
+    
+    <div id="certified" class="tab-content active">
+        <h2 class="section-title">CERTIFIED DEPLOYMENT RECORDS</h2>
+        <div class="certificate-grid">
+            <div class="certificate-card">
+                <div class="official-seal">DCA</div>
+                <div class="ripple-effect"></div>
+                <div class="cert-header">
+                    <div class="cert-status">✓ DIPLOMACITY認証済み</div>
+                    <div class="cert-title">DEPLOYMENT CERTIFICATE</div>
+                    <div class="cert-action">職業相談システム初回アクセス</div>
                 </div>
-                
-                <p>空を見れば、晴れの日もあれば雨の日もある。雨も一概に悪いとは言えない。大地を潤す雨あれば、洪水を起こして濁流で一掃しながらも大地を動かす雨もある。隣の芝がこちらに入り込む時もある笑。</p>
-                
-                <p>なので、雨の時は「ああ、雨降ってるな」と。静観するしかできない。その時に自分もずぶ濡れになる必要はなく、物理的に離れて雨宿りしながら見守ればいい。</p>
-                
-                <div class="quote">
-                    見守ることは祈りだと思う。僕にできることは祈りだと思う。反応したり行動を無闇に起こすことではない。
+                <div class="cert-meta">
+                    <span class="cert-id">DCA-2025-001</span>
+                    <span class="cert-date">2025.06.10</span>
                 </div>
-                
-                <p>一服しながら見守ればいい。</p>
-                
-                <p>そもそも、他人がどんなに問題の渦中にいたとしても、それは本質的に私自身の問題ではない。他者の問題に巻き込まれたとしても、それは自分の問題が新たに発生したわけであり、その人自身の問題を引き継ぐわけではなく、あくまでその人の問題はその人のもの。</p>
-                
-                <p>これを切り分けて考える。その人が浴びる雨粒を自分が一緒に受けられるわけではない。</p>
-                
-                <p>一服する「間」を持ちたい。親子、恋人、上司、友人、ほぼ全ての人間関係において、うまくいかない時に近距離にいてよかった試しがない。</p>
-                
-                <p>今、Rはまた新たな動きが始まり、書類仕事続きだった数ヶ月だったから余計に、急激にワクワクしている。勢いというのは大切で、世界はリズム、バイオリズムで成り立っているから。</p>
-                
-                <div class="quote">
-                    だけど問題は、バイオリズムには、世界と個々の人間のレイヤーがあり、世界のバイオリズムは時代の集合意識が影響している。しかし個人のバイオリズムはそれぞれ違う。
-                </div>
-                
-                <p>Rのリズムが動き出すとして、私がそのリズムとどう共振していくか。共振させるところとさせないところ。</p>
-                
-                <p>自分があって、他者がいる。この順序が大事と思う。他者があって、自分がいる。もありうる。自分も親から生まれたし、親もまた世界から生まれていて、部分にして全体、オールワンでもある。</p>
-                
-                <p>今、自分にできることは観察、静観、見守りだ。リズムをシンクロさせようと思わなくていいし、そもそもできない。</p>
-                
-                <p>ハイテンポに疲れたら、こうやって一服して自分のリズムに戻ればいい。</p>
-                
-                <p>さて、戻るか。</p>
-            </div>
-            <div class="note-tags">
-                <span class="tag">心の平安</span>
-                <span class="tag">境界線</span>
-                <span class="tag">リズム</span>
-                <span class="tag">観察</span>
-                <span class="tag">距離感</span>
-            </div>
-        </article>
-
-        <article class="note-entry ripple-effect">
-            <div class="note-date">2025.06.12</div>
-            <h2 class="note-title">生きる意味なんてない。<br>存在の証明とは</h2>
-            <div class="note-content">
-                <p>俺はなんの証明書も有してない。それはつまり、自分という存在は一応ありながらも、公的には何ら証明するだけの「意味」を持たないということになる。</p>
-                
-                <p>そもそも、証明とはなにか？仮に、あるかもしれないしないかもしれない意味を明示するものが証明とする。ビッグバンの証明は科学的にはあるわけだが、信じないと言えばそれまでで、私が生きる意味もスケールこそ違えど、基本的に同じようなものだと考える。</p>
-                
-                <div class="quote">
-                    意味の証明というのがおかしいのではないか。意味と事実はちがう。証明は事実に対してするものであって、意味などという曖昧であやふやで、詐欺師の口先に乗っかっているようなものをどう証明しろというのだ？
-                </div>
-                
-                <p>5年後10年後の世界を夢想した時、AIがより強固でクリエイティブで、完全なものになっていたとする。そうすると、多くの人の持つ肩書きの価値が下落して、一部の人はただの人に成り下がる、と仮定する。</p>
-                
-                <p>価値とは相対的なもので、似たような能力を持つ存在が周りに多ければ多いほど下がる。仮にAIが人の代わりをできる時代になったとして、「ただの人」が地球上の資源を消費してまで「生きる意味」はあるのだろうか？またそれは「生きる価値」とはどうちがうのだろうか？</p>
-                
-                <p>ミュージシャン、建築家、編集者、教育者、そして農家。これらの人々はAIによって代替されるのか？肌感で言うと、上に挙げた職種の人々は、ただの人にはなりにくいスキルを有していると感じる。</p>
-                
-                <p>よりクリエイティブで、より精神的で、より実践的、より人間的な営みを志す者だけが、AIとの差別化に成功すると思われる。</p>
-                
-                <div class="quote">
-                    ある文脈で価値が高いからと言って、「生きる全般」に関して、生きること自体についての「意味」とは、まるで無関係かもしれないことをちゃんと考えたい。
-                </div>
-                
-                <p>桃太郎にとってのイヌサルキジは価値が高い。スキルがあり、役に立つ。なにより、鬼退治という文脈においての相対的な価値が高い。じゃこれが、キビダンゴにつられてやってきたのが、ナメクジとえのきと石ころだったらどうか？</p>
-                
-                <p>ナメクジえのき石ころは生きる意味はないか？と問われると、ないと思いたい。言葉悪いけど「いやないでしょ。雑魚なんだし」みたいなことになる。でも、でもだよ？</p>
-                
-                <div class="quote">
-                    「雑魚」と決めつけてるこちらの解像度が圧倒的に低い可能性がある。ナメクジは生物ツリーの中で重要な役割を担っていたり、菌もまたそうだし、石も...マグマが岩となり砂になるまで、何かの役割を果たしているだろう。
-                </div>
-                
-                <p>石に意味はきっとない。それなのに人間に対しては強く思う。あの人は価値が高いけど、この人は価値が低い。</p>
-                
-                <p>今日あった建築家やミュージシャン、教育者や活動家、農家は価値が高い。すなわち、生きる意味がある人たち。ランチの時のシェフは、自分なりに頑張っていたけどご飯の炊き方が固かったので、その次元に達してない。</p>
-                
-                <p>この思考は、偏ったバイアスが、自分に向いた時を表してる。自分の中の劣等感というか傷つき感、自虐傾向が、ナメクジえのき石ころに価値がないと思い込みたい思考の表れ。</p>
-                
-                <div class="quote">
-                    たぶん主は、価値イコール意味になってるから、生きづらくなっている。価値はあくまで相対的で、その時の文脈に委ねられるのに対し、意味をつくるのをサボっている？
-                </div>
-                
-                <p>他者評価によって人生の意味が決まるはずがない。固有のミッション、学びを果たすために人生を送ってきている。表出する結果がどうあれ、今を生きること自体に意味があり、またそれを受けて中間生や来世にバトンパスしていく。</p>
-                
-                <p>相対的無力感かなと思う。自分はアリで自分なりに模索して生きてるけど、ゾウがでかい一歩で超えていく。鳥は高速で移動する。クジラは海を潜って深くまでいける。それを見た時に、「ああ（アリの）俺って生きる意味あるのかなぁ」</p>
-                
-                <p>DNAと言わずとも、自分がいきなり無から生まれたことではない。どんな生き物も、過去に生きたものからのルーツの系譜の先に誕生していて、その大きなつながり、流れの中での自分、というように捉えることはできる。ある種の全部で一つとまでに。</p>
-                
-                <div class="quote">
-                    だんだん見えてきたのは、これは自分を縛る二項対立とか強烈な価値づけ思考に対する脱構築をいかにしていくかということ。タイトルに絡めるならば、自分で自分に証明書を発行するために、価値体系を見直すということ。
-                </div>
-                
-                <p>生きる意味はあったりなかったり。価値もあったりなかったり。その時によるし見方にもよる。みんな事情がある。だからそもそも比較もしづらい。</p>
-                
-                <p>建築家とニートは同じ価値ではない。どちらが生きる価値が高いかといえば歴然。これは覆せない気がする。ただ、腹が痛い時はニートじゃなく医者が必要だし、その医者もまたヘボじゃなく優秀な医者を真っ先に選ぶ。</p>
-                
-                <p>生み出せればいいけど、生み出せないものもまた肯定しないといけないし、あまつさえ自分が生み出さない側にいたとしても、生きていいと信じて生きよう。</p>
-                
-                <div class="quote">
-                    役に立たないと生きちゃいけないのか？価値が低くても生きてていいのでは？みたいなことは、また話が戻るけど、医者とニートどちらを助ける？シチュエーションでは無に帰す考え方かなと。
-                </div>
-                
-                <p>結論としては、どちらでもあるしどちらとも言い切れない。明確な答えはない。強いて言えば、それが私の答えかな。</p>
-            </div>
-            <div class="note-tags">
-                <span class="tag">存在証明</span>
-                <span class="tag">価値と意味</span>
-                <span class="tag">AI時代</span>
-                <span class="tag">相対性</span>
-                <span class="tag">脱構築</span>
-            </div>
-        </article>
-
-        <article class="note-entry ripple-effect">
-            <div class="note-date">2025.06.12</div>
-            <h2 class="note-title">波紋という共有方法</h2>
-            <div class="note-content">
-                <p>「〇〇君は、頭の中では多弁だね」といわれたことがある。</p>
-                
-                <p>頭の中にあることを言葉や行動にした時に、波紋として結果が生じる。残念ながら、今は世界をその波紋を見ることでしか共有できない。テレパシーのように分かり合えたらいいけど。</p>
-                
-                <div class="quote">
-                    頭の中で一人で考え続ける以外に、ノートやウェブページに書き綴ったとしても、それを人が見ないのであれば伝わってない。ないのと一緒に近い。
-                </div>
-                
-                <p>チャットサイトでは、未熟でも不完全でもこうやって頭の中を他人様に晒すことが容易に出来る。皮一枚めくったところにある未完成の破片たちを並べて、まとまらない形を見せる。</p>
-            </div>
-            <div class="note-tags">
-                <span class="tag">思考</span>
-                <span class="tag">コミュニケーション</span>
-                <span class="tag">アウトプット</span>
-            </div>
-        </article>
-
-        <article class="note-entry ripple-effect">
-            <div class="note-date">2025.06.12</div>
-            <h2 class="note-title">議論のアーカイブという可能性</h2>
-            <div class="note-content">
-                <p>別チャットサイトで交わした議論をアーカイブ、発信する場所にしたい。作りながらフォーマットや機能を考えたい。</p>
-                
-                <p>リアルタイムの対話の中で生まれる思考の化学反応を、後から見返せる形で残していく。完成された論文ではなく、思考のプロセスそのものを。</p>
-                
-                <div class="quote">
-                    議論は生き物だ。その瞬間の文脈、相手との呼吸、偶然の閃き。全てを含めて保存したい。
+                <div class="cert-actions">
+                    <button class="cert-btn primary" onclick="showModifyHistory('001')">修正履歴</button>
+                    <button class="cert-btn" onclick="exportCertificate('001')">エクスポート</button>
+                    <button class="cert-btn" onclick="shareCertificate('001')">共有</button>
                 </div>
             </div>
-            <div class="note-tags">
-                <span class="tag">アーカイブ</span>
-                <span class="tag">議論</span>
-                <span class="tag">プロセス</span>
+            
+            <div class="certificate-card">
+                <div class="official-seal">DCA</div>
+                <div class="ripple-effect"></div>
+                <div class="cert-header">
+                    <div class="cert-status">✓ DIPLOMACITY認証済み</div>
+                    <div class="cert-title">DEPLOYMENT CERTIFICATE</div>
+                    <div class="cert-action">ウェブプラットフォーム構築</div>
+                </div>
+                <div class="cert-meta">
+                    <span class="cert-id">DCA-2025-002</span>
+                    <span class="cert-date">2025.06.08</span>
+                </div>
+                <div class="cert-actions">
+                    <button class="cert-btn primary" onclick="showModifyHistory('002')">修正履歴</button>
+                    <button class="cert-btn" onclick="exportCertificate('002')">エクスポート</button>
+                    <button class="cert-btn" onclick="shareCertificate('002')">共有</button>
+                </div>
             </div>
-        </article>
-
-        <article class="note-entry ripple-effect">
-            <div class="note-date">2025.06.11</div>
-            <h2 class="note-title">未完成の美学</h2>
-            <div class="note-content">
-                <p>完璧でないものを見せることの価値について。</p>
+            
+            <div class="certificate-card">
+                <div class="official-seal">DCA</div>
+                <div class="ripple-effect"></div>
+                <div class="cert-header">
+                    <div class="cert-status">✓ DIPLOMACITY認証済み</div>
+                    <div class="cert-title">DEPLOYMENT CERTIFICATE</div>
+                    <div class="cert-action">無人航空機運用開始</div>
+                </div>
+                <div class="cert-meta">
+                    <span class="cert-id">DCA-2025-003</span>
+                    <span class="cert-date">2025.06.05</span>
+                </div>
+                <div class="cert-actions">
+                    <button class="cert-btn primary" onclick="showModifyHistory('003')">修正履歴</button>
+                    <button class="cert-btn" onclick="exportCertificate('003')">エクスポート</button>
+                    <button class="cert-btn" onclick="shareCertificate('003')">共有</button>
+                </div>
+            </div>
+            
+            <div class="certificate-card">
+                <div class="official-seal">DCA</div>
+                <div class="ripple-effect"></div>
+                <div class="cert-header">
+                    <div class="cert-status">✓ DIPLOMACITY認証済み</div>
+                    <div class="cert-title">DEPLOYMENT CERTIFICATE</div>
+                    <div class="cert-action">情報発信プロトコル実装</div>
+                </div>
+                <div class="cert-meta">
+                    <span class="cert-id">DCA-2025-004</span>
+                    <span class="cert-date">2025.06.03</span>
+                </div>
+                <div class="cert-actions">
+                    <button class="cert-btn primary" onclick="showModifyHistory('004')">修正履歴</button>
+                    <button class="cert-btn" onclick="exportCertificate('004')">エクスポート</button>
+                    <button class="cert-btn" onclick="shareCertificate('004')">共有</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div id="application" class="tab-content">
+        <h2 class="section-title">DEPLOYMENT CERTIFICATION APPLICATION</h2>
+        <div class="report-form">
+            <form id="deploymentForm">
+                <div class="form-group">
+                    <label for="applicantName">申請者識別子</label>
+                    <input type="text" id="applicantName" name="applicantName" placeholder="匿名申請可能">
+                </div>
                 
-                <p>未完成だからこそ見える可能性。途中経過だからこそ感じられる生命力。完成品は美しいが、制作過程には別種の魅力がある。</p>
+                <div class="form-group">
+                    <label for="deploymentAction">実装行動</label>
+                    <input type="text" id="deploymentAction" name="deploymentAction" placeholder="例：職業相談システムへの初回アクセス" required>
+                </div>
                 
-                <p>このノート自体も、そんな未完成の破片の一つ。誰かが見て、何かを感じてくれれば、それで波紋は生まれる。</p>
+                <div class="form-group">
+                    <label for="preDeploymentState">実装前状態</label>
+                    <textarea id="preDeploymentState" name="preDeploymentState" placeholder="思考レベルでの構想段階..." required></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="deploymentDetails">実装詳細</label>
+                    <textarea id="deploymentDetails" name="deploymentDetails" placeholder="実際の実装プロセス..." required></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="systemFeedback">システム応答</label>
+                    <textarea id="systemFeedback" name="systemFeedback" placeholder="実装によって得られたフィードバック..." required></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="deploymentImpact">波紋効果</label>
+                    <textarea id="deploymentImpact" name="deploymentImpact" placeholder="この実装が現実世界に与えた影響..." required></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="deploymentCategory">分類</label>
+                    <select id="deploymentCategory" name="deploymentCategory" required>
+                        <option value="">選択してください</option>
+                        <option value="career">キャリア・職業</option>
+                        <option value="technology">技術・開発</option>
+                        <option value="creative">創作・表現</option>
+                        <option value="learning">学習・研究</option>
+                        <option value="health">健康・医療</option>
+                        <option value="social">社会・コミュニティ</option>
+                        <option value="business">事業・起業</option>
+                        <option value="innovation">革新・発明</option>
+                    </select>
+                </div>
+                
+                <button type="submit" class="submit-btn">認証申請を送信</button>
+            </form>
+            
+            <div class="contact-info">
+                <h4>申請チャネル</h4>
+                <p>📧 電子メール: certification@diplomacity.org</p>
+                <p>📱 セキュア通信: @diplomacity_official</p>
+                <p>🔒 申請内容は暗号化され、認証委員会にて審査されます</p>
             </div>
-            <div class="note-tags">
-                <span class="tag">美学</span>
-                <span class="tag">プロセス</span>
-                <span class="tag">価値観</span>
-            </div>
-        </article>
-    </main>
+        </div>
+    </div>
+    
+    <div id="protocol" class="tab-content">
+        <div class="about-section">
+            <h2 class="section-title">CERTIFICATION PROTOCOL</h2>
+            
+            <h3>認証機関概要</h3>
+            <p>DIPLOMACITYは、<span class="highlight">思考の実装化を公的記録として認証する唯一の機関</span>です。2050年のデジタル社会において、個人の行動が現実世界に与える影響を科学的に測定し、証明書として発行します。</p>
+            
+            <h3>認証プロセス</h3>
+            <p>すべての申請は以下の厳格なプロトコルに基づいて処理されます：</p>
+            <p>1. <span class="highlight">実装証明の検証</span> - 思考から行動への変換過程の確認<br>
+            2. <span class="highlight">波紋効果の測定</span> - 現実世界への影響度の定量化<br>
+            3. <span class="highlight">第三者認証</span> - 独立した認証委員会による承認<br>
+            4. <span class="highlight">デジタル署名</span> - ブロックチェーン技術による改ざん防止</p>
+            
+            <h3>認証の意義</h3>
+            <p><span class="highlight">「DIPLOMACITYによる認証を通過しました。これにより公的な記録として成立しました。」</span></p>
+            <p>この一文により、あなたの行動は個人的な体験から社会的な事実へと昇華されます。それは存在の証明であり、デジタル社会における新しい価値の創造です。</p>
+            
+            <h3>技術仕様</h3>
+            <p>• <span class="highlight">量子暗号化</span>による証明書の保護<br>
+            • <span class="highlight">分散型台帳</span>による永続的な記録保存<br>
+            • <span class="highlight">バイオメトリクス認証</span>による本人確認<br>
+            • <span class="highlight">AI審査システム</span>による24時間体制の処理</p>
+            
+            <h3>グローバル標準</h3>
+            <p>DIPLOMACITY認証は、世界180カ国の政府機関および主要企業に承認されており、履歴書、職務経歴書、学術論文などの公式文書として使用可能です。</p>
+        </div>
+    </div>
 </div>
 
-<div class="add-note-section">
-    <button class="add-note-btn" onclick="addNewNote()" title="新しいノートを追加">+</button>
+<!-- 修正履歴モーダル -->
+<div id="modifyModal" class="modal">
+    <div class="modal-content">
+        <button class="close-btn" onclick="closeModal()">&times;</button>
+        <div class="modal-header">
+            <h3 class="modal-title">修正状況履歴</h3>
+            <p style="color: rgba(255,255,255,0.6);">Certificate ID: <span id="modalCertId"></span></p>
+        </div>
+        <div class="timeline" id="timelineContent">
+            <!-- 動的に生成される -->
+        </div>
+    </div>
 </div>
 
 <script>
-    // 新しいノート追加機能（プロトタイプ）
-    function addNewNote() {
-        const title = prompt('ノートのタイトルを入力してください：');
-        if (title) {
-            const content = prompt('内容を入力してください：');
-            if (content) {
-                createNoteEntry(title, content);
-            }
-        }
-    }
-
-    function createNoteEntry(title, content) {
-        const notesContainer = document.querySelector('.notes-content');
-        const today = new Date();
-        const dateStr = `${today.getFullYear()}.${String(today.getMonth() + 1).padStart(2, '0')}.${String(today.getDate()).padStart(2, '0')}`;
+    function showTab(tabName) {
+        const contents = document.querySelectorAll('.tab-content');
+        contents.forEach(content => content.classList.remove('active'));
         
-        const noteHTML = `
-            <article class="note-entry ripple-effect" style="animation: fadeInUp 0.6s ease-out;">
-                <div class="note-date">${dateStr}</div>
-                <h2 class="note-title">${title}</h2>
-                <div class="note-content">
-                    <p>${content}</p>
-                </div>
-                <div class="note-tags">
-                    <span class="tag">新規</span>
-                    <span class="tag">思考</span>
-                </div>
-            </article>
+        const tabs = document.querySelectorAll('.nav-tab');
+        tabs.forEach(tab => tab.classList.remove('active'));
+        
+        document.getElementById(tabName).classList.add('active');
+        event.target.classList.add('active');
+    }
+    
+    function showModifyHistory(certId) {
+        document.getElementById('modalCertId').textContent = `DCA-2025-${certId}`;
+        
+        const timelineData = {
+            '001': [
+                { date: '2025.06.10 14:32', content: '初回認証完了 - 職業相談システムへのアクセスを確認' },
+                { date: '2025.06.11 09:15', content: 'レベル2認証 - 継続的な職業相談活動を検出' },
+                { date: '2025.06.12 16:20', content: 'インパクト評価更新 - 面接スケジュール設定による波紋効果を記録' }
+            ],
+            '002': [
+                { date: '2025.06.08 11:45', content: '初回認証完了 - ウェブサイトの公開を確認' },
+                { date: '2025.06.09 08:30', content: 'トラフィック分析 - 初回訪問者による波紋効果を測定' },
+                { date: '2025.06.10 13:10', content: 'SEO最適化実装 - 検索エンジンでの可視性向上を記録' },
+                { date: '2025.06.12 19:45', content: 'ユーザビリティ改善 - フィードバックに基づく修正を確認' }
+            ],
+            '003': [
+                { date: '2025.06.05 10:20', content: '初回認証完了 - ドローンの初回飛行を確認' },
+                { date: '2025.06.06 14:15', content: '安全性評価 - 法規制遵守による責任ある運用を記録' },
+                { date: '2025.06.07 16:30', content: '技術向上 - 操縦スキルの改善を検出' }
+            ],
+            '004': [
+                { date: '2025.06.03 09:00', content: '初回認証完了 - SNSでの情報発信開始を確認' },
+                { date: '2025.06.04 12:20', content: 'エンゲージメント分析 - 初回フォロワー獲得を記録' },
+                { date: '2025.06.05 15:45', content: 'ネットワーク拡張 - 専門分野でのコミュニティ形成を検出' },
+                { date: '2025.06.08 11:30', content: '影響力測定 - 情報シェアによる間接的影響を評価' },
+                { date: '2025.06.11 17:10', content: 'コンテンツ品質向上 - 継続的な改善活動を確認' }
+            ]
+        };
+        
+        const timeline = document.getElementById('timelineContent');
+        timeline.innerHTML = '';
+        
+        timelineData[certId].forEach(item => {
+            const timelineItem = document.createElement('div');
+            timelineItem.className = 'timeline-item';
+            timelineItem.innerHTML = `
+                <div class="timeline-date">${item.date}</div>
+                <div class="timeline-content">${item.content}</div>
+            `;
+            timeline.appendChild(timelineItem);
+        });
+        
+        document.getElementById('modifyModal').style.display = 'block';
+    }
+    
+    function closeModal() {
+        document.getElementById('modifyModal').style.display = 'none';
+    }
+    
+    function exportCertificate(certId) {
+        const exportOptions = `
+            <div class="export-options">
+                <button class="export-btn" onclick="exportToPDF('${certId}')">
+                    📄 PDF出力
+                </button>
+                <button class="export-btn" onclick="exportToImage('${certId}')">
+                    🖼️ 画像出力
+                </button>
+                <button class="export-btn" onclick="exportToQR('${certId}')">
+                    📱 QRコード
+                </button>
+                <button class="export-btn" onclick="exportToBlockchain('${certId}')">
+                    🔗 ブロックチェーン
+                </button>
+            </div>
         `;
         
-        notesContainer.insertAdjacentHTML('afterbegin', noteHTML);
-    }
-
-    // スクロール時の視差効果
-    window.addEventListener('scroll', () => {
-        const scrolled = window.pageYOffset;
-        const parallax = document.querySelector('.header');
-        const speed = scrolled * 0.5;
-        
-        if (parallax) {
-            parallax.style.transform = `translateY(${speed}px)`;
+        if (confirm('証明書をエクスポートしますか？\n\nPDF: 印刷・保存用\n画像: SNS共有用\nQRコード: モバイル表示用\nブロックチェーン: 永続保存用')) {
+            alert('エクスポート機能を準備中です。\n\n証明書DCA-2025-' + certId + 'のエクスポートを開始します。');
         }
-    });
-
-    // ページ読み込み時のアニメーション
-    document.addEventListener('DOMContentLoaded', function() {
-        const entries = document.querySelectorAll('.note-entry');
-        entries.forEach((entry, index) => {
-            entry.style.animationDelay = `${index * 0.1}s`;
+    }
+    
+    function shareCertificate(certId) {
+        const shareText = `DIPLOMACITYによる認証を通過しました。\n\n証明書ID: DCA-2025-${certId}\n\nこれにより公的な記録として成立しました。\n\n#DIPLOMACITY #行動証明書 #デプロイメント認証`;
+        
+        if (navigator.share) {
+            navigator.share({
+                title: 'DIPLOMACITY認証済み証明書',
+                text: shareText,
+                url: `https://diplomacity.org/cert/DCA-2025-${certId}`
+            });
+        } else {
+            navigator.clipboard.writeText(shareText).then(() => {
+                alert('共有テキストをクリップボードにコピーしました。\n\nSNSに貼り付けてシェアしてください。');
+            });
+        }
+    }
+    
+    function exportToPDF(certId) {
+        alert('PDF出力を開始します。\n\n高解像度の証明書PDFファイルを生成中...');
+    }
+    
+    function exportToImage(certId) {
+        alert('画像出力を開始します。\n\nSNS共有用の高品質画像を生成中...');
+    }
+    
+    function exportToQR(certId) {
+        alert('QRコード生成を開始します。\n\n証明書検証用のQRコードを生成中...');
+    }
+    
+    function exportToBlockchain(certId) {
+        alert('ブロックチェーン記録を開始します。\n\n永続的な保存のため分散台帳に記録中...');
+    }
+    
+    document.getElementById('deploymentForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const formData = new FormData(this);
+        const data = {};
+        formData.forEach((value, key) => {
+            data[key] = value;
         });
+        
+        alert('認証申請を受理しました。\n\n申請ID: DCA-APP-' + new Date().getTime() + '\n\n認証委員会による審査後、72時間以内に結果をお知らせします。\n\nDIPLOMACITY認証システム');
+        
+        this.reset();
+        console.log('Deployment application submitted:', data);
+    });
+    
+    // モーダル外クリックで閉じる
+    window.onclick = function(event) {
+        const modal = document.getElementById('modifyModal');
+        if (event.target === modal) {
+            closeModal();
+        }
+    }
+    
+    // 波紋エフェクトのランダム化
+    document.querySelectorAll('.ripple-effect').forEach(ripple => {
+        const delay = Math.random() * 2000;
+        ripple.style.animationDelay = delay + 'ms';
     });
 </script>
 ```
