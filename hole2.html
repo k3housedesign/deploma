@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#0a0a0a">
+    <title>HOLE - 地下世界への入り口</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;700&display=swap">
+    <link rel="stylesheet" href="hole2.css">
+</head>
+<body>
+    <!-- ユーザーカウンター -->
+    <div class="user-counter">
+        現在 <span id="userCount">248</span> 人が徘徊中
+    </div>
+
+    <!-- スプラッシュスクリーン -->
+    <div class="splash-screen" id="splashScreen">
+        <div class="manhole-cover"></div>
+        <button class="enter-button" id="enterButton">
+            ENTER THE HOLE
+        </button>
+    </div>
+
+    <!-- メインコンテンツ -->
+    <div class="main-content" id="mainContent">
+        <!-- ルーム選択画面 -->
+        <div class="room-selection" id="roomSelection">
+            <div class="underground-plaza">
+                <h1 class="plaza-title">地下街広場</h1>
+                <p class="plaza-subtitle">薄暗い路地裏で、今夜は誰と出会うだろうか</p>
+                
+                <div class="room-grid" id="roomGrid">
+                    <!-- ルーム一覧がここに動的生成される -->
+                </div>
+                
+                <div class="create-room-btn" id="createRoomBtn">
+                    <div class="icon">+</div>
+                    <div>新しい路地裏を作る</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- チャット画面 -->
+        <div class="chat-screen" id="chatScreen">
+            <div class="chat-header">
+                <div class="room-info">
+                    <h2 id="currentRoomName"></h2>
+                    <p>この場所のURL: <span id="currentRoomUrl"></span></p>
+                </div>
+                <div class="chat-actions">
+                    <button class="action-btn" id="copyUrlBtn">📋 この場所を教える</button>
+                    <button class="action-btn" id="exportLogBtn">💾 記憶を書き出す</button>
+                    <button class="action-btn" id="leaveRoomBtn">🚪 立ち去る</button>
+                </div>
+            </div>
+            
+            <div class="chat-messages" id="chatMessages">
+                <!-- メッセージがここに表示される -->
+            </div>
+            
+            <div class="chat-input">
+                <textarea 
+                    id="messageInput" 
+                    class="message-input" 
+                    placeholder="この夜に何を囁こうか..."
+                    rows="1"></textarea>
+                <button class="send-btn" id="sendBtn" disabled>
+                    ➤
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- プロフィール設定モーダル -->
+    <div class="modal-overlay" id="profileModal">
+        <div class="modal">
+            <h2 class="modal-title">地下世界での仮の姿</h2>
+            <form id="profileForm">
+                <div class="form-group">
+                    <label class="form-label">ニックネーム（最大15文字）</label>
+                    <input type="text" id="nicknameInput" class="form-input" maxlength="15" placeholder="名無しの客">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">アイコンを選択</label>
+                    <div class="icon-selector" id="iconSelector">
+                        <!-- アイコンオプションが動的生成される -->
+                    </div>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-secondary" id="profileCancelBtn">キャンセル</button>
+                    <button type="submit" class="btn btn-primary">この姿で潜る</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ルーム作成モーダル -->
+    <div class="modal-overlay" id="createRoomModal">
+        <div class="modal">
+            <h2 class="modal-title">新しい路地裏を作る</h2>
+            <form id="createRoomForm">
+                <div class="form-group">
+                    <label class="form-label">場所の名前</label>
+                    <input type="text" id="roomNameInput" class="form-input" maxlength="30" placeholder="猥雑な麻雀クラブ">
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-secondary" id="createRoomCancelBtn">キャンセル</button>
+                    <button type="submit" class="btn btn-primary">路地裏を開く</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- JavaScriptファイルを読み込み -->
+    <script type="module" src="hole2.js"></script>
+</body>
+</html>
