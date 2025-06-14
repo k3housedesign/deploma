@@ -1,8 +1,64 @@
-<!DOCTYPE html>
+function initializeApp() {
+            // ユーザーカウンターのアニメーション開始
+            startUserCounterAnimation();
+            
+            // アイコンセレクターの生成（1回だけ実行）
+            if (document.getElementById('iconSelector').children.length === 0) {
+                generateIconSelector();
+            }
+            
+            // イベントリスナーの設定
+            setupEventListeners();
+            
+            // モバイルUI調整
+            adjustMobileUI();
+            
+            // URLパラメータからルームIDをチェック
+            checkRoomFromUrl();
+        }        body {
+            font-family: 'Noto Sans JP', sans-serif;
+            background: #0a0a0a;
+            color: #ffffff;
+            overflow-x: hidden;
+            /* モバイル用のスクロール改善 */
+            -webkit-overflow-scrolling: touch;
+            overscroll-behavior: contain;
+        }
+        
+        /* モバイル用のフォーカス改善 */
+        .message-input:focus {
+            transform: none;
+            -webkit-transform: none;
+        }
+        
+        /* iOS Safari用の入力フィールド修正 */
+        input, textarea {
+            -webkit-appearance: none;
+            -webkit-border-radius: 0;
+            border-radius: inherit;
+        }
+        
+        /* モバイルでのタップハイライト削除 */
+        * {
+            -webkit-tap-highlight-color: transparent;
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+        
+        /* 選択可能にするべき要素 */
+        input, textarea, .message-content {
+            -webkit-user-select: text;
+            user-select: text;
+        }<!DOCTYPE html>
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#0a0a0a">
     <title>HOLE - 地下世界への入り口</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;700&display=swap');
@@ -13,11 +69,37 @@
             box-sizing: border-box;
         }
 
-        body {
-            font-family: 'Noto Sans JP', sans-serif;
-            background: #0a0a0a;
-            color: #ffffff;
-            overflow-x: hidden;
+        /* モバイル用のスクロール改善 */
+        .chat-messages {
+            -webkit-overflow-scrolling: touch;
+            overscroll-behavior: contain;
+        }
+        
+        /* モバイル用のフォーカス改善 */
+        .message-input:focus {
+            transform: none;
+            -webkit-transform: none;
+        }
+        
+        /* iOS Safari用の入力フィールド修正 */
+        input, textarea {
+            -webkit-appearance: none;
+            -webkit-border-radius: 0;
+            border-radius: inherit;
+        }
+        
+        /* モバイルでのタップハイライト削除 */
+        * {
+            -webkit-tap-highlight-color: transparent;
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+        
+        /* 選択可能にするべき要素 */
+        input, textarea, .message-content {
+            -webkit-user-select: text;
+            user-select: text;
         }
 
         /* スプラッシュスクリーン */
@@ -587,23 +669,290 @@
             transform: none;
         }
 
-        /* レスポンシブ */
+        /* レスポンシブ - モバイル最適化 */
         @media (max-width: 768px) {
             .plaza-title {
-                font-size: 2em;
+                font-size: 2.5em;
+                margin-bottom: 15px;
+            }
+            
+            .plaza-subtitle {
+                font-size: 1em;
+                margin-bottom: 40px;
             }
             
             .room-grid {
                 grid-template-columns: 1fr;
+                gap: 20px;
+                margin-bottom: 40px;
+            }
+            
+            .room-card {
+                padding: 20px;
+            }
+            
+            .neon-sign {
+                font-size: 1.5em;
+            }
+            
+            .create-room-btn {
+                padding: 30px 20px;
+                min-height: 150px;
             }
             
             .modal {
                 padding: 20px;
-                margin: 20px;
+                margin: 10px;
+                max-width: calc(100vw - 20px);
+            }
+            
+            .modal-title {
+                font-size: 1.5em;
+                margin-bottom: 20px;
             }
             
             .icon-selector {
                 grid-template-columns: repeat(4, 1fr);
+                gap: 8px;
+            }
+            
+            .icon-option {
+                width: 50px;
+                height: 50px;
+                font-size: 1.3em;
+            }
+            
+            /* チャット画面のモバイル最適化 */
+            .chat-header {
+                padding: 15px;
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+            
+            .room-info h2 {
+                font-size: 1.2em;
+            }
+            
+            .room-info p {
+                font-size: 0.8em;
+                word-break: break-all;
+            }
+            
+            .chat-actions {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 8px;
+                width: 100%;
+            }
+            
+            .action-btn {
+                padding: 6px 12px;
+                font-size: 0.8em;
+                flex: 1;
+                min-width: calc(50% - 4px);
+                text-align: center;
+            }
+            
+            .chat-messages {
+                padding: 15px;
+            }
+            
+            .message {
+                margin-bottom: 12px;
+                padding: 10px 12px;
+                border-radius: 12px;
+            }
+            
+            .message-header {
+                gap: 8px;
+                margin-bottom: 6px;
+            }
+            
+            .message-avatar {
+                width: 28px;
+                height: 28px;
+                font-size: 1em;
+            }
+            
+            .message-author {
+                font-size: 0.9em;
+            }
+            
+            .message-time {
+                font-size: 0.75em;
+            }
+            
+            .message-content {
+                font-size: 0.9em;
+                line-height: 1.3;
+            }
+            
+            .chat-input {
+                padding: 15px;
+                gap: 12px;
+            }
+            
+            .message-input {
+                padding: 10px 15px;
+                border-radius: 18px;
+                font-size: 16px; /* iOS zoomを防ぐ */
+                max-height: 80px;
+            }
+            
+            .send-btn {
+                width: 40px;
+                height: 40px;
+                font-size: 1.1em;
+                flex-shrink: 0;
+            }
+            
+            /* ユーザーカウンター */
+            .user-counter {
+                bottom: 15px;
+                right: 15px;
+                padding: 8px 15px;
+                font-size: 12px;
+                border-radius: 15px;
+            }
+            
+            /* トースト通知 */
+            .toast {
+                top: 15px;
+                right: 15px;
+                left: 15px;
+                padding: 12px 15px;
+                font-size: 0.9em;
+            }
+            
+            /* スプラッシュスクリーン */
+            .manhole-cover {
+                width: 150px;
+                height: 150px;
+                margin-bottom: 30px;
+            }
+            
+            .manhole-cover::before {
+                width: 120px;
+                height: 120px;
+            }
+            
+            .manhole-cover::after {
+                font-size: 18px;
+                letter-spacing: 3px;
+            }
+            
+            .enter-button {
+                padding: 12px 30px;
+                font-size: 16px;
+            }
+        }
+        
+        /* 小さいスマホ用（iPhone SEなど） */
+        @media (max-width: 375px) {
+            .plaza-title {
+                font-size: 2em;
+            }
+            
+            .modal {
+                margin: 5px;
+                padding: 15px;
+            }
+            
+            .icon-selector {
+                grid-template-columns: repeat(3, 1fr);
+            }
+            
+            .icon-option {
+                width: 45px;
+                height: 45px;
+                font-size: 1.2em;
+            }
+            
+            .chat-header {
+                padding: 10px;
+            }
+            
+            .action-btn {
+                font-size: 0.75em;
+                padding: 5px 8px;
+            }
+            
+            .chat-messages {
+                padding: 10px;
+            }
+            
+            .message {
+                padding: 8px 10px;
+            }
+            
+            .chat-input {
+                padding: 10px;
+            }
+            
+            .message-input {
+                padding: 8px 12px;
+            }
+            
+            .send-btn {
+                width: 35px;
+                height: 35px;
+                font-size: 1em;
+            }
+        }
+        
+        /* タッチ操作の改善 */
+        @media (hover: none) and (pointer: coarse) {
+            .room-card:hover {
+                transform: none;
+            }
+            
+            .room-card:active {
+                transform: scale(0.98);
+                transition: transform 0.1s;
+            }
+            
+            .enter-button:hover {
+                transform: none;
+            }
+            
+            .enter-button:active {
+                transform: scale(0.95);
+            }
+            
+            .btn:hover {
+                transform: none;
+            }
+            
+            .btn:active {
+                transform: scale(0.95);
+            }
+            
+            .action-btn:hover {
+                background: rgba(255, 107, 53, 0.1);
+            }
+            
+            .action-btn:active {
+                background: rgba(255, 107, 53, 0.3);
+            }
+            
+            .send-btn:hover {
+                transform: none;
+            }
+            
+            .send-btn:active {
+                transform: scale(0.9);
+            }
+        }
+        
+        /* PWA対応のビューポート調整 */
+        @supports (padding: max(0px)) {
+            .chat-screen {
+                padding-bottom: env(safe-area-inset-bottom);
+            }
+            
+            .chat-input {
+                padding-bottom: calc(15px + env(safe-area-inset-bottom));
             }
         }
 
@@ -856,20 +1205,45 @@
             initializeApp();
         });
 
-        function initializeApp() {
-            // ユーザーカウンターのアニメーション開始
-            startUserCounterAnimation();
-            
-            // アイコンセレクターの生成（1回だけ実行）
-            if (document.getElementById('iconSelector').children.length === 0) {
-                generateIconSelector();
+        // モバイル検出とUI調整
+        function isMobile() {
+            return window.innerWidth <= 768 || /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+        }
+
+        function adjustMobileUI() {
+            if (isMobile()) {
+                // チャット画面でのキーボード表示時の調整
+                const messageInput = document.getElementById('messageInput');
+                
+                messageInput.addEventListener('focus', function() {
+                    // キーボード表示時にメッセージエリアを調整
+                    setTimeout(() => {
+                        const chatMessages = document.getElementById('chatMessages');
+                        chatMessages.scrollTop = chatMessages.scrollHeight;
+                    }, 300);
+                });
+                
+                // モバイル用のスワイプジェスチャー（簡易版）
+                let touchStartY = 0;
+                document.addEventListener('touchstart', function(e) {
+                    touchStartY = e.touches[0].clientY;
+                });
+                
+                document.addEventListener('touchend', function(e) {
+                    const touchEndY = e.changedTouches[0].clientY;
+                    const diff = touchStartY - touchEndY;
+                    
+                    // 下にスワイプでリフレッシュ風の動作（ルーム一覧更新）
+                    if (diff < -100 && touchStartY < 100) {
+                        if (document.getElementById('roomSelection').style.display !== 'none') {
+                            loadRooms();
+                            showToast('ルーム一覧を更新しました');
+                        }
+                    }
+                });
+                
+                console.log('モバイルUI調整を適用しました');
             }
-            
-            // イベントリスナーの設定
-            setupEventListeners();
-            
-            // URLパラメータからルームIDをチェック
-            checkRoomFromUrl();
         }
 
         function startUserCounterAnimation() {
@@ -1411,7 +1785,16 @@
             }
             
             container.appendChild(messageEl);
-            container.scrollTop = container.scrollHeight;
+            
+            // スムーズスクロール（モバイル対応）
+            if (isMobile()) {
+                container.scrollTo({
+                    top: container.scrollHeight,
+                    behavior: 'smooth'
+                });
+            } else {
+                container.scrollTop = container.scrollHeight;
+            }
         }
 
         // ユーティリティ関数
