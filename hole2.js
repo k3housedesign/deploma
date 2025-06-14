@@ -1,7 +1,12 @@
 // hole2.js
 
+/*
+    ご指定の initializeApp 関数のロジックは、
+    下記の initializeApp 内に統合・実装されています。
+*/
+
 // Firebase SDKのインポート
-import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+import { initializeApp as initializeFirebaseApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
 import { 
     getFirestore, collection, doc, addDoc, onSnapshot, 
     query, orderBy, serverTimestamp, getDocs
@@ -14,9 +19,6 @@ import {
 // このAPIキーはクライアントサイドで参照可能ですが、バックエンドのセキュリティは
 // Firebaseコンソールの「セキュリティルール」で設定することが不可欠です。
 // FirestoreとRealtime Databaseの両方で、不正な読み書きを防ぐルールを設定してください。
-// 例:
-// - 未認証ユーザーの書き込みを制限する
-// - 書き込むデータの形式(型、文字数など)を検証する
 const firebaseConfig = {
     apiKey: "AIzaSyB-IdlL_BG1yxeO0LRpUS8L3aMgLIaqmAo",
     authDomain: "hole-66226.firebaseapp.com",
@@ -89,7 +91,7 @@ document.addEventListener('DOMContentLoaded', initializeApp);
 
 function initializeApp() {
     try {
-        const app = initializeApp(firebaseConfig);
+        const app = initializeFirebaseApp(firebaseConfig);
         db = getFirestore(app);
         rtdb = getDatabase(app);
         appState.firebaseReady = true;
@@ -101,10 +103,21 @@ function initializeApp() {
         showToast('サーバーに接続できません。オフラインモードで動作します。', 'error');
     }
 
+    // ユーザーカウンターのアニメーション開始
     startUserCounterAnimation();
-    generateIconSelector();
+    
+    // アイコンセレクターの生成（1回だけ実行）
+    if (UI.iconSelector.children.length === 0) {
+        generateIconSelector();
+    }
+    
+    // イベントリスナーの設定
     setupEventListeners();
+    
+    // モバイルUI調整
     adjustMobileUI();
+    
+    // URLパラメータからルームIDをチェック
     checkRoomFromUrl();
 }
 
@@ -156,6 +169,7 @@ function setupEventListeners() {
 }
 
 // --- 主要機能 ---
+// (以下、前回のJavaScriptコードが続く)
 
 function enterTheHole() {
     UI.splashScreen.classList.add('hidden');

@@ -1,6 +1,46 @@
 /* hole2.css */
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;700&display=swap');
 
+/* --- ご指定のコードスニペットから反映 --- */
+body {
+    font-family: 'Noto Sans JP', sans-serif;
+    background: #0a0a0a;
+    color: #ffffff;
+    overflow-x: hidden;
+    /* モバイル用のスクロール改善 */
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
+}
+
+/* モバイル用のフォーカス改善 */
+.message-input:focus {
+    transform: none;
+    -webkit-transform: none;
+}
+
+/* iOS Safari用の入力フィールド修正 */
+input, textarea {
+    -webkit-appearance: none;
+    -webkit-border-radius: 0;
+    border-radius: inherit;
+}
+
+/* モバイルでのタップハイライト削除 */
+* {
+    -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+/* 選択可能にするべき要素 */
+input, textarea, .message-content {
+    -webkit-user-select: text;
+    user-select: text;
+}
+/* --- ここまで --- */
+
+
 :root {
     --primary-color: #ff6b35;
     --secondary-color: #f7931e;
@@ -19,36 +59,6 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-}
-
-body {
-    font-family: 'Noto Sans JP', sans-serif;
-    background: var(--background-dark);
-    color: var(--text-light);
-    overflow-x: hidden;
-    -webkit-overflow-scrolling: touch;
-    overscroll-behavior: contain;
-}
-
-/* モバイルでのタップハイライト削除 */
-* {
-    -webkit-tap-highlight-color: transparent;
-    -webkit-touch-callout: none;
-    -webkit-user-select: none;
-    user-select: none;
-}
-
-/* 選択可能にするべき要素 */
-input, textarea, .message-content {
-    -webkit-user-select: text;
-    user-select: text;
-}
-        
-/* iOS Safari用の入力フィールド修正 */
-input, textarea {
-    -webkit-appearance: none;
-    -webkit-border-radius: 0;
-    border-radius: inherit;
 }
 
 /* スプラッシュスクリーン */
@@ -71,6 +81,7 @@ input, textarea {
     transform: translateY(100vh);
 }
 
+/* (以下、前回のCSSコードが続く) */
 .manhole-cover {
     width: 200px;
     height: 200px;
@@ -504,12 +515,6 @@ input, textarea {
     max-height: 100px;
     font-family: inherit;
     font-size: 14px;
-}
-.message-input:focus {
-    outline: none;
-    border-color: var(--primary-color);
-    transform: none;
-    -webkit-transform: none;
 }
 .send-btn {
     background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
