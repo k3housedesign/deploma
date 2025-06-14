@@ -1171,6 +1171,10 @@
                     messagesListener();
                 }
                 
+                // メッセージ配列をクリア（重複防止）
+                messages = [];
+                document.getElementById('chatMessages').innerHTML = '';
+                
                 // Firestoreからメッセージをリアルタイム取得
                 const messagesQuery = window.firebase.query(
                     window.firebase.collection(window.firebase.db, 'rooms', roomId, 'messages'),
@@ -1190,10 +1194,16 @@
                                 type: messageData.type || 'user'
                             };
                             
-                            // 重複チェック
-                            if (!messages.find(m => m.id === message.id)) {
+                            // 重複チェック（より厳密に）
+                            const isDuplicate = messages.some(m => 
+                                m.id === message.id || 
+                                (m.text === message.text && m.authorName === message.authorName && Math.abs(m.timestamp - message.timestamp) < 1000)
+                            );
+                            
+                            if (!isDuplicate) {
                                 messages.push(message);
                                 renderMessage(message);
+                                console.log('新しいメッセージを表示:', message.text);
                             }
                         }
                     });
@@ -1289,6 +1299,10 @@
             
             if (!text || !currentUser || !currentRoom) return;
             
+            // 送信ボタンを一時的に無効化（連続送信防止）
+            const sendBtn = document.getElementById('sendBtn');
+            sendBtn.disabled = true;
+            
             try {
                 // Firebase接続チェック
                 if (!window.firebase || !window.firebase.ready) {
@@ -1297,6 +1311,8 @@
                     return;
                 }
 
+                console.log('メッセージ送信開始:', text);
+                
                 // Firestoreにメッセージを保存
                 const messageData = {
                     text: text,
@@ -1306,18 +1322,24 @@
                     type: 'user'
                 };
                 
-                await window.firebase.addDoc(
+                const docRef = await window.firebase.addDoc(
                     window.firebase.collection(window.firebase.db, 'rooms', currentRoom.id, 'messages'),
                     messageData
                 );
                 
+                console.log('メッセージ送信完了:', docRef.id);
+                
                 input.value = '';
-                document.getElementById('sendBtn').disabled = true;
                 
             } catch (error) {
                 console.error('メッセージ送信エラー:', error);
                 showToast('メッセージ送信に失敗しました（ローカル表示）', 'warning');
                 sendLocalMessage(text);
+            } finally {
+                // 1秒後に送信ボタンを再有効化
+                setTimeout(() => {
+                    sendBtn.disabled = false;
+                }, 1000);
             }
         }
 
@@ -1334,7 +1356,6 @@
             
             addMessage(message);
             input.value = '';
-            document.getElementById('sendBtn').disabled = true;
         }
 
         function addMessage(message) {
@@ -1469,6 +1490,9 @@
             currentRoom = null;
             messages = [];
             document.getElementById('chatMessages').innerHTML = '';
+            
+            // 送信ボタンを無効化
+            document.getElementById('sendBtn').disabled = true;
         }
 
         // デモ用メッセージ
