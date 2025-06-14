@@ -782,22 +782,31 @@
             off 
         } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js';
 
-        // Firebase設定（ここに実際の設定値を入力）
+        // Firebase設定（Firebase Consoleから取得した値に置き換えてください）
         const firebaseConfig = {
-            // TODO: Firebase Console から取得した設定値を入力
             apiKey: "AIzaSyB-IdlL_BG1yxeO0LRpUS8L3aMgLIaqmAo",
             authDomain: "hole-66226.firebaseapp.com",
-            databaseURL: "https://hole-66226-default-rtdb.firebaseio.com",
+            databaseURL: "https://hole-66226-default-rtdb.asia-southeast1.firebasedatabase.app",
             projectId: "hole-66226",
             storageBucket: "hole-66226.appspot.com",
             messagingSenderId: "122901664767",
             appId: "1:122901664767:web:9705c7bbe94eece1184dca"
         };
 
-        // Firebase初期化
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
-        const rtdb = getDatabase(app);
+        // Firebase初期化とエラーハンドリング
+        let app, db, rtdb;
+        let firebaseReady = false;
+
+        try {
+            app = initializeApp(firebaseConfig);
+            db = getFirestore(app);
+            rtdb = getDatabase(app);
+            firebaseReady = true;
+            console.log('Firebase初期化成功');
+        } catch (error) {
+            console.error('Firebase初期化エラー:', error);
+            firebaseReady = false;
+        }
 
         // グローバルにFirebase機能を公開
         window.firebase = {
@@ -817,8 +826,12 @@
             remove,
             onDisconnect,
             onValue,
-            off
+            off,
+            ready: firebaseReady
         };
+
+        // Firebase準備完了を通知
+        window.dispatchEvent(new CustomEvent('firebaseReady'));
     </script>
 
     <script>
@@ -978,6 +991,13 @@
         // ルーム関連
         async function loadRooms() {
             try {
+                // Firebase接続チェック
+                if (!window.firebase || !window.firebase.ready) {
+                    console.log('Firebase未接続 - デモモードで動作');
+                    loadDemoRooms();
+                    return;
+                }
+
                 // Firestoreからルーム一覧を取得
                 const roomsQuery = window.firebase.query(
                     window.firebase.collection(window.firebase.db, 'rooms'),
@@ -1001,6 +1021,9 @@
                     // アクティブユーザー数を更新
                     updateActiveUserCounts();
                     renderRooms();
+                }, (error) => {
+                    console.error('Firestoreリスナーエラー:', error);
+                    loadDemoRooms();
                 });
                 
             } catch (error) {
@@ -1136,6 +1159,13 @@
         
         async function loadMessages(roomId) {
             try {
+                // Firebase接続チェック
+                if (!window.firebase || !window.firebase.ready) {
+                    console.log('Firebase未接続 - デモメッセージ表示');
+                    addDemoMessages();
+                    return;
+                }
+
                 // 既存のリスナーを解除
                 if (messagesListener) {
                     messagesListener();
@@ -1148,8 +1178,6 @@
                 );
                 
                 messagesListener = window.firebase.onSnapshot(messagesQuery, (snapshot) => {
-                    const chatContainer = document.getElementById('chatMessages');
-                    
                     snapshot.docChanges().forEach((change) => {
                         if (change.type === 'added') {
                             const messageData = change.doc.data();
@@ -1169,6 +1197,9 @@
                             }
                         }
                     });
+                }, (error) => {
+                    console.error('メッセージリスナーエラー:', error);
+                    addDemoMessages();
                 });
                 
             } catch (error) {
@@ -1200,6 +1231,13 @@
             }
             
             try {
+                // Firebase接続チェック
+                if (!window.firebase || !window.firebase.ready) {
+                    console.log('Firebase未接続 - ローカルルーム作成');
+                    createLocalRoom(roomName);
+                    return;
+                }
+
                 // Firestoreに新しいルームを作成
                 const roomData = {
                     roomName: roomName,
@@ -1220,25 +1258,28 @@
                 
             } catch (error) {
                 console.error('ルーム作成エラー:', error);
-                showToast('ルームの作成に失敗しました', 'error');
-                
-                // フォールバック: ローカルルーム作成
-                const newRoom = {
-                    id: generateRoomId(),
-                    name: roomName,
-                    createdAt: Date.now(),
-                    createdBy: currentUser.id
-                };
-                
-                rooms.push({
-                    ...newRoom,
-                    description: '新しく開かれた場所（ローカル）',
-                    activeUsers: 1
-                });
-                
-                closeCreateRoomModal();
-                enterRoom(newRoom.id, newRoom.name);
+                showToast('Firebase接続エラー - ローカルルームを作成', 'warning');
+                createLocalRoom(roomName);
             }
+        }
+
+        function createLocalRoom(roomName) {
+            const newRoom = {
+                id: generateRoomId(),
+                name: roomName,  
+                createdAt: Date.now(),
+                createdBy: currentUser.id
+            };
+            
+            rooms.push({
+                ...newRoom,
+                description: '新しく開かれた場所（ローカル）',
+                activeUsers: 1
+            });
+            
+            closeCreateRoomModal();
+            enterRoom(newRoom.id, newRoom.name);
+            renderRooms();
         }
 
         // メッセージ関連
@@ -1249,6 +1290,13 @@
             if (!text || !currentUser || !currentRoom) return;
             
             try {
+                // Firebase接続チェック
+                if (!window.firebase || !window.firebase.ready) {
+                    console.log('Firebase未接続 - ローカルメッセージ送信');
+                    sendLocalMessage(text);
+                    return;
+                }
+
                 // Firestoreにメッセージを保存
                 const messageData = {
                     text: text,
@@ -1268,23 +1316,25 @@
                 
             } catch (error) {
                 console.error('メッセージ送信エラー:', error);
-                
-                // フォールバック: ローカルメッセージ追加
-                const message = {
-                    id: generateMessageId(),
-                    text: text,
-                    authorName: currentUser.nickname,
-                    authorIcon: currentUser.icon,
-                    timestamp: Date.now(),
-                    type: 'user'
-                };
-                
-                addMessage(message);
-                input.value = '';
-                document.getElementById('sendBtn').disabled = true;
-                
                 showToast('メッセージ送信に失敗しました（ローカル表示）', 'warning');
+                sendLocalMessage(text);
             }
+        }
+
+        function sendLocalMessage(text) {
+            const input = document.getElementById('messageInput');
+            const message = {
+                id: generateMessageId(),
+                text: text,
+                authorName: currentUser.nickname,
+                authorIcon: currentUser.icon,
+                timestamp: Date.now(),
+                type: 'user'
+            };
+            
+            addMessage(message);
+            input.value = '';
+            document.getElementById('sendBtn').disabled = true;
         }
 
         function addMessage(message) {
@@ -1461,10 +1511,16 @@
         // Firebase接続状態の監視
         function monitorFirebaseConnection() {
             try {
+                if (!window.firebase || !window.firebase.ready) {
+                    console.log('Firebase未接続 - 監視をスキップ');
+                    return;
+                }
+
                 const connectedRef = window.firebase.ref(window.firebase.rtdb, '.info/connected');
                 window.firebase.onValue(connectedRef, (snapshot) => {
                     if (snapshot.val() === true) {
                         console.log('Firebase接続: オンライン');
+                        showToast('Firebase接続: オンライン');
                     } else {
                         console.log('Firebase接続: オフライン');
                         showToast('接続が不安定です', 'warning');
@@ -1472,17 +1528,23 @@
                 });
             } catch (error) {
                 console.error('Firebase接続監視エラー:', error);
+                console.log('ローカルモードで動作します');
             }
         }
         
-        // 初期化時にFirebase接続を監視
+        // 初期化時にFirebase準備を待つ
         document.addEventListener('DOMContentLoaded', function() {
             initializeApp();
-            
-            // Firebase機能が利用可能になったら接続監視を開始
+        });
+
+        // Firebase準備完了を待つ
+        window.addEventListener('firebaseReady', function() {
+            console.log('Firebase準備完了');
             setTimeout(() => {
-                if (window.firebase) {
+                if (window.firebase && window.firebase.ready) {
                     monitorFirebaseConnection();
+                } else {
+                    console.warn('Firebase接続に失敗しました。ローカルモードで動作します。');
                 }
             }, 1000);
         });
