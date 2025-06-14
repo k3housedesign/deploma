@@ -860,8 +860,10 @@
             // ユーザーカウンターのアニメーション開始
             startUserCounterAnimation();
             
-            // アイコンセレクターの生成
-            generateIconSelector();
+            // アイコンセレクターの生成（1回だけ実行）
+            if (document.getElementById('iconSelector').children.length === 0) {
+                generateIconSelector();
+            }
             
             // イベントリスナーの設定
             setupEventListeners();
@@ -885,6 +887,10 @@
 
         function generateIconSelector() {
             const selector = document.getElementById('iconSelector');
+            
+            // 既存のアイコンをクリア（重複防止）
+            selector.innerHTML = '';
+            
             iconOptions.forEach((icon, index) => {
                 const option = document.createElement('div');
                 option.className = `icon-option ${index === 0 ? 'selected' : ''}`;
@@ -949,6 +955,12 @@
 
         // プロフィール設定関連
         function showProfileModal() {
+            // アイコンセレクターが空の場合のみ生成
+            const selector = document.getElementById('iconSelector');
+            if (selector.children.length === 0) {
+                generateIconSelector();
+            }
+            
             document.getElementById('profileModal').classList.add('active');
         }
 
