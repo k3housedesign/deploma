@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>チャットサイト</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+```
+    body {
+        font-family: 'Arial', sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .container {
+        width: 95%;
+        max-width: 1200px;
+        height: 90vh;
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 20px;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        display: flex;
+        overflow: hidden;
+    }
+
+    .sidebar {
+        width: 300px;
+        background: linear-gradient(180deg, #2c3e50 0%, #34495e 100%);
+        color: white;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .header {
+        padding: 20px;
+        background: rgba(0, 0, 0, 0.2);
+        text-align: center;
+    }
+
+    .header h1 {
+        font-size: 1.5em;
+        margin-bottom: 10px;
+    }
+
+    .user-setup {
+        padding: 20px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .user-setup input {
+        width: 100%;
+        padding: 10px;
+        margin: 5px 0;
+        border: none;
+        border-radius: 5px;
+        background: rgba(255, 255, 255, 0.1);
+        color: white;
+        placeholder-color: rgba(255, 255, 255, 0.7);
+    }
+
+    .user-setup input::placeholder {
+        color: rgba(255, 255, 255, 0.7);
+    }
+
+    .user-setup button {
+        width: 100%;
+        padding: 10px;
+        margin-top: 10px;
+        border: none;
+        border-radius: 5px;
+        background: #e74c3c;
+        color: white;
+        cursor: pointer;
+        font-weight: bold;
+        transition: background 0.3s;
+    }
+
+    .user-setup button:hover {
+        background: #c0392b;
+    }
+
+    .online-users {
+        flex: 1;
+        padding: 20px;
+        overflow-y: auto;
+    }
+
+    .online-users h3 {
+        margin-bottom: 15px;
+        color: #ecf0f1;
+    }
+
+    .user-list {
+        list-style: none;
+    }
+
+    .user-item {
+        padding: 8px 12px;
+        margin: 5px 0;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 15px;
+        display: flex;
+        align-items: center;
+        transition: background 0.3s;
+    }
+
+    .user-item:hover {
+        background: rgba(255, 255, 255, 0.2);
+    }
+
+    .user-avatar {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        margin-right: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        color: white;
+    }
+
+    .chat-area {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        background: white;
+    }
+
+    .chat-header {
+        padding: 20px;
+        background: #f8f9fa;
+        border-bottom: 1px solid #dee2e6;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .room-info h2 {
+        color: #2c3e50;
+        margin-bottom: 5px;
+    }
+
+    .room-info p {
+        color: #7f8c8d;
+        font-size: 0.9em;
+    }
+
+    .chat-controls {
+        display: flex;
+        gap: 10px;
+    }
+
+    .chat-controls button {
+        padding: 8px 15px;
+        border: none;
+        border-radius: 20px;
+        background: #3498db;
+        color: white;
+        cursor: pointer;
+        font-size: 0.9em;
+        transition: background 0.3s;
+    }
+
+    .chat-controls button:hover {
+        background: #2980b9;
+    }
+
+    .secret-btn {
+        background: #9b59b6 !important;
+    }
+
+    .secret-btn:hover {
+        background: #8e44ad !important;
+    }
+
+    .messages {
+        flex: 1;
+        padding: 20px;
+        overflow-y: auto;
+        background: #f8f9fa;
+    }
+
+    .message {
+        margin-bottom: 15px;
+        padding: 12px;
+        border-radius: 15px;
+        background: white;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        animation: slideIn 0.3s ease-out;
+    }
+
+    .message.secret {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: 2px solid #9b59b6;
+    }
+
+    .message.system {
+        background: #e8f5e8;
+        color: #27ae60;
+        text-align: center;
+        font-style: italic;
+    }
+
+    .message-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 8px;
+    }
+
+    .message-user {
+        font-weight: bold;
+        color: #2c3e50;
+        display: flex;
+        align-items: center;
+    }
+
+    .message.secret .message-user {
+        color: white;
+    }
+
+    .message-time {
+        font-size: 0.8em;
+        color: #95a5a6;
+    }
+
+    .message.secret .message-time {
+        color: rgba(255, 255, 255, 0.8);
+    }
+
+    .message-content {
+        line-height: 1.4;
+        color: #2c3e50;
+    }
+
+    .message.secret .message-content {
+        color: white;
+    }
+
+    .input-area {
+        padding: 20px;
+        background: white;
+        border-top: 1px solid #dee2e6;
+        display: flex;
+        gap: 10px;
+        align-items: flex-end;
+    }
+
+    .message-input {
+        flex: 1;
+        padding: 12px;
+        border: 2px solid #dee2e6;
+        border-radius: 25px;
+        resize: none;
+        max-height: 100px;
+        font-family: inherit;
+        transition: border-color 0.3s;
+    }
+
+    .message-input:focus {
+        outline: none;
+        border-color: #3498db;
+    }
+
+    .send-btn {
+        padding: 12px 25px;
+        border: none;
+        border-radius: 25px;
+        background: #27ae60;
+        color: white;
+        cursor: pointer;
+        font-weight: bold;
+        transition: background 0.3s;
+    }
+
+    .send-btn:hover {
+        background: #229954;
+    }
+
+    .send-btn:disabled {
+        background: #bdc3c7;
+        cursor: not-allowed;
+    }
+
+    @keyframes slideIn {
+        from {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .color-picker {
+        display: flex;
+        gap: 5px;
+        margin-top: 10px;
+    }
+
+    .color-option {
+        width: 25px;
+        height: 25px;
+        border-radius: 50%;
+        cursor: pointer;
+        border: 2px solid transparent;
+        transition: border-color 0.3s;
+    }
+
+    .color-option.selected {
+        border-color: white;
+    }
+
+    .drawing-area {
+        display: none;
+        flex-direction: column;
+        height: 200px;
+        margin-top: 10px;
+    }
+
+    .drawing-controls {
+        display: flex;
+        gap: 10px;
+        padding: 10px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 5px;
+        margin-bottom: 10px;
+    }
+
+    .drawing-controls button {
+        padding: 5px 10px;
+        border: none;
+        border-radius: 3px;
+        background: #3498db;
+        color: white;
+        cursor: pointer;
+        font-size: 0.8em;
+    }
+
+    #drawingCanvas {
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        border-radius: 5px;
+        background: white;
+        cursor: crosshair;
+    }
+
+    @media (max-width: 768px) {
+        .container {
+            flex-direction: column;
+            height: 100vh;
+            border-radius: 0;
+        }
+
+        .sidebar {
+            width: 100%;
+            height: auto;
+        }
+
+        .online-users {
+            display: none;
+        }
+    }
+</style>
+```
+
+</head>
+<body>
+    <div class="container">
+        <div class="sidebar">
+            <div class="header">
+                <h1>🎭 チャットルーム</h1>
+                <p>みんなで楽しく話そう！</p>
+            </div>
+
+```
+        <div class="user-setup">
+            <input type="text" id="usernameInput" placeholder="ニックネームを入力" maxlength="20">
+            <div class="color-picker">
+                <div class="color-option selected" style="background: #e74c3c" data-color="#e74c3c"></div>
+                <div class="color-option" style="background: #3498db" data-color="#3498db"></div>
+                <div class="color-option" style="background: #2ecc71" data-color="#2ecc71"></div>
+                <div class="color-option" style="background: #f39c12" data-color="#f39c12"></div>
+                <div class="color-option" style="background: #9b59b6" data-color="#9b59b6"></div>
+                <div class="color-option" style="background: #34495e" data-color="#34495e"></div>
+            </div>
+            <button onclick="joinChat()">チャットに参加</button>
+            
+            <div class="drawing-area" id="drawingArea">
+                <div class="drawing-controls">
+                    <button onclick="clearCanvas()">クリア</button>
+                    <button onclick="sendDrawing()">送信</button>
+                    <button onclick="hideDrawing()">閉じる</button>
+                </div>
+                <canvas id="drawingCanvas" width="260" height="150"></canvas>
+            </div>
+        </div>
+
+        <div class="online-users">
+            <h3>オンラインユーザー (<span id="userCount">0</span>)</h3>
+            <ul class="user-list" id="userList"></ul>
+        </div>
+    </div>
+
+    <div class="chat-area">
+        <div class="chat-header">
+            <div class="room-info">
+                <h2>メインルーム</h2>
+                <p>自由に話せる雑談ルームです</p>
+            </div>
+            <div class="chat-controls">
+                <button onclick="toggleDrawing()">🎨 お絵描き</button>
+                <button class="secret-btn" onclick="toggleSecretMode()">🔒 内緒モード</button>
+            </div>
+        </div>
+
+        <div class="messages" id="messages"></div>
+
+        <div class="input-area">
+            <textarea id="messageInput" class="message-input" placeholder="メッセージを入力..." rows="1"></textarea>
+            <button class="send-btn" onclick="sendMessage()" id="sendBtn" disabled>送信</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // グローバル変数
+    let currentUser = null;
+    let userColor = '#e74c3c';
+    let isSecretMode = false;
+    let secretTarget = null;
+    let messages = [];
+    let users = [];
+    let isDrawing = false;
+    let lastX = 0;
+    let lastY = 0;
+
+    // キャンバス初期化
+    const canvas = document.getElementById('drawingCanvas');
+    const ctx = canvas.getContext('2d');
+    ctx.strokeStyle = '#000';
+    ctx.lineWidth = 2;
+    ctx.lineCap = 'round';
+
+    // 初期化
+    document.addEventListener('DOMContentLoaded', function() {
+        setupEventListeners();
+        addSystemMessage('チャットルームへようこそ！ニックネームを入力してチャットに参加してください。');
+    });
+
+    function setupEventListeners() {
+        // エンターキーでメッセージ送信
+        document.getElementById('messageInput').addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                sendMessage();
+            }
+        });
+
+        // 入力チェック
+        document.getElementById('messageInput').addEventListener('input', function() {
+            const btn = document.getElementById('sendBtn');
+            btn.disabled = !this.value.trim() || !currentUser;
+        });
+
+        // ユーザー名入力チェック
+        document.getElementById('usernameInput').addEventListener('input', function() {
+            // リアルタイムでボタンの状態を更新
+        });
+
+        // カラーピッカー
+        document.querySelectorAll('.color-option').forEach(option => {
+            option.addEventListener('click', function() {
+                document.querySelectorAll('.color-option').forEach(o => o.classList.remove('selected'));
+                this.classList.add('selected');
+                userColor = this.dataset.color;
+            });
+        });
+
+        // お絵描き機能
+        setupDrawing();
+    }
+
+    function joinChat() {
+        const username = document.getElementById('usernameInput').value.trim();
+        if (!username) {
+            alert('ニックネームを入力してください');
+            return;
+        }
+
+        if (users.some(user => user.name === username)) {
+            alert('そのニックネームは既に使用されています');
+            return;
+        }
+
+        currentUser = {
+            name: username,
+            color: userColor,
+            joinTime: new Date()
+        };
+
+        users.push(currentUser);
+        updateUserList();
+        
+        addSystemMessage(`${username}さんがチャットに参加しました`);
+        document.getElementById('sendBtn').disabled = false;
+        document.getElementById('usernameInput').disabled = true;
+    }
+
+    function sendMessage() {
+        const input = document.getElementById('messageInput');
+        const text = input.value.trim();
+        
+        if (!text || !currentUser) return;
+
+        const message = {
+            id: Date.now(),
+            user: currentUser.name,
+            userColor: currentUser.color,
+            content: text,
+            timestamp: new Date(),
+            isSecret: isSecretMode,
+            secretTarget: secretTarget
+        };
+
+        messages.push(message);
+        displayMessage(message);
+        input.value = '';
+        input.focus();
+
+        // 内緒モードの場合はリセット
+        if (isSecretMode) {
+            toggleSecretMode();
+        }
+    }
+
+    function displayMessage(message) {
+        const messagesContainer = document.getElementById('messages');
+        const messageEl = document.createElement('div');
+        messageEl.className = `message${message.isSecret ? ' secret' : ''}`;
+
+        const time = message.timestamp.toLocaleTimeString('ja-JP', {
+            hour: '2-digit',
+            minute: '2-digit'
+        });
+
+        let secretInfo = '';
+        if (message.isSecret) {
+            secretInfo = message.secretTarget ? 
+                ` → ${message.secretTarget}` : ' (内緒話)';
+        }
+
+        messageEl.innerHTML = `
+            <div class="message-header">
+                <div class="message-user">
+                    <span class="user-avatar" style="background: ${message.userColor}">
+                        ${message.user.charAt(0)}
+                    </span>
+                    ${message.user}${secretInfo}
+                </div>
+                <div class="message-time">${time}</div>
+            </div>
+            <div class="message-content">${escapeHtml(message.content)}</div>
+        `;
+
+        messagesContainer.appendChild(messageEl);
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    }
+
+    function addSystemMessage(text) {
+        const messagesContainer = document.getElementById('messages');
+        const messageEl = document.createElement('div');
+        messageEl.className = 'message system';
+        messageEl.innerHTML = `<div class="message-content">${escapeHtml(text)}</div>`;
+        messagesContainer.appendChild(messageEl);
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    }
+
+    function updateUserList() {
+        const userList = document.getElementById('userList');
+        const userCount = document.getElementById('userCount');
+        
+        userList.innerHTML = '';
+        userCount.textContent = users.length;
+
+        users.forEach(user => {
+            const li = document.createElement('li');
+            li.className = 'user-item';
+            li.innerHTML = `
+                <div class="user-avatar" style="background: ${user.color}">
+                    ${user.name.charAt(0)}
+                </div>
+                ${user.name}
+            `;
+            
+            // 内緒モードでのターゲット選択
+            li.addEventListener('click', function() {
+                if (isSecretMode && user.name !== currentUser.name) {
+                    secretTarget = user.name;
+                    updateSecretModeDisplay();
+                }
+            });
+            
+            userList.appendChild(li);
+        });
+    }
+
+    function toggleSecretMode() {
+        isSecretMode = !isSecretMode;
+        secretTarget = null;
+        updateSecretModeDisplay();
+    }
+
+    function updateSecretModeDisplay() {
+        const messageInput = document.getElementById('messageInput');
+        const secretBtn = document.querySelector('.secret-btn');
+        
+        if (isSecretMode) {
+            messageInput.style.borderColor = '#9b59b6';
+            messageInput.placeholder = secretTarget ? 
+                `${secretTarget}への内緒話を入力...` : 
+                '内緒話を入力... (ユーザーをクリックして相手を選択)';
+            secretBtn.style.background = '#8e44ad';
+            secretBtn.textContent = '🔓 通常モード';
+        } else {
+            messageInput.style.borderColor = '#dee2e6';
+            messageInput.placeholder = 'メッセージを入力...';
+            secretBtn.style.background = '#9b59b6';
+            secretBtn.textContent = '🔒 内緒モード';
+        }
+    }
+
+    function toggleDrawing() {
+        const drawingArea = document.getElementById('drawingArea');
+        drawingArea.style.display = drawingArea.style.display === 'none' ? 'flex' : 'none';
+    }
+
+    function hideDrawing() {
+        document.getElementById('drawingArea').style.display = 'none';
+    }
+
+    function setupDrawing() {
+        canvas.addEventListener('mousedown', startDrawing);
+        canvas.addEventListener('mousemove', draw);
+        canvas.addEventListener('mouseup', stopDrawing);
+        canvas.addEventListener('mouseout', stopDrawing);
+    }
+
+    function startDrawing(e) {
+        isDrawing = true;
+        const rect = canvas.getBoundingClientRect();
+        lastX = e.clientX - rect.left;
+        lastY = e.clientY - rect.top;
+    }
+
+    function draw(e) {
+        if (!isDrawing) return;
+        
+        const rect = canvas.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        
+        ctx.beginPath();
+        ctx.moveTo(lastX, lastY);
+        ctx.lineTo(x, y);
+        ctx.stroke();
+        
+        lastX = x;
+        lastY = y;
+    }
+
+    function stopDrawing() {
+        isDrawing = false;
+    }
+
+    function clearCanvas() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }
+
+    function sendDrawing() {
+        const dataURL = canvas.toDataURL();
+        const message = {
+            id: Date.now(),
+            user: currentUser.name,
+            userColor: currentUser.color,
+            content: '[お絵描き]',
+            timestamp: new Date(),
+            isSecret: false,
+            isDrawing: true,
+            drawingData: dataURL
+        };
+
+        messages.push(message);
+        displayDrawingMessage(message);
+        clearCanvas();
+        hideDrawing();
+    }
+
+    function displayDrawingMessage(message) {
+        const messagesContainer = document.getElementById('messages');
+        const messageEl = document.createElement('div');
+        messageEl.className = 'message';
+
+        const time = message.timestamp.toLocaleTimeString('ja-JP', {
+            hour: '2-digit',
+            minute: '2-digit'
+        });
+
+        messageEl.innerHTML = `
+            <div class="message-header">
+                <div class="message-user">
+                    <span class="user-avatar" style="background: ${message.userColor}">
+                        ${message.user.charAt(0)}
+                    </span>
+                    ${message.user}
+                </div>
+                <div class="message-time">${time}</div>
+            </div>
+            <div class="message-content">
+                <img src="${message.drawingData}" style="max-width: 100%; border-radius: 5px; border: 1px solid #dee2e6;">
+            </div>
+        `;
+
+        messagesContainer.appendChild(messageEl);
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    }
+
+    function escapeHtml(text) {
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+    }
+
+    // デモ用：自動的にいくつかのユーザーを追加
+    setTimeout(() => {
+        const demoUsers = [
+            { name: 'アリス', color: '#3498db' },
+            { name: 'ボブ', color: '#2ecc71' },
+            { name: 'チャーリー', color: '#f39c12' }
+        ];
+
+        demoUsers.forEach(user => {
+            users.push({
+                ...user,
+                joinTime: new Date()
+            });
+        });
+        updateUserList();
+    }, 1000);
+</script>
+```
+
+</body>
+</html>
