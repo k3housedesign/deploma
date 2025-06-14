@@ -11,6 +11,8 @@
     <title>HOLE - 地下世界への入り口</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;700&display=swap');
+
+```
     * {
         margin: 0;
         padding: 0;
@@ -26,7 +28,6 @@
         overscroll-behavior: contain;
     }
 
-    /* モバイル用の最適化 */
     input, textarea {
         -webkit-appearance: none;
         -webkit-border-radius: 0;
@@ -45,7 +46,6 @@
         user-select: text;
     }
 
-    /* スプラッシュスクリーン */
     .splash-screen {
         position: fixed;
         top: 0;
@@ -142,7 +142,6 @@
         left: 100%;
     }
 
-    /* ユーザーカウンター */
     .user-counter {
         position: fixed;
         bottom: 20px;
@@ -157,7 +156,6 @@
         backdrop-filter: blur(10px);
     }
 
-    /* メインコンテンツ */
     .main-content {
         min-height: 100vh;
         display: none;
@@ -167,7 +165,6 @@
         display: block;
     }
 
-    /* ルーム選択画面 */
     .room-selection {
         min-height: 100vh;
         background: 
@@ -297,7 +294,6 @@
         color: #ff6b35;
     }
 
-    /* プロフィール設定モーダル */
     .modal-overlay {
         position: fixed;
         top: 0;
@@ -431,7 +427,6 @@
         color: white;
     }
 
-    /* チャット画面 */
     .chat-screen {
         height: 100vh;
         display: none;
@@ -613,7 +608,6 @@
         transform: none;
     }
 
-    /* トースト通知 */
     .toast {
         position: fixed;
         top: 20px;
@@ -640,7 +634,6 @@
         background: rgba(231, 76, 60, 0.9);
     }
 
-    /* モバイル最適化 */
     @media (max-width: 768px) {
         .plaza-title {
             font-size: 2.5em;
@@ -924,13 +917,11 @@
 
 </head>
 <body>
-    <!-- ユーザーカウンター -->
     <div class="user-counter">
         現在 <span id="userCount">248</span> 人が徘徊中
     </div>
 
 ```
-<!-- スプラッシュスクリーン -->
 <div class="splash-screen" id="splashScreen">
     <div class="manhole-cover"></div>
     <button class="enter-button" onclick="enterTheHole()">
@@ -938,16 +929,13 @@
     </button>
 </div>
 
-<!-- メインコンテンツ -->
 <div class="main-content" id="mainContent">
-    <!-- ルーム選択画面 -->
     <div class="room-selection" id="roomSelection">
         <div class="underground-plaza">
             <h1 class="plaza-title">地下街広場</h1>
             <p class="plaza-subtitle">薄暗い路地裏で、今夜は誰と出会うだろうか</p>
             
             <div class="room-grid" id="roomGrid">
-                <!-- ルーム一覧がここに動的生成される -->
             </div>
             
             <div class="create-room-btn" onclick="showCreateRoomModal()">
@@ -957,7 +945,6 @@
         </div>
     </div>
 
-    <!-- チャット画面 -->
     <div class="chat-screen" id="chatScreen">
         <div class="chat-header">
             <div class="room-info">
@@ -972,7 +959,6 @@
         </div>
         
         <div class="chat-messages" id="chatMessages">
-            <!-- メッセージがここに表示される -->
         </div>
         
         <div class="chat-input">
@@ -988,7 +974,6 @@
     </div>
 </div>
 
-<!-- プロフィール設定モーダル -->
 <div class="modal-overlay" id="profileModal">
     <div class="modal">
         <h2 class="modal-title">地下世界での仮の姿</h2>
@@ -1006,7 +991,6 @@
             <div class="form-group">
                 <label class="form-label">アイコンを選択</label>
                 <div class="icon-selector" id="iconSelector">
-                    <!-- アイコンオプションが動的生成される -->
                 </div>
             </div>
             
@@ -1022,7 +1006,6 @@
     </div>
 </div>
 
-<!-- ルーム作成モーダル -->
 <div class="modal-overlay" id="createRoomModal">
     <div class="modal">
         <h2 class="modal-title">新しい路地裏を作る</h2>
@@ -1049,7 +1032,6 @@
     </div>
 </div>
 
-<!-- Firebase SDK -->
 <script type="module">
     import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
     import { 
@@ -1123,7 +1105,6 @@
 </script>
 
 <script>
-    // アプリケーション状態
     let currentUser = null;
     let currentRoom = null;
     let messages = [];
@@ -1133,14 +1114,12 @@
     let statusRef = null;
     let isInitialized = false;
 
-    // アイコンデータ
     const iconOptions = [
         '🎭', '👤', '🕴️', '🦹', '🧙', '👻',
         '🐺', '🦊', '🐱', '🦝', '🦉', '🐍',
         '💀', '🎪', '🃏', '🎨', '📚', '⚡'
     ];
 
-    // ページ読み込み時の初期化
     document.addEventListener('DOMContentLoaded', function() {
         initializeApp();
     });
