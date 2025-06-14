@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
@@ -7,629 +6,630 @@
     <title>HOLE - 地下世界への入り口</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;700&display=swap');
-
-```
-    * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-    }
-
-    body {
-        font-family: 'Noto Sans JP', sans-serif;
-        background: #0a0a0a;
-        color: #ffffff;
-        overflow-x: hidden;
-    }
-
-    /* スプラッシュスクリーン */
-    .splash-screen {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100vw;
-        height: 100vh;
-        background: linear-gradient(180deg, #1a1a1a 0%, #000 100%);
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        z-index: 1000;
-        transition: transform 1.5s cubic-bezier(0.7, 0, 0.3, 1);
-    }
-
-    .splash-screen.hidden {
-        transform: translateY(100vh);
-    }
-
-    .manhole-cover {
-        width: 200px;
-        height: 200px;
-        background: radial-gradient(circle, #444 0%, #222 50%, #111 100%);
-        border-radius: 50%;
-        position: relative;
-        margin-bottom: 40px;
-        box-shadow: 
-            inset 0 0 50px rgba(0,0,0,0.8),
-            0 10px 30px rgba(0,0,0,0.5);
-    }
-
-    .manhole-cover::before {
-        content: '';
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        width: 160px;
-        height: 160px;
-        background: repeating-conic-gradient(
-            from 0deg at 50% 50%,
-            #333 0deg 30deg,
-            #222 30deg 60deg
-        );
-        border-radius: 50%;
-        transform: translate(-50%, -50%);
-    }
-
-    .manhole-cover::after {
-        content: 'HOLE';
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        font-size: 24px;
-        font-weight: 700;
-        letter-spacing: 4px;
-        color: #666;
-        text-shadow: 0 0 10px rgba(255,255,255,0.1);
-    }
-
-    .enter-button {
-        padding: 15px 40px;
-        background: linear-gradient(45deg, #ff6b35, #f7931e);
-        border: none;
-        border-radius: 30px;
-        color: white;
-        font-size: 18px;
-        font-weight: 700;
-        letter-spacing: 2px;
-        cursor: pointer;
-        position: relative;
-        overflow: hidden;
-        transition: all 0.3s ease;
-        box-shadow: 0 5px 20px rgba(255, 107, 53, 0.3);
-    }
-
-    .enter-button:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 8px 25px rgba(255, 107, 53, 0.5);
-    }
-
-    .enter-button::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: -100%;
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-        transition: left 0.5s;
-    }
-
-    .enter-button:hover::before {
-        left: 100%;
-    }
-
-    /* ユーザーカウンター */
-    .user-counter {
-        position: fixed;
-        bottom: 20px;
-        right: 20px;
-        background: rgba(0, 0, 0, 0.8);
-        padding: 10px 20px;
-        border-radius: 20px;
-        border: 1px solid #333;
-        font-size: 14px;
-        color: #ff6b35;
-        z-index: 100;
-        backdrop-filter: blur(10px);
-    }
-
-    /* メインコンテンツ */
-    .main-content {
-        min-height: 100vh;
-        display: none;
-    }
-
-    .main-content.active {
-        display: block;
-    }
-
-    /* ルーム選択画面 */
-    .room-selection {
-        min-height: 100vh;
-        background: 
-            radial-gradient(circle at 20% 50%, rgba(255, 107, 53, 0.1) 0%, transparent 50%),
-            radial-gradient(circle at 80% 20%, rgba(247, 147, 30, 0.1) 0%, transparent 50%),
-            linear-gradient(180deg, #111 0%, #000 100%);
-        padding: 40px 20px;
-    }
-
-    .underground-plaza {
-        max-width: 1200px;
-        margin: 0 auto;
-        text-align: center;
-    }
-
-    .plaza-title {
-        font-size: 3em;
-        font-weight: 300;
-        margin-bottom: 20px;
-        background: linear-gradient(45deg, #ff6b35, #f7931e);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
-        text-shadow: 0 0 30px rgba(255, 107, 53, 0.3);
-    }
-
-    .plaza-subtitle {
-        font-size: 1.2em;
-        color: #888;
-        margin-bottom: 60px;
-    }
-
-    .room-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-        gap: 30px;
-        margin-bottom: 60px;
-    }
-
-    .room-card {
-        background: rgba(20, 20, 20, 0.8);
-        border: 1px solid #333;
-        border-radius: 15px;
-        padding: 30px;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        position: relative;
-        overflow: hidden;
-    }
-
-    .room-card::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 3px;
-        background: linear-gradient(90deg, #ff6b35, #f7931e);
-        transform: scaleX(0);
-        transition: transform 0.3s ease;
-    }
-
-    .room-card:hover {
-        transform: translateY(-5px);
-        border-color: #ff6b35;
-        box-shadow: 0 10px 30px rgba(255, 107, 53, 0.2);
-    }
-
-    .room-card:hover::before {
-        transform: scaleX(1);
-    }
-
-    .neon-sign {
-        font-size: 1.8em;
-        font-weight: 700;
-        color: #ff6b35;
-        text-shadow: 
-            0 0 5px #ff6b35,
-            0 0 10px #ff6b35,
-            0 0 15px #ff6b35;
-        animation: neonFlicker 2s infinite alternate;
-        margin-bottom: 15px;
-    }
-
-    @keyframes neonFlicker {
-        0%, 100% { opacity: 1; }
-        50% { opacity: 0.8; }
-    }
-
-    .room-description {
-        color: #aaa;
-        font-size: 0.9em;
-        margin-bottom: 15px;
-    }
-
-    .room-status {
-        color: #666;
-        font-size: 0.8em;
-    }
-
-    .create-room-btn {
-        background: linear-gradient(45deg, #333, #555);
-        border: 2px dashed #666;
-        border-radius: 15px;
-        padding: 40px 30px;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        min-height: 200px;
-    }
-
-    .create-room-btn:hover {
-        border-color: #ff6b35;
-        background: linear-gradient(45deg, #444, #666);
-    }
-
-    .create-room-btn .icon {
-        font-size: 3em;
-        margin-bottom: 15px;
-        color: #666;
-    }
-
-    .create-room-btn:hover .icon {
-        color: #ff6b35;
-    }
-
-    /* プロフィール設定モーダル */
-    .modal-overlay {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100vw;
-        height: 100vh;
-        background: rgba(0, 0, 0, 0.8);
-        display: none;
-        justify-content: center;
-        align-items: center;
-        z-index: 2000;
-        backdrop-filter: blur(5px);
-    }
-
-    .modal-overlay.active {
-        display: flex;
-    }
-
-    .modal {
-        background: linear-gradient(145deg, #1a1a1a, #2a2a2a);
-        border-radius: 20px;
-        padding: 40px;
-        max-width: 500px;
-        width: 90%;
-        border: 1px solid #333;
-        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
-    }
-
-    .modal-title {
-        font-size: 1.8em;
-        font-weight: 700;
-        text-align: center;
-        margin-bottom: 30px;
-        color: #ff6b35;
-    }
-
-    .form-group {
-        margin-bottom: 25px;
-    }
-
-    .form-label {
-        display: block;
-        margin-bottom: 8px;
-        color: #ccc;
-        font-weight: 500;
-    }
-
-    .form-input {
-        width: 100%;
-        padding: 12px 15px;
-        background: rgba(0, 0, 0, 0.5);
-        border: 1px solid #444;
-        border-radius: 8px;
-        color: white;
-        font-size: 16px;
-        transition: border-color 0.3s ease;
-    }
-
-    .form-input:focus {
-        outline: none;
-        border-color: #ff6b35;
-        box-shadow: 0 0 10px rgba(255, 107, 53, 0.2);
-    }
-
-    .icon-selector {
-        display: grid;
-        grid-template-columns: repeat(6, 1fr);
-        gap: 10px;
-        margin-top: 10px;
-    }
-
-    .icon-option {
-        width: 60px;
-        height: 60px;
-        border-radius: 50%;
-        border: 2px solid #444;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 1.5em;
-        background: linear-gradient(145deg, #2a2a2a, #1a1a1a);
-    }
-
-    .icon-option:hover {
-        border-color: #ff6b35;
-        transform: scale(1.1);
-    }
-
-    .icon-option.selected {
-        border-color: #ff6b35;
-        box-shadow: 0 0 15px rgba(255, 107, 53, 0.5);
-    }
-
-    .modal-actions {
-        display: flex;
-        gap: 15px;
-        justify-content: center;
-        margin-top: 30px;
-    }
-
-    .btn {
-        padding: 12px 30px;
-        border: none;
-        border-radius: 25px;
-        font-size: 16px;
-        font-weight: 600;
-        cursor: pointer;
-        transition: all 0.3s ease;
-    }
-
-    .btn-primary {
-        background: linear-gradient(45deg, #ff6b35, #f7931e);
-        color: white;
-    }
-
-    .btn-primary:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 5px 15px rgba(255, 107, 53, 0.4);
-    }
-
-    .btn-secondary {
-        background: #333;
-        color: #ccc;
-        border: 1px solid #555;
-    }
-
-    .btn-secondary:hover {
-        background: #444;
-        color: white;
-    }
-
-    /* チャット画面 */
-    .chat-screen {
-        height: 100vh;
-        display: none;
-        flex-direction: column;
-        background: linear-gradient(135deg, #1a1a1a 0%, #000 100%);
-    }
-
-    .chat-screen.active {
-        display: flex;
-    }
-
-    .chat-header {
-        background: rgba(10, 10, 10, 0.9);
-        border-bottom: 1px solid #333;
-        padding: 15px 20px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        backdrop-filter: blur(10px);
-    }
-
-    .room-info h2 {
-        color: #ff6b35;
-        font-size: 1.4em;
-        margin-bottom: 5px;
-    }
-
-    .room-info p {
-        color: #888;
-        font-size: 0.9em;
-    }
-
-    .chat-actions {
-        display: flex;
-        gap: 10px;
-    }
-
-    .action-btn {
-        padding: 8px 15px;
-        background: rgba(255, 107, 53, 0.1);
-        border: 1px solid #ff6b35;
-        border-radius: 15px;
-        color: #ff6b35;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        font-size: 0.9em;
-    }
-
-    .action-btn:hover {
-        background: rgba(255, 107, 53, 0.2);
-    }
-
-    .chat-messages {
-        flex: 1;
-        padding: 20px;
-        overflow-y: auto;
-        background: 
-            radial-gradient(circle at 10% 20%, rgba(255, 107, 53, 0.05) 0%, transparent 50%),
-            radial-gradient(circle at 90% 80%, rgba(247, 147, 30, 0.05) 0%, transparent 50%);
-    }
-
-    .message {
-        margin-bottom: 15px;
-        padding: 12px 15px;
-        border-radius: 15px;
-        background: rgba(20, 20, 20, 0.6);
-        border-left: 3px solid #333;
-        animation: messageSlideIn 0.3s ease-out;
-    }
-
-    .message.system {
-        background: rgba(255, 107, 53, 0.1);
-        border-left-color: #ff6b35;
-        text-align: center;
-        font-style: italic;
-        color: #ff6b35;
-    }
-
-    .message.bot {
-        background: rgba(247, 147, 30, 0.1);
-        border-left-color: #f7931e;
-    }
-
-    @keyframes messageSlideIn {
-        from {
-            opacity: 0;
-            transform: translateY(10px);
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
-        to {
-            opacity: 1;
-            transform: translateY(0);
+
+        body {
+            font-family: 'Noto Sans JP', sans-serif;
+            background: #0a0a0a;
+            color: #ffffff;
+            overflow-x: hidden;
         }
-    }
 
-    .message-header {
-        display: flex;
-        align-items: center;
-        margin-bottom: 8px;
-        gap: 10px;
-    }
+        /* スプラッシュスクリーン */
+        .splash-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: linear-gradient(180deg, #1a1a1a 0%, #000 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            transition: transform 1.5s cubic-bezier(0.7, 0, 0.3, 1);
+        }
 
-    .message-avatar {
-        width: 32px;
-        height: 32px;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background: linear-gradient(145deg, #333, #222);
-        font-size: 1.2em;
-    }
+        .splash-screen.hidden {
+            transform: translateY(100vh);
+        }
 
-    .message-author {
-        font-weight: 600;
-        color: #ff6b35;
-    }
+        .manhole-cover {
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle, #444 0%, #222 50%, #111 100%);
+            border-radius: 50%;
+            position: relative;
+            margin-bottom: 40px;
+            box-shadow: 
+                inset 0 0 50px rgba(0,0,0,0.8),
+                0 10px 30px rgba(0,0,0,0.5);
+        }
 
-    .message-time {
-        font-size: 0.8em;
-        color: #666;
-        margin-left: auto;
-    }
+        .manhole-cover::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 160px;
+            height: 160px;
+            background: repeating-conic-gradient(
+                from 0deg at 50% 50%,
+                #333 0deg 30deg,
+                #222 30deg 60deg
+            );
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+        }
 
-    .message-content {
-        color: #ddd;
-        line-height: 1.4;
-    }
+        .manhole-cover::after {
+            content: 'HOLE';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 24px;
+            font-weight: 700;
+            letter-spacing: 4px;
+            color: #666;
+            text-shadow: 0 0 10px rgba(255,255,255,0.1);
+        }
 
-    .chat-input {
-        background: rgba(10, 10, 10, 0.9);
-        border-top: 1px solid #333;
-        padding: 20px;
-        display: flex;
-        gap: 15px;
-        align-items: flex-end;
-    }
+        .enter-button {
+            padding: 15px 40px;
+            background: linear-gradient(45deg, #ff6b35, #f7931e);
+            border: none;
+            border-radius: 30px;
+            color: white;
+            font-size: 18px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 20px rgba(255, 107, 53, 0.3);
+        }
 
-    .message-input {
-        flex: 1;
-        background: rgba(30, 30, 30, 0.8);
-        border: 1px solid #444;
-        border-radius: 20px;
-        padding: 12px 20px;
-        color: white;
-        resize: none;
-        max-height: 100px;
-        font-family: inherit;
-        font-size: 14px;
-    }
+        .enter-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(255, 107, 53, 0.5);
+        }
 
-    .message-input:focus {
-        outline: none;
-        border-color: #ff6b35;
-    }
+        .enter-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
 
-    .send-btn {
-        background: linear-gradient(45deg, #ff6b35, #f7931e);
-        border: none;
-        border-radius: 50%;
-        width: 45px;
-        height: 45px;
-        color: white;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 1.2em;
-        transition: all 0.3s ease;
-    }
+        .enter-button:hover::before {
+            left: 100%;
+        }
 
-    .send-btn:hover {
-        transform: scale(1.1);
-    }
+        /* ユーザーカウンター */
+        .user-counter {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 10px 20px;
+            border-radius: 20px;
+            border: 1px solid #333;
+            font-size: 14px;
+            color: #ff6b35;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+        }
 
-    .send-btn:disabled {
-        background: #333;
-        cursor: not-allowed;
-        transform: none;
-    }
+        /* メインコンテンツ */
+        .main-content {
+            min-height: 100vh;
+            display: none;
+        }
 
-    /* レスポンシブ */
-    @media (max-width: 768px) {
+        .main-content.active {
+            display: block;
+        }
+
+        /* ルーム選択画面 */
+        .room-selection {
+            min-height: 100vh;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(255, 107, 53, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(247, 147, 30, 0.1) 0%, transparent 50%),
+                linear-gradient(180deg, #111 0%, #000 100%);
+            padding: 40px 20px;
+        }
+
+        .underground-plaza {
+            max-width: 1200px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
         .plaza-title {
-            font-size: 2em;
+            font-size: 3em;
+            font-weight: 300;
+            margin-bottom: 20px;
+            background: linear-gradient(45deg, #ff6b35, #f7931e);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 30px rgba(255, 107, 53, 0.3);
         }
-        
+
+        .plaza-subtitle {
+            font-size: 1.2em;
+            color: #888;
+            margin-bottom: 60px;
+        }
+
         .room-grid {
-            grid-template-columns: 1fr;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 60px;
         }
-        
+
+        .room-card {
+            background: rgba(20, 20, 20, 0.8);
+            border: 1px solid #333;
+            border-radius: 15px;
+            padding: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .room-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #ff6b35, #f7931e);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .room-card:hover {
+            transform: translateY(-5px);
+            border-color: #ff6b35;
+            box-shadow: 0 10px 30px rgba(255, 107, 53, 0.2);
+        }
+
+        .room-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .neon-sign {
+            font-size: 1.8em;
+            font-weight: 700;
+            color: #ff6b35;
+            text-shadow: 
+                0 0 5px #ff6b35,
+                0 0 10px #ff6b35,
+                0 0 15px #ff6b35;
+            animation: neonFlicker 2s infinite alternate;
+            margin-bottom: 15px;
+        }
+
+        @keyframes neonFlicker {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.8; }
+        }
+
+        .room-description {
+            color: #aaa;
+            font-size: 0.9em;
+            margin-bottom: 15px;
+        }
+
+        .room-status {
+            color: #666;
+            font-size: 0.8em;
+        }
+
+        .create-room-btn {
+            background: linear-gradient(45deg, #333, #555);
+            border: 2px dashed #666;
+            border-radius: 15px;
+            padding: 40px 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 200px;
+        }
+
+        .create-room-btn:hover {
+            border-color: #ff6b35;
+            background: linear-gradient(45deg, #444, #666);
+        }
+
+        .create-room-btn .icon {
+            font-size: 3em;
+            margin-bottom: 15px;
+            color: #666;
+        }
+
+        .create-room-btn:hover .icon {
+            color: #ff6b35;
+        }
+
+        /* プロフィール設定モーダル */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.8);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
         .modal {
+            background: linear-gradient(145deg, #1a1a1a, #2a2a2a);
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 500px;
+            width: 90%;
+            border: 1px solid #333;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-title {
+            font-size: 1.8em;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 30px;
+            color: #ff6b35;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            color: #ccc;
+            font-weight: 500;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 12px 15px;
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid #444;
+            border-radius: 8px;
+            color: white;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #ff6b35;
+            box-shadow: 0 0 10px rgba(255, 107, 53, 0.2);
+        }
+
+        .icon-selector {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .icon-option {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            border: 2px solid #444;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5em;
+            background: linear-gradient(145deg, #2a2a2a, #1a1a1a);
+        }
+
+        .icon-option:hover {
+            border-color: #ff6b35;
+            transform: scale(1.1);
+        }
+
+        .icon-option.selected {
+            border-color: #ff6b35;
+            box-shadow: 0 0 15px rgba(255, 107, 53, 0.5);
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 30px;
+        }
+
+        .btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: linear-gradient(45deg, #ff6b35, #f7931e);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 107, 53, 0.4);
+        }
+
+        .btn-secondary {
+            background: #333;
+            color: #ccc;
+            border: 1px solid #555;
+        }
+
+        .btn-secondary:hover {
+            background: #444;
+            color: white;
+        }
+
+        /* チャット画面 */
+        .chat-screen {
+            height: 100vh;
+            display: none;
+            flex-direction: column;
+            background: linear-gradient(135deg, #1a1a1a 0%, #000 100%);
+        }
+
+        .chat-screen.active {
+            display: flex;
+        }
+
+        .chat-header {
+            background: rgba(10, 10, 10, 0.9);
+            border-bottom: 1px solid #333;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            backdrop-filter: blur(10px);
+        }
+
+        .room-info h2 {
+            color: #ff6b35;
+            font-size: 1.4em;
+            margin-bottom: 5px;
+        }
+
+        .room-info p {
+            color: #888;
+            font-size: 0.9em;
+        }
+
+        .chat-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .action-btn {
+            padding: 8px 15px;
+            background: rgba(255, 107, 53, 0.1);
+            border: 1px solid #ff6b35;
+            border-radius: 15px;
+            color: #ff6b35;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9em;
+        }
+
+        .action-btn:hover {
+            background: rgba(255, 107, 53, 0.2);
+        }
+
+        .chat-messages {
+            flex: 1;
             padding: 20px;
-            margin: 20px;
+            overflow-y: auto;
+            background: 
+                radial-gradient(circle at 10% 20%, rgba(255, 107, 53, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 90% 80%, rgba(247, 147, 30, 0.05) 0%, transparent 50%);
+        }
+
+        .message {
+            margin-bottom: 15px;
+            padding: 12px 15px;
+            border-radius: 15px;
+            background: rgba(20, 20, 20, 0.6);
+            border-left: 3px solid #333;
+            animation: messageSlideIn 0.3s ease-out;
+        }
+
+        .message.system {
+            background: rgba(255, 107, 53, 0.1);
+            border-left-color: #ff6b35;
+            text-align: center;
+            font-style: italic;
+            color: #ff6b35;
+        }
+
+        .message.bot {
+            background: rgba(247, 147, 30, 0.1);
+            border-left-color: #f7931e;
+        }
+
+        @keyframes messageSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .message-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+            gap: 10px;
+        }
+
+        .message-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(145deg, #333, #222);
+            font-size: 1.2em;
+        }
+
+        .message-author {
+            font-weight: 600;
+            color: #ff6b35;
+        }
+
+        .message-time {
+            font-size: 0.8em;
+            color: #666;
+            margin-left: auto;
+        }
+
+        .message-content {
+            color: #ddd;
+            line-height: 1.4;
+        }
+
+        .chat-input {
+            background: rgba(10, 10, 10, 0.9);
+            border-top: 1px solid #333;
+            padding: 20px;
+            display: flex;
+            gap: 15px;
+            align-items: flex-end;
+        }
+
+        .message-input {
+            flex: 1;
+            background: rgba(30, 30, 30, 0.8);
+            border: 1px solid #444;
+            border-radius: 20px;
+            padding: 12px 20px;
+            color: white;
+            resize: none;
+            max-height: 100px;
+            font-family: inherit;
+            font-size: 14px;
+        }
+
+        .message-input:focus {
+            outline: none;
+            border-color: #ff6b35;
+        }
+
+        .send-btn {
+            background: linear-gradient(45deg, #ff6b35, #f7931e);
+            border: none;
+            border-radius: 50%;
+            width: 45px;
+            height: 45px;
+            color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2em;
+            transition: all 0.3s ease;
+        }
+
+        .send-btn:hover {
+            transform: scale(1.1);
+        }
+
+        .send-btn:disabled {
+            background: #333;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* レスポンシブ */
+        @media (max-width: 768px) {
+            .plaza-title {
+                font-size: 2em;
+            }
+            
+            .room-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .modal {
+                padding: 20px;
+                margin: 20px;
+            }
+            
+            .icon-selector {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+
+        /* トースト通知 */
+        .toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 107, 53, 0.9);
+            color: white;
+            padding: 15px 20px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+            z-index: 3000;
+        }
+
+        .toast.warning {
+            background: rgba(247, 147, 30, 0.9);
         }
         
-        .icon-selector {
-            grid-template-columns: repeat(4, 1fr);
+        .toast.error {
+            background: rgba(231, 76, 60, 0.9);
         }
-    }
-
-    /* トースト通知 */
-    .toast {
-        position: fixed;
-        top: 20px;
-        right: 20px;
-        background: rgba(255, 107, 53, 0.9);
-        color: white;
-        padding: 15px 20px;
-        border-radius: 10px;
-        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-        transform: translateX(100%);
-        transition: transform 0.3s ease;
-        z-index: 3000;
-    }
-
-    .toast.show {
-        transform: translateX(0);
-    }
-</style>
-```
-
+    </style>
 </head>
 <body>
     <!-- ユーザーカウンター -->
@@ -637,567 +637,855 @@
         現在 <span id="userCount">248</span> 人が徘徊中
     </div>
 
-```
-<!-- スプラッシュスクリーン -->
-<div class="splash-screen" id="splashScreen">
-    <div class="manhole-cover"></div>
-    <button class="enter-button" onclick="enterTheHole()">
-        ENTER THE HOLE
-    </button>
-</div>
-
-<!-- メインコンテンツ -->
-<div class="main-content" id="mainContent">
-    <!-- ルーム選択画面 -->
-    <div class="room-selection" id="roomSelection">
-        <div class="underground-plaza">
-            <h1 class="plaza-title">地下街広場</h1>
-            <p class="plaza-subtitle">薄暗い路地裏で、今夜は誰と出会うだろうか</p>
-            
-            <div class="room-grid" id="roomGrid">
-                <!-- ルーム一覧がここに動的生成される -->
-            </div>
-            
-            <div class="create-room-btn" onclick="showCreateRoomModal()">
-                <div class="icon">+</div>
-                <div>新しい路地裏を作る</div>
-            </div>
-        </div>
+    <!-- スプラッシュスクリーン -->
+    <div class="splash-screen" id="splashScreen">
+        <div class="manhole-cover"></div>
+        <button class="enter-button" onclick="enterTheHole()">
+            ENTER THE HOLE
+        </button>
     </div>
 
-    <!-- チャット画面 -->
-    <div class="chat-screen" id="chatScreen">
-        <div class="chat-header">
-            <div class="room-info">
-                <h2 id="currentRoomName">猥雑な麻雀クラブ</h2>
-                <p>この場所のURL: <span id="currentRoomUrl"></span></p>
+    <!-- メインコンテンツ -->
+    <div class="main-content" id="mainContent">
+        <!-- ルーム選択画面 -->
+        <div class="room-selection" id="roomSelection">
+            <div class="underground-plaza">
+                <h1 class="plaza-title">地下街広場</h1>
+                <p class="plaza-subtitle">薄暗い路地裏で、今夜は誰と出会うだろうか</p>
+                
+                <div class="room-grid" id="roomGrid">
+                    <!-- ルーム一覧がここに動的生成される -->
+                </div>
+                
+                <div class="create-room-btn" onclick="showCreateRoomModal()">
+                    <div class="icon">+</div>
+                    <div>新しい路地裏を作る</div>
+                </div>
             </div>
-            <div class="chat-actions">
-                <button class="action-btn" onclick="copyRoomUrl()">📋 この場所を教える</button>
-                <button class="action-btn" onclick="exportLog()">💾 記憶を書き出す</button>
-                <button class="action-btn" onclick="leaveRoom()">🚪 立ち去る</button>
-            </div>
         </div>
-        
-        <div class="chat-messages" id="chatMessages">
-            <!-- メッセージがここに表示される -->
-        </div>
-        
-        <div class="chat-input">
-            <textarea 
-                id="messageInput" 
-                class="message-input" 
-                placeholder="この夜に何を囁こうか..."
-                rows="1"></textarea>
-            <button class="send-btn" id="sendBtn" onclick="sendMessage()">
-                ➤
-            </button>
-        </div>
-    </div>
-</div>
 
-<!-- プロフィール設定モーダル -->
-<div class="modal-overlay" id="profileModal">
-    <div class="modal">
-        <h2 class="modal-title">地下世界での仮の姿</h2>
-        <form id="profileForm">
-            <div class="form-group">
-                <label class="form-label">ニックネーム（最大15文字）</label>
-                <input 
-                    type="text" 
-                    id="nicknameInput" 
-                    class="form-input" 
-                    maxlength="15" 
-                    placeholder="名無しの客">
-            </div>
-            
-            <div class="form-group">
-                <label class="form-label">アイコンを選択</label>
-                <div class="icon-selector" id="iconSelector">
-                    <!-- アイコンオプションが動的生成される -->
+        <!-- チャット画面 -->
+        <div class="chat-screen" id="chatScreen">
+            <div class="chat-header">
+                <div class="room-info">
+                    <h2 id="currentRoomName">猥雑な麻雀クラブ</h2>
+                    <p>この場所のURL: <span id="currentRoomUrl"></span></p>
+                </div>
+                <div class="chat-actions">
+                    <button class="action-btn" onclick="copyRoomUrl()">📋 この場所を教える</button>
+                    <button class="action-btn" onclick="exportLog()">💾 記憶を書き出す</button>
+                    <button class="action-btn" onclick="leaveRoom()">🚪 立ち去る</button>
                 </div>
             </div>
             
-            <div class="modal-actions">
-                <button type="button" class="btn btn-secondary" onclick="closeProfileModal()">
-                    キャンセル
-                </button>
-                <button type="submit" class="btn btn-primary">
-                    この姿で潜る
-                </button>
-            </div>
-        </form>
-    </div>
-</div>
-
-<!-- ルーム作成モーダル -->
-<div class="modal-overlay" id="createRoomModal">
-    <div class="modal">
-        <h2 class="modal-title">新しい路地裏を作る</h2>
-        <form id="createRoomForm">
-            <div class="form-group">
-                <label class="form-label">場所の名前</label>
-                <input 
-                    type="text" 
-                    id="roomNameInput" 
-                    class="form-input" 
-                    maxlength="30" 
-                    placeholder="猥雑な麻雀クラブ">
+            <div class="chat-messages" id="chatMessages">
+                <!-- メッセージがここに表示される -->
             </div>
             
-            <div class="modal-actions">
-                <button type="button" class="btn btn-secondary" onclick="closeCreateRoomModal()">
-                    キャンセル
-                </button>
-                <button type="submit" class="btn btn-primary">
-                    路地裏を開く
+            <div class="chat-input">
+                <textarea 
+                    id="messageInput" 
+                    class="message-input" 
+                    placeholder="この夜に何を囁こうか..."
+                    rows="1"></textarea>
+                <button class="send-btn" id="sendBtn" onclick="sendMessage()">
+                    ➤
                 </button>
             </div>
-        </form>
+        </div>
     </div>
-</div>
 
-<script>
-    // アプリケーション状態
-    let currentUser = null;
-    let currentRoom = null;
-    let messages = [];
-    let rooms = [];
+    <!-- プロフィール設定モーダル -->
+    <div class="modal-overlay" id="profileModal">
+        <div class="modal">
+            <h2 class="modal-title">地下世界での仮の姿</h2>
+            <form id="profileForm">
+                <div class="form-group">
+                    <label class="form-label">ニックネーム（最大15文字）</label>
+                    <input 
+                        type="text" 
+                        id="nicknameInput" 
+                        class="form-input" 
+                        maxlength="15" 
+                        placeholder="名無しの客">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">アイコンを選択</label>
+                    <div class="icon-selector" id="iconSelector">
+                        <!-- アイコンオプションが動的生成される -->
+                    </div>
+                </div>
+                
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-secondary" onclick="closeProfileModal()">
+                        キャンセル
+                    </button>
+                    <button type="submit" class="btn btn-primary">
+                        この姿で潜る
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
 
-    // アイコンデータ（実際のプロジェクトではassets/icons/から読み込み）
-    const iconOptions = [
-        '🎭', '👤', '🕴️', '🦹', '🧙', '👻',
-        '🐺', '🦊', '🐱', '🦝', '🦉', '🐍',
-        '💀', '🎪', '🃏', '🎨', '📚', '⚡'
-    ];
+    <!-- ルーム作成モーダル -->
+    <div class="modal-overlay" id="createRoomModal">
+        <div class="modal">
+            <h2 class="modal-title">新しい路地裏を作る</h2>
+            <form id="createRoomForm">
+                <div class="form-group">
+                    <label class="form-label">場所の名前</label>
+                    <input 
+                        type="text" 
+                        id="roomNameInput" 
+                        class="form-input" 
+                        maxlength="30" 
+                        placeholder="猥雑な麻雀クラブ">
+                </div>
+                
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-secondary" onclick="closeCreateRoomModal()">
+                        キャンセル
+                    </button>
+                    <button type="submit" class="btn btn-primary">
+                        路地裏を開く
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
 
-    // ページ読み込み時の初期化
-    document.addEventListener('DOMContentLoaded', function() {
-        initializeApp();
-    });
+    <!-- Firebase SDK -->
+    <script type="module">
+        // Firebase設定とインポート
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+        import { 
+            getFirestore, 
+            collection, 
+            doc, 
+            addDoc, 
+            onSnapshot, 
+            query, 
+            orderBy, 
+            serverTimestamp,
+            deleteDoc,
+            getDocs
+        } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+        import { 
+            getDatabase, 
+            ref, 
+            set, 
+            remove, 
+            onDisconnect, 
+            onValue,
+            off 
+        } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js';
 
-    function initializeApp() {
-        // ユーザーカウンターのアニメーション開始
-        startUserCounterAnimation();
-        
-        // アイコンセレクターの生成
-        generateIconSelector();
-        
-        // イベントリスナーの設定
-        setupEventListeners();
-        
-        // URLパラメータからルームIDをチェック
-        checkRoomFromUrl();
-    }
-
-    function startUserCounterAnimation() {
-        const counter = document.getElementById('userCount');
-        const baseCount = 240 + Math.floor(Math.random() * 40); // 240-280
-        counter.textContent = baseCount;
-        
-        setInterval(() => {
-            const currentCount = parseInt(counter.textContent);
-            const change = Math.floor(Math.random() * 11) - 5; // -5 to +5
-            const newCount = Math.max(200, Math.min(300, currentCount + change));
-            counter.textContent = newCount;
-        }, Math.random() * 5000 + 5000); // 5-10秒間隔
-    }
-
-    function generateIconSelector() {
-        const selector = document.getElementById('iconSelector');
-        iconOptions.forEach((icon, index) => {
-            const option = document.createElement('div');
-            option.className = `icon-option ${index === 0 ? 'selected' : ''}`;
-            option.textContent = icon;
-            option.dataset.icon = icon;
-            option.onclick = () => selectIcon(option);
-            selector.appendChild(option);
-        });
-    }
-
-    function selectIcon(selectedOption) {
-        document.querySelectorAll('.icon-option').forEach(option => {
-            option.classList.remove('selected');
-        });
-        selectedOption.classList.add('selected');
-    }
-
-    function setupEventListeners() {
-        // プロフィールフォーム
-        document.getElementById('profileForm').addEventListener('submit', handleProfileSubmit);
-        
-        // ルーム作成フォーム
-        document.getElementById('createRoomForm').addEventListener('submit', handleCreateRoom);
-        
-        // メッセージ入力
-        const messageInput = document.getElementById('messageInput');
-        messageInput.addEventListener('keydown', function(e) {
-            if (e.key === 'Enter' && !e.shiftKey) {
-                e.preventDefault();
-                sendMessage();
-            }
-        });
-        
-        messageInput.addEventListener('input', function() {
-            const sendBtn = document.getElementById('sendBtn');
-            sendBtn.disabled = !this.value.trim();
-        });
-    }
-
-    function checkRoomFromUrl() {
-        const path = window.location.pathname;
-        const roomMatch = path.match(/\/hole\/(.+)$/);
-        if (roomMatch) {
-            const roomId = roomMatch[1];
-            // ルーム直接アクセス - プロフィール設定を要求
-            showProfileModal();
-        }
-    }
-
-    // スプラッシュスクリーン関連
-    function enterTheHole() {
-        const splash = document.getElementById('splashScreen');
-        const main = document.getElementById('mainContent');
-        
-        splash.classList.add('hidden');
-        setTimeout(() => {
-            splash.style.display = 'none';
-            main.classList.add('active');
-            loadRooms();
-        }, 1500);
-    }
-
-    // プロフィール設定関連
-    function showProfileModal() {
-        document.getElementById('profileModal').classList.add('active');
-    }
-
-    function closeProfileModal() {
-        document.getElementById('profileModal').classList.remove('active');
-    }
-
-    function handleProfileSubmit(e) {
-        e.preventDefault();
-        
-        const nickname = document.getElementById('nicknameInput').value.trim();
-        const selectedIcon = document.querySelector('.icon-option.selected').dataset.icon;
-        
-        if (!nickname) {
-            showToast('ニックネームを入力してください', 'error');
-            return;
-        }
-        
-        // ユーザープロフィールをセッションストレージに保存
-        currentUser = {
-            id: generateUserId(),
-            nickname: nickname,
-            icon: selectedIcon,
-            joinTime: Date.now()
+        // Firebase設定（ここに実際の設定値を入力）
+        const firebaseConfig = {
+            // TODO: Firebase Console から取得した設定値を入力
+            apiKey: "AIzaSyB-IdlL_BG1yxeO0LRpUS8L3aMgLIaqmAo",
+            authDomain: "hole-66226.firebaseapp.com",
+            databaseURL: "https://hole-66226-default-rtdb.firebaseio.com",
+            projectId: "hole-66226",
+            storageBucket: "hole-66226.appspot.com",
+            messagingSenderId: "122901664767",
+            appId: "1:122901664767:web:9705c7bbe94eece1184dca"
         };
-        
-        sessionStorage.setItem('holeUserProfile', JSON.stringify(currentUser));
-        closeProfileModal();
-        
-        // URLからルームIDがある場合は直接入室
-        const path = window.location.pathname;
-        const roomMatch = path.match(/\/hole\/(.+)$/);
-        if (roomMatch) {
-            enterRoom(roomMatch[1], '直接アクセス');
-        }
-        
-        showToast(`${nickname}として地下世界に潜りました`);
-    }
 
-    // ルーム関連
-    function loadRooms() {
-        // デモ用のダミールーム（実際はFirestoreから取得）
-        rooms = [
-            {
-                id: 'room1',
-                name: '猥雑な麻雀クラブ',
-                description: '煙草の煙が立ち込める奥の間',
-                activeUsers: 3
-            },
-            {
-                id: 'room2', 
-                name: '錆びついたジャズバー',
-                description: '古いピアノの音色が響く',
-                activeUsers: 7
-            },
-            {
-                id: 'room3',
-                name: '地下書店の奥',
-                description: '禁書が並ぶ秘密の部屋',
-                activeUsers: 2
-            }
+        // Firebase初期化
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const rtdb = getDatabase(app);
+
+        // グローバルにFirebase機能を公開
+        window.firebase = {
+            db,
+            rtdb,
+            collection,
+            doc,
+            addDoc,
+            onSnapshot,
+            query,
+            orderBy,
+            serverTimestamp,
+            deleteDoc,
+            getDocs,
+            ref,
+            set,
+            remove,
+            onDisconnect,
+            onValue,
+            off
+        };
+    </script>
+
+    <script>
+        // アプリケーション状態
+        let currentUser = null;
+        let currentRoom = null;
+        let messages = [];
+        let rooms = [];
+        let roomListener = null;
+        let messagesListener = null;
+        let statusRef = null;
+
+        // アイコンデータ（実際のプロジェクトではassets/icons/から読み込み）
+        const iconOptions = [
+            '🎭', '👤', '🕴️', '🦹', '🧙', '👻',
+            '🐺', '🦊', '🐱', '🦝', '🦉', '🐍',
+            '💀', '🎪', '🃏', '🎨', '📚', '⚡'
         ];
-        
-        renderRooms();
-    }
 
-    function renderRooms() {
-        const grid = document.getElementById('roomGrid');
-        grid.innerHTML = '';
-        
-        rooms.forEach(room => {
-            const roomCard = document.createElement('div');
-            roomCard.className = 'room-card';
-            roomCard.onclick = () => handleRoomEntry(room);
-            
-            roomCard.innerHTML = `
-                <div class="neon-sign">${room.name}</div>
-                <div class="room-description">${room.description}</div>
-                <div class="room-status">${room.activeUsers}人が佇んでいる</div>
-            `;
-            
-            grid.appendChild(roomCard);
+        // ページ読み込み時の初期化
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeApp();
         });
-    }
 
-    function handleRoomEntry(room) {
-        if (!currentUser) {
-            showProfileModal();
-            // プロフィール設定後に入室するためのデータを保存
-            sessionStorage.setItem('pendingRoom', JSON.stringify(room));
-            return;
+        function initializeApp() {
+            // ユーザーカウンターのアニメーション開始
+            startUserCounterAnimation();
+            
+            // アイコンセレクターの生成
+            generateIconSelector();
+            
+            // イベントリスナーの設定
+            setupEventListeners();
+            
+            // URLパラメータからルームIDをチェック
+            checkRoomFromUrl();
         }
-        
-        enterRoom(room.id, room.name);
-    }
 
-    function enterRoom(roomId, roomName) {
-        currentRoom = { id: roomId, name: roomName };
-        
-        // URL更新
-        history.pushState({}, '', `/hole/${roomId}`);
-        
-        // UI切り替え
-        document.getElementById('roomSelection').style.display = 'none';
-        document.getElementById('chatScreen').classList.add('active');
-        
-        // ルーム情報表示
-        document.getElementById('currentRoomName').textContent = roomName;
-        document.getElementById('currentRoomUrl').textContent = window.location.href;
-        
-        // システムメッセージ追加
-        addSystemMessage(`${currentUser.nickname} が足音を立てて入ってきた…`);
-        
-        // デモ用メッセージ追加
-        addDemoMessages();
-    }
-
-    function showCreateRoomModal() {
-        if (!currentUser) {
-            showProfileModal();
-            return;
+        function startUserCounterAnimation() {
+            const counter = document.getElementById('userCount');
+            const baseCount = 240 + Math.floor(Math.random() * 40); // 240-280
+            counter.textContent = baseCount;
+            
+            setInterval(() => {
+                const currentCount = parseInt(counter.textContent);
+                const change = Math.floor(Math.random() * 11) - 5; // -5 to +5
+                const newCount = Math.max(200, Math.min(300, currentCount + change));
+                counter.textContent = newCount;
+            }, Math.random() * 5000 + 5000); // 5-10秒間隔
         }
-        document.getElementById('createRoomModal').classList.add('active');
-    }
 
-    function closeCreateRoomModal() {
-        document.getElementById('createRoomModal').classList.remove('active');
-    }
-
-    function handleCreateRoom(e) {
-        e.preventDefault();
-        
-        const roomName = document.getElementById('roomNameInput').value.trim();
-        if (!roomName) {
-            showToast('場所の名前を入力してください', 'error');
-            return;
+        function generateIconSelector() {
+            const selector = document.getElementById('iconSelector');
+            iconOptions.forEach((icon, index) => {
+                const option = document.createElement('div');
+                option.className = `icon-option ${index === 0 ? 'selected' : ''}`;
+                option.textContent = icon;
+                option.dataset.icon = icon;
+                option.onclick = () => selectIcon(option);
+                selector.appendChild(option);
+            });
         }
-        
-        // 新しいルーム作成（実際はFirestoreに保存）
-        const newRoom = {
-            id: generateRoomId(),
-            name: roomName,
-            createdAt: Date.now(),
-            createdBy: currentUser.id
-        };
-        
-        rooms.push({
-            ...newRoom,
-            description: '新しく開かれた場所',
-            activeUsers: 1
-        });
-        
-        closeCreateRoomModal();
-        enterRoom(newRoom.id, newRoom.name);
-    }
 
-    // メッセージ関連
-    function sendMessage() {
-        const input = document.getElementById('messageInput');
-        const text = input.value.trim();
-        
-        if (!text || !currentUser) return;
-        
-        const message = {
-            id: generateMessageId(),
-            text: text,
-            authorName: currentUser.nickname,
-            authorIcon: currentUser.icon,
-            timestamp: Date.now(),
-            type: 'user'
-        };
-        
-        addMessage(message);
-        input.value = '';
-        document.getElementById('sendBtn').disabled = true;
-    }
+        function selectIcon(selectedOption) {
+            document.querySelectorAll('.icon-option').forEach(option => {
+                option.classList.remove('selected');
+            });
+            selectedOption.classList.add('selected');
+        }
 
-    function addMessage(message) {
-        messages.push(message);
-        renderMessage(message);
-    }
-
-    function addSystemMessage(text) {
-        const message = {
-            id: generateMessageId(),
-            text: text,
-            timestamp: Date.now(),
-            type: 'system'
-        };
-        addMessage(message);
-    }
-
-    function renderMessage(message) {
-        const container = document.getElementById('chatMessages');
-        const messageEl = document.createElement('div');
-        messageEl.className = `message ${message.type}`;
-        
-        if (message.type === 'system') {
-            messageEl.innerHTML = `
-                <div class="message-content">${escapeHtml(message.text)}</div>
-            `;
-        } else {
-            const time = new Date(message.timestamp).toLocaleTimeString('ja-JP', {
-                hour: '2-digit',
-                minute: '2-digit'
+        function setupEventListeners() {
+            // プロフィールフォーム
+            document.getElementById('profileForm').addEventListener('submit', handleProfileSubmit);
+            
+            // ルーム作成フォーム
+            document.getElementById('createRoomForm').addEventListener('submit', handleCreateRoom);
+            
+            // メッセージ入力
+            const messageInput = document.getElementById('messageInput');
+            messageInput.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    sendMessage();
+                }
             });
             
-            messageEl.innerHTML = `
-                <div class="message-header">
-                    <div class="message-avatar">${message.authorIcon}</div>
-                    <div class="message-author">${escapeHtml(message.authorName)}</div>
-                    <div class="message-time">${time}</div>
-                </div>
-                <div class="message-content">${escapeHtml(message.text)}</div>
-            `;
+            messageInput.addEventListener('input', function() {
+                const sendBtn = document.getElementById('sendBtn');
+                sendBtn.disabled = !this.value.trim();
+            });
         }
-        
-        container.appendChild(messageEl);
-        container.scrollTop = container.scrollHeight;
-    }
 
-    // ユーティリティ関数
-    function generateUserId() {
-        return 'user_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
-    }
-
-    function generateRoomId() {
-        return 'room_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
-    }
-
-    function generateMessageId() {
-        return 'msg_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
-    }
-
-    function escapeHtml(text) {
-        const div = document.createElement('div');
-        div.textContent = text;
-        return div.innerHTML;
-    }
-
-    function showToast(message, type = 'success') {
-        const toast = document.createElement('div');
-        toast.className = 'toast';
-        toast.textContent = message;
-        document.body.appendChild(toast);
-        
-        setTimeout(() => toast.classList.add('show'), 100);
-        setTimeout(() => {
-            toast.classList.remove('show');
-            setTimeout(() => document.body.removeChild(toast), 300);
-        }, 2000);
-    }
-
-    // アクション関数
-    function copyRoomUrl() {
-        navigator.clipboard.writeText(window.location.href).then(() => {
-            showToast('URLをコピーしました');
-        });
-    }
-
-    function exportLog() {
-        const logText = messages.map(msg => {
-            if (msg.type === 'system') {
-                return `[${new Date(msg.timestamp).toLocaleString()}] ${msg.text}`;
-            } else {
-                return `[${new Date(msg.timestamp).toLocaleString()}] ${msg.authorName}: ${msg.text}`;
+        function checkRoomFromUrl() {
+            const path = window.location.pathname;
+            const roomMatch = path.match(/\/hole\/(.+)$/);
+            if (roomMatch) {
+                const roomId = roomMatch[1];
+                // ルーム直接アクセス - プロフィール設定を要求
+                showProfileModal();
             }
-        }).join('\n');
-        
-        const blob = new Blob([logText], { type: 'text/plain' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `hole_log_${Date.now()}.txt`;
-        a.click();
-        URL.revokeObjectURL(url);
-        
-        showToast('記憶を書き出しました');
-    }
+        }
 
-    function leaveRoom() {
-        if (currentRoom && currentUser) {
-            addSystemMessage(`${currentUser.nickname} が闇に消えていった…`);
+        // スプラッシュスクリーン関連
+        function enterTheHole() {
+            const splash = document.getElementById('splashScreen');
+            const main = document.getElementById('mainContent');
+            
+            splash.classList.add('hidden');
+            setTimeout(() => {
+                splash.style.display = 'none';
+                main.classList.add('active');
+                loadRooms();
+            }, 1500);
+        }
+
+        // プロフィール設定関連
+        function showProfileModal() {
+            document.getElementById('profileModal').classList.add('active');
+        }
+
+        function closeProfileModal() {
+            document.getElementById('profileModal').classList.remove('active');
+        }
+
+        function handleProfileSubmit(e) {
+            e.preventDefault();
+            
+            const nickname = document.getElementById('nicknameInput').value.trim();
+            const selectedIcon = document.querySelector('.icon-option.selected').dataset.icon;
+            
+            if (!nickname) {
+                showToast('ニックネームを入力してください', 'error');
+                return;
+            }
+            
+            // ユーザープロフィールをセッションストレージに保存
+            currentUser = {
+                id: generateUserId(),
+                nickname: nickname,
+                icon: selectedIcon,
+                joinTime: Date.now()
+            };
+            
+            sessionStorage.setItem('holeUserProfile', JSON.stringify(currentUser));
+            closeProfileModal();
+            
+            // URLからルームIDがある場合は直接入室
+            const path = window.location.pathname;
+            const roomMatch = path.match(/\/hole\/(.+)$/);
+            if (roomMatch) {
+                enterRoom(roomMatch[1], '直接アクセス');
+            }
+            
+            showToast(`${nickname}として地下世界に潜りました`);
+        }
+
+        // ルーム関連
+        async function loadRooms() {
+            try {
+                // Firestoreからルーム一覧を取得
+                const roomsQuery = window.firebase.query(
+                    window.firebase.collection(window.firebase.db, 'rooms'),
+                    window.firebase.orderBy('createdAt', 'desc')
+                );
+                
+                // リアルタイムリスナー設定
+                roomListener = window.firebase.onSnapshot(roomsQuery, (snapshot) => {
+                    rooms = [];
+                    snapshot.forEach((doc) => {
+                        const roomData = doc.data();
+                        rooms.push({
+                            id: doc.id,
+                            name: roomData.roomName,
+                            description: roomData.description || '新しく開かれた場所',
+                            createdAt: roomData.createdAt,
+                            activeUsers: 0 // Realtime Databaseから取得する
+                        });
+                    });
+                    
+                    // アクティブユーザー数を更新
+                    updateActiveUserCounts();
+                    renderRooms();
+                });
+                
+            } catch (error) {
+                console.error('ルーム読み込みエラー:', error);
+                // フォールバック: デモルーム表示
+                loadDemoRooms();
+            }
         }
         
-        // ルーム選択画面に戻る
-        document.getElementById('chatScreen').classList.remove('active');
-        document.getElementById('roomSelection').style.display = 'block';
-        history.pushState({}, '', '/');
-        
-        currentRoom = null;
-        messages = [];
-        document.getElementById('chatMessages').innerHTML = '';
-    }
-
-    // デモ用メッセージ
-    function addDemoMessages() {
-        setTimeout(() => {
-            addMessage({
-                id: generateMessageId(),
-                text: '今夜は冷えるな…',
-                authorName: '名無しの客',
-                authorIcon: '🎭',
-                timestamp: Date.now(),
-                type: 'user'
-            });
-        }, 1000);
-        
-        setTimeout(() => {
-            addMessage({
-                id: generateMessageId(),
-                text: 'この場所も随分と寂れたものだ',
-                authorName: 'バーテンダー',
-                authorIcon: '🍸',
-                timestamp: Date.now(),
-                type: 'bot'
-            });
-        }, 3000);
-    }
-
-    // ページ離脱時の処理
-    window.addEventListener('beforeunload', function() {
-        if (currentRoom && currentUser) {
-            // 実際の実装では Realtime Database から在室状態を削除
-            console.log('User leaving room:', currentRoom.id);
+        function loadDemoRooms() {
+            // Firebase接続失敗時のデモルーム
+            rooms = [
+                {
+                    id: 'demo1',
+                    name: '猥雑な麻雀クラブ',
+                    description: '煙草の煙が立ち込める奥の間（デモ）',
+                    activeUsers: 3
+                },
+                {
+                    id: 'demo2', 
+                    name: '錆びついたジャズバー',
+                    description: '古いピアノの音色が響く（デモ）',
+                    activeUsers: 7
+                }
+            ];
+            renderRooms();
         }
-    });
-</script>
-```
+        
+        async function updateActiveUserCounts() {
+            // 各ルームのアクティブユーザー数をRealtime Databaseから取得
+            rooms.forEach(async (room) => {
+                const statusRef = window.firebase.ref(window.firebase.rtdb, `status`);
+                window.firebase.onValue(statusRef, (snapshot) => {
+                    const allStatus = snapshot.val() || {};
+                    let activeCount = 0;
+                    
+                    // 各ユーザーの状態をチェック
+                    Object.keys(allStatus).forEach(userId => {
+                        const userRooms = allStatus[userId];
+                        if (userRooms && userRooms[room.id]) {
+                            activeCount++;
+                        }
+                    });
+                    
+                    // ルームのアクティブユーザー数を更新
+                    const roomIndex = rooms.findIndex(r => r.id === room.id);
+                    if (roomIndex !== -1) {
+                        rooms[roomIndex].activeUsers = activeCount;
+                        renderRooms();
+                    }
+                });
+            });
+        }
 
+        function renderRooms() {
+            const grid = document.getElementById('roomGrid');
+            grid.innerHTML = '';
+            
+            rooms.forEach(room => {
+                const roomCard = document.createElement('div');
+                roomCard.className = 'room-card';
+                roomCard.onclick = () => handleRoomEntry(room);
+                
+                roomCard.innerHTML = `
+                    <div class="neon-sign">${room.name}</div>
+                    <div class="room-description">${room.description}</div>
+                    <div class="room-status">${room.activeUsers}人が佇んでいる</div>
+                `;
+                
+                grid.appendChild(roomCard);
+            });
+        }
+
+        function handleRoomEntry(room) {
+            if (!currentUser) {
+                showProfileModal();
+                // プロフィール設定後に入室するためのデータを保存
+                sessionStorage.setItem('pendingRoom', JSON.stringify(room));
+                return;
+            }
+            
+            enterRoom(room.id, room.name);
+        }
+
+        async function enterRoom(roomId, roomName) {
+            currentRoom = { id: roomId, name: roomName };
+            
+            // URL更新
+            history.pushState({}, '', `/hole/${roomId}`);
+            
+            // UI切り替え
+            document.getElementById('roomSelection').style.display = 'none';
+            document.getElementById('chatScreen').classList.add('active');
+            
+            // ルーム情報表示
+            document.getElementById('currentRoomName').textContent = roomName;
+            document.getElementById('currentRoomUrl').textContent = window.location.href;
+            
+            // Realtime Databaseで在室状態を設定
+            await setUserOnlineStatus(roomId);
+            
+            // Firestoreからメッセージを読み込み
+            await loadMessages(roomId);
+            
+            // システムメッセージ追加
+            addSystemMessage(`${currentUser.nickname} が足音を立てて入ってきた…`);
+        }
+        
+        async function setUserOnlineStatus(roomId) {
+            try {
+                // ユーザーの在室状態をRealtime Databaseに設定
+                statusRef = window.firebase.ref(
+                    window.firebase.rtdb, 
+                    `status/${currentUser.id}/${roomId}`
+                );
+                
+                // 接続が切れた時の自動削除設定（重要）
+                window.firebase.onDisconnect(statusRef).remove();
+                
+                // オンライン状態を設定
+                await window.firebase.set(statusRef, {
+                    state: 'online',
+                    nickname: currentUser.nickname,
+                    joinedAt: Date.now()
+                });
+                
+                console.log('在室状態を設定しました:', roomId);
+                
+            } catch (error) {
+                console.error('在室状態設定エラー:', error);
+            }
+        }
+        
+        async function loadMessages(roomId) {
+            try {
+                // 既存のリスナーを解除
+                if (messagesListener) {
+                    messagesListener();
+                }
+                
+                // Firestoreからメッセージをリアルタイム取得
+                const messagesQuery = window.firebase.query(
+                    window.firebase.collection(window.firebase.db, 'rooms', roomId, 'messages'),
+                    window.firebase.orderBy('createdAt', 'asc')
+                );
+                
+                messagesListener = window.firebase.onSnapshot(messagesQuery, (snapshot) => {
+                    const chatContainer = document.getElementById('chatMessages');
+                    
+                    snapshot.docChanges().forEach((change) => {
+                        if (change.type === 'added') {
+                            const messageData = change.doc.data();
+                            const message = {
+                                id: change.doc.id,
+                                text: messageData.text,
+                                authorName: messageData.authorName,
+                                authorIcon: messageData.authorIcon,
+                                timestamp: messageData.createdAt ? messageData.createdAt.toMillis() : Date.now(),
+                                type: messageData.type || 'user'
+                            };
+                            
+                            // 重複チェック
+                            if (!messages.find(m => m.id === message.id)) {
+                                messages.push(message);
+                                renderMessage(message);
+                            }
+                        }
+                    });
+                });
+                
+            } catch (error) {
+                console.error('メッセージ読み込みエラー:', error);
+                // フォールバック: デモメッセージ
+                addDemoMessages();
+            }
+        }
+
+        function showCreateRoomModal() {
+            if (!currentUser) {
+                showProfileModal();
+                return;
+            }
+            document.getElementById('createRoomModal').classList.add('active');
+        }
+
+        function closeCreateRoomModal() {
+            document.getElementById('createRoomModal').classList.remove('active');
+        }
+
+        async function handleCreateRoom(e) {
+            e.preventDefault();
+            
+            const roomName = document.getElementById('roomNameInput').value.trim();
+            if (!roomName) {
+                showToast('場所の名前を入力してください', 'error');
+                return;
+            }
+            
+            try {
+                // Firestoreに新しいルームを作成
+                const roomData = {
+                    roomName: roomName,
+                    description: '新しく開かれた場所',
+                    createdAt: window.firebase.serverTimestamp(),
+                    createdBy: currentUser.id,
+                    lastActivity: window.firebase.serverTimestamp()
+                };
+                
+                const docRef = await window.firebase.addDoc(
+                    window.firebase.collection(window.firebase.db, 'rooms'), 
+                    roomData
+                );
+                
+                closeCreateRoomModal();
+                enterRoom(docRef.id, roomName);
+                showToast(`${roomName} を開きました`);
+                
+            } catch (error) {
+                console.error('ルーム作成エラー:', error);
+                showToast('ルームの作成に失敗しました', 'error');
+                
+                // フォールバック: ローカルルーム作成
+                const newRoom = {
+                    id: generateRoomId(),
+                    name: roomName,
+                    createdAt: Date.now(),
+                    createdBy: currentUser.id
+                };
+                
+                rooms.push({
+                    ...newRoom,
+                    description: '新しく開かれた場所（ローカル）',
+                    activeUsers: 1
+                });
+                
+                closeCreateRoomModal();
+                enterRoom(newRoom.id, newRoom.name);
+            }
+        }
+
+        // メッセージ関連
+        async function sendMessage() {
+            const input = document.getElementById('messageInput');
+            const text = input.value.trim();
+            
+            if (!text || !currentUser || !currentRoom) return;
+            
+            try {
+                // Firestoreにメッセージを保存
+                const messageData = {
+                    text: text,
+                    authorName: currentUser.nickname,
+                    authorIcon: currentUser.icon,
+                    createdAt: window.firebase.serverTimestamp(),
+                    type: 'user'
+                };
+                
+                await window.firebase.addDoc(
+                    window.firebase.collection(window.firebase.db, 'rooms', currentRoom.id, 'messages'),
+                    messageData
+                );
+                
+                input.value = '';
+                document.getElementById('sendBtn').disabled = true;
+                
+            } catch (error) {
+                console.error('メッセージ送信エラー:', error);
+                
+                // フォールバック: ローカルメッセージ追加
+                const message = {
+                    id: generateMessageId(),
+                    text: text,
+                    authorName: currentUser.nickname,
+                    authorIcon: currentUser.icon,
+                    timestamp: Date.now(),
+                    type: 'user'
+                };
+                
+                addMessage(message);
+                input.value = '';
+                document.getElementById('sendBtn').disabled = true;
+                
+                showToast('メッセージ送信に失敗しました（ローカル表示）', 'warning');
+            }
+        }
+
+        function addMessage(message) {
+            messages.push(message);
+            renderMessage(message);
+        }
+
+        function addSystemMessage(text) {
+            const message = {
+                id: generateMessageId(),
+                text: text,
+                timestamp: Date.now(),
+                type: 'system'
+            };
+            addMessage(message);
+        }
+
+        function renderMessage(message) {
+            const container = document.getElementById('chatMessages');
+            const messageEl = document.createElement('div');
+            messageEl.className = `message ${message.type}`;
+            
+            if (message.type === 'system') {
+                messageEl.innerHTML = `
+                    <div class="message-content">${escapeHtml(message.text)}</div>
+                `;
+            } else {
+                const time = new Date(message.timestamp).toLocaleTimeString('ja-JP', {
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+                
+                messageEl.innerHTML = `
+                    <div class="message-header">
+                        <div class="message-avatar">${message.authorIcon}</div>
+                        <div class="message-author">${escapeHtml(message.authorName)}</div>
+                        <div class="message-time">${time}</div>
+                    </div>
+                    <div class="message-content">${escapeHtml(message.text)}</div>
+                `;
+            }
+            
+            container.appendChild(messageEl);
+            container.scrollTop = container.scrollHeight;
+        }
+
+        // ユーティリティ関数
+        function generateUserId() {
+            return 'user_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+        }
+
+        function generateRoomId() {
+            return 'room_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+        }
+
+        function generateMessageId() {
+            return 'msg_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function showToast(message, type = 'success') {
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            toast.textContent = message;
+            document.body.appendChild(toast);
+            
+            setTimeout(() => toast.classList.add('show'), 100);
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => document.body.removeChild(toast), 300);
+            }, 2000);
+        }
+
+        // アクション関数
+        function copyRoomUrl() {
+            navigator.clipboard.writeText(window.location.href).then(() => {
+                showToast('URLをコピーしました');
+            });
+        }
+
+        function exportLog() {
+            const logText = messages.map(msg => {
+                if (msg.type === 'system') {
+                    return `[${new Date(msg.timestamp).toLocaleString()}] ${msg.text}`;
+                } else {
+                    return `[${new Date(msg.timestamp).toLocaleString()}] ${msg.authorName}: ${msg.text}`;
+                }
+            }).join('\n');
+            
+            const blob = new Blob([logText], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `hole_log_${Date.now()}.txt`;
+            a.click();
+            URL.revokeObjectURL(url);
+            
+            showToast('記憶を書き出しました');
+        }
+
+        async function leaveRoom() {
+            if (currentRoom && currentUser) {
+                addSystemMessage(`${currentUser.nickname} が闇に消えていった…`);
+                
+                // Realtime Databaseから在室状態を削除
+                try {
+                    if (statusRef) {
+                        await window.firebase.remove(statusRef);
+                        statusRef = null;
+                    }
+                } catch (error) {
+                    console.error('退室状態更新エラー:', error);
+                }
+            }
+            
+            // メッセージリスナーを解除
+            if (messagesListener) {
+                messagesListener();
+                messagesListener = null;
+            }
+            
+            // ルーム選択画面に戻る
+            document.getElementById('chatScreen').classList.remove('active');
+            document.getElementById('roomSelection').style.display = 'block';
+            history.pushState({}, '', '/');
+            
+            currentRoom = null;
+            messages = [];
+            document.getElementById('chatMessages').innerHTML = '';
+        }
+
+        // デモ用メッセージ
+        function addDemoMessages() {
+            setTimeout(() => {
+                addMessage({
+                    id: generateMessageId(),
+                    text: '今夜は冷えるな…',
+                    authorName: '名無しの客',
+                    authorIcon: '🎭',
+                    timestamp: Date.now(),
+                    type: 'user'
+                });
+            }, 1000);
+            
+            setTimeout(() => {
+                addMessage({
+                    id: generateMessageId(),
+                    text: 'この場所も随分と寂れたものだ',
+                    authorName: 'バーテンダー',
+                    authorIcon: '🍸',
+                    timestamp: Date.now(),
+                    type: 'bot'
+                });
+            }, 3000);
+        }
+
+        // ページ離脱時の処理
+        window.addEventListener('beforeunload', async function() {
+            if (currentRoom && currentUser && statusRef) {
+                // 在室状態を削除
+                try {
+                    await window.firebase.remove(statusRef);
+                } catch (error) {
+                    console.error('退室処理エラー:', error);
+                }
+            }
+        });
+        
+        // Firebase接続状態の監視
+        function monitorFirebaseConnection() {
+            try {
+                const connectedRef = window.firebase.ref(window.firebase.rtdb, '.info/connected');
+                window.firebase.onValue(connectedRef, (snapshot) => {
+                    if (snapshot.val() === true) {
+                        console.log('Firebase接続: オンライン');
+                    } else {
+                        console.log('Firebase接続: オフライン');
+                        showToast('接続が不安定です', 'warning');
+                    }
+                });
+            } catch (error) {
+                console.error('Firebase接続監視エラー:', error);
+            }
+        }
+        
+        // 初期化時にFirebase接続を監視
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeApp();
+            
+            // Firebase機能が利用可能になったら接続監視を開始
+            setTimeout(() => {
+                if (window.firebase) {
+                    monitorFirebaseConnection();
+                }
+            }, 1000);
+        });
+    </script>
 </body>
 </html>
