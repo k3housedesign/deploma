@@ -93,6 +93,15 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 function initializeApp() {
+    // スプラッシュ画面が既に非表示の場合（リロード時など）、メインコンテンツを表示
+    if (UI.splashScreen.style.display === 'none' || !UI.splashScreen.offsetParent) {
+        console.log('Splash screen already hidden, showing main content directly');
+        UI.mainContent.classList.add('active');
+        UI.mainContent.classList.add('visible');
+        UI.roomSelection.style.display = 'block';
+        loadRooms();
+    }
+    
     try {
         const app = initializeFirebaseApp(firebaseConfig);
         db = getFirestore(app);
@@ -128,10 +137,8 @@ function initializeApp() {
     console.log('Room selection display:', UI.roomSelection.style.display);
     console.log('Chat screen active:', UI.chatScreen.classList.contains('active'));
     console.log('Plaza title exists:', document.querySelector('.plaza-title'));
-    console.log('Underground plaza computed style:', window.getComputedStyle(document.querySelector('.underground-plaza')));
-    console.log('Plaza title computed style:', window.getComputedStyle(document.querySelector('.plaza-title')));
-    console.log('Main content classes:', UI.mainContent.className);
-    console.log('Main content computed display:', window.getComputedStyle(UI.mainContent).display);
+    console.log('Main content display:', window.getComputedStyle(UI.mainContent).display);
+    console.log('Main content opacity:', window.getComputedStyle(UI.mainContent).opacity);
     
     // チャット画面が誤って表示されている場合は修正
     if (!appState.currentRoom && UI.chatScreen.classList.contains('active')) {

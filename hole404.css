@@ -514,6 +514,12 @@ input, textarea, .message-content {
     display: none;
     flex-direction: column;
     background: linear-gradient(135deg, var(--background-light) 0%, #000 100%);
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 100;
 }
 .chat-screen.active { display: flex; }
 .chat-header {
