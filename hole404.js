@@ -177,6 +177,9 @@ function enterTheHole() {
     const manholeCover = document.getElementById('manholeCover');
     const manholeHole = document.getElementById('manholeHole');
     
+    // ボタンを非表示に
+    UI.enterButton.classList.add('hidden');
+    
     // マンホールを回転させながら小さくする
     manholeCover.classList.add('opening');
     
@@ -185,15 +188,25 @@ function enterTheHole() {
         manholeHole.classList.add('visible');
     }, 500);
     
-    // アニメーション完了後に画面遷移
+    // 穴が300pxになったら全画面に拡大
     setTimeout(() => {
-        UI.splashScreen.classList.add('hidden');
+        manholeHole.classList.add('fullscreen');
+    }, 2000);
+    
+    // 穴が全画面になったら画面遷移
+    setTimeout(() => {
+        UI.mainContent.classList.add('active');
+        loadRooms();
+        
+        // 少し遅れてスプラッシュ画面を非表示
         setTimeout(() => {
-            UI.splashScreen.style.display = 'none';
-            UI.mainContent.classList.add('active');
-            loadRooms();
-        }, 1500);
-    }, 1500);
+            UI.splashScreen.classList.add('hidden');
+            setTimeout(() => {
+                UI.splashScreen.style.display = 'none';
+                manholeHole.classList.remove('visible', 'fullscreen');
+            }, 500);
+        }, 300);
+    }, 3500);
 }
 
 async function loadRooms() {
