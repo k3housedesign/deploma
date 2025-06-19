@@ -263,6 +263,7 @@ input, textarea, .message-content {
     background: #000;
     padding: 40px 20px;
     position: relative;
+    display: block !important;
 }
 
 .room-selection::before {

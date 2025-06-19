@@ -87,7 +87,10 @@ const iconOptions = [
 
 // --- 初期化 ---
 
-document.addEventListener('DOMContentLoaded', initializeApp);
+document.addEventListener('DOMContentLoaded', () => {
+    console.log('DOM loaded, initializing app...');
+    initializeApp();
+});
 
 function initializeApp() {
     try {
@@ -119,6 +122,19 @@ function initializeApp() {
     
     // URLパラメータからルームIDをチェック
     checkRoomFromUrl();
+    
+    // 初期状態の確認とデバッグ
+    console.log('Initial state check:');
+    console.log('Room selection display:', UI.roomSelection.style.display);
+    console.log('Chat screen active:', UI.chatScreen.classList.contains('active'));
+    console.log('Plaza title exists:', document.querySelector('.plaza-title'));
+    
+    // チャット画面が誤って表示されている場合は修正
+    if (!appState.currentRoom && UI.chatScreen.classList.contains('active')) {
+        console.log('Fixing incorrect chat screen display');
+        UI.chatScreen.classList.remove('active');
+        UI.roomSelection.style.display = 'block';
+    }
 }
 
 function setupEventListeners() {
@@ -208,6 +224,12 @@ function enterTheHole() {
                 UI.mainContent.classList.add('visible');
                 UI.splashScreen.classList.add('hidden');
                 
+                // チャット画面が誤って表示されていないか確認
+                if (!appState.currentRoom) {
+                    UI.chatScreen.classList.remove('active');
+                    UI.roomSelection.style.display = 'block';
+                }
+                
                 // スプラッシュ画面のクリーンアップ
                 setTimeout(() => {
                     UI.splashScreen.style.display = 'none';
@@ -222,6 +244,12 @@ function enterTheHole() {
             UI.mainContent.classList.add('visible');
             UI.splashScreen.classList.add('hidden');
             
+            // チャット画面が誤って表示されていないか確認
+            if (!appState.currentRoom) {
+                UI.chatScreen.classList.remove('active');
+                UI.roomSelection.style.display = 'block';
+            }
+            
             setTimeout(() => {
                 UI.splashScreen.style.display = 'none';
                 manholeHole.classList.remove('visible', 'fullscreen');
@@ -231,10 +259,12 @@ function enterTheHole() {
 }
 
 async function loadRooms() {
+    console.log('Loading rooms...');
     // ルーム読み込み完了フラグを設定
     appState.roomsLoaded = false;
     
     if (!appState.firebaseReady) {
+        console.log('Firebase not ready, loading demo rooms');
         loadDemoRooms();
         appState.roomsLoaded = true;
         return;
