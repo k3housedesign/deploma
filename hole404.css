@@ -260,7 +260,7 @@ input, textarea, .message-content {
 /* ルーム選択画面 */
 .room-selection {
     min-height: 100vh;
-    background: #000;
+    background: var(--background-dark);
     padding: 40px 20px;
     position: relative;
     display: block !important;
@@ -297,13 +297,15 @@ input, textarea, .message-content {
     font-size: 3em;
     font-weight: 300;
     margin-bottom: 20px;
-    color: var(--primary-color);
-    text-shadow: 0 0 30px rgba(255, 107, 53, 0.3);
+    color: #ff6b35;
+    text-shadow: 
+        0 0 30px rgba(255, 107, 53, 0.5),
+        0 0 10px rgba(255, 107, 53, 0.8);
     display: block !important;
 }
 .plaza-subtitle {
     font-size: 1.2em;
-    color: #888;
+    color: #ccc;
     margin-bottom: 60px;
     display: block !important;
 }
@@ -368,7 +370,7 @@ input, textarea, .message-content {
 }
 .create-room-btn {
     background: linear-gradient(45deg, #333, #555);
-    border: 2px dashed #666;
+    border: 2px dashed #999;
     border-radius: 15px;
     padding: 40px 30px;
     cursor: pointer;
@@ -386,13 +388,14 @@ input, textarea, .message-content {
 .create-room-btn .icon {
     font-size: 3em;
     margin-bottom: 15px;
-    color: #999;
+    color: #fff;
 }
 .create-room-btn:hover .icon {
     color: var(--primary-color);
 }
 .create-room-btn div {
-    color: #ccc;
+    color: #fff;
+    font-size: 1.1em;
 }
 
 /* モーダル */
