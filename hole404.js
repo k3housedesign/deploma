@@ -312,9 +312,10 @@ function handleRoomEntry(room) {
 }
 
 async function enterRoom(roomId, roomName) {
+    console.log('Entering room:', roomId, roomName);
     appState.currentRoom = { id: roomId, name: roomName };
     
-    history.pushState({}, '', `/hole/${roomId}`);
+    history.pushState({}, '', `/hole404.html?room=${roomId}`);
     
     UI.roomSelection.style.display = 'none';
     UI.chatScreen.classList.add('active');
@@ -350,7 +351,7 @@ async function leaveRoom() {
     
     UI.chatScreen.classList.remove('active');
     UI.roomSelection.style.display = 'block';
-    history.pushState({}, '', '/');
+    history.pushState({}, '', '/hole404.html');
     
     appState.currentRoom = null;
     appState.messages = [];
@@ -416,9 +417,10 @@ function handleProfileSubmit(e) {
         const pendingRoom = JSON.parse(pendingRoomJson);
         handleRoomEntry(pendingRoom);
     } else {
-        const roomMatch = window.location.pathname.match(/\/hole\/(.+)$/);
-        if (roomMatch) {
-            enterRoom(roomMatch[1], '地下のどこか'); // ルーム名は後で取得される
+        const urlParams = new URLSearchParams(window.location.search);
+        const roomId = urlParams.get('room');
+        if (roomId) {
+            enterRoom(roomId, '地下のどこか'); // ルーム名は後で取得される
         }
     }
     showToast(`${nickname}として地下世界に潜りました`);
@@ -690,9 +692,9 @@ function startUserCounterAnimation() {
 }
 
 function checkRoomFromUrl() {
-    const path = window.location.pathname;
-    const roomMatch = path.match(/\/hole\/(.+)$/);
-    if (roomMatch) {
+    const urlParams = new URLSearchParams(window.location.search);
+    const roomId = urlParams.get('room');
+    if (roomId) {
         const storedUser = sessionStorage.getItem('holeUserProfile');
         if (storedUser) {
             appState.currentUser = JSON.parse(storedUser);
@@ -700,9 +702,10 @@ function checkRoomFromUrl() {
             if (UI.splashScreen.style.display !== 'none') {
                  UI.splashScreen.style.display = 'none';
                  UI.mainContent.classList.add('active');
+                 UI.mainContent.classList.add('visible');
                  loadRooms();
             }
-            enterRoom(roomMatch[1], '地下のどこか');
+            enterRoom(roomId, '地下のどこか');
         } else {
             showProfileModal();
         }
