@@ -358,7 +358,8 @@ async function enterRoom(roomId, roomName) {
     console.log('Entering room:', roomId, roomName);
     appState.currentRoom = { id: roomId, name: roomName };
     
-    history.pushState({}, '', `/hole404.html?room=${roomId}`);
+    // URLパラメータを使わない（GitHub Pagesでの問題を避けるため）
+    // history.pushState({}, '', `/hole404.html?room=${roomId}`);
     
     UI.roomSelection.style.display = 'none';
     UI.chatScreen.classList.add('active');
@@ -394,7 +395,10 @@ async function leaveRoom() {
     
     UI.chatScreen.classList.remove('active');
     UI.roomSelection.style.display = 'block';
-    history.pushState({}, '', '/hole404.html');
+    // URLをクリーンに保つ
+    if (window.location.search) {
+        history.pushState({}, '', window.location.pathname);
+    }
     
     appState.currentRoom = null;
     appState.messages = [];
@@ -738,6 +742,10 @@ function checkRoomFromUrl() {
     const urlParams = new URLSearchParams(window.location.search);
     const roomId = urlParams.get('room');
     if (roomId) {
+        // URLパラメータをクリア
+        const newUrl = window.location.pathname;
+        window.history.replaceState({}, '', newUrl);
+        
         const storedUser = sessionStorage.getItem('holeUserProfile');
         if (storedUser) {
             appState.currentUser = JSON.parse(storedUser);
@@ -748,7 +756,9 @@ function checkRoomFromUrl() {
                  UI.mainContent.classList.add('visible');
                  loadRooms();
             }
-            enterRoom(roomId, '地下のどこか');
+            // 自動的にルームに入らないようにする
+            // ユーザーが明示的にルームをクリックした時のみ入る
+            console.log('Room URL detected but not auto-entering:', roomId);
         } else {
             showProfileModal();
         }
