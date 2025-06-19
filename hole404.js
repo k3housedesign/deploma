@@ -186,12 +186,12 @@ function enterTheHole() {
     // 少し遅れて穴を表示
     setTimeout(() => {
         manholeHole.classList.add('visible');
-    }, 500);
+    }, 300);
     
-    // 穴が300pxになったら全画面に拡大
+    // 穴が200pxになったら全画面に拡大
     setTimeout(() => {
         manholeHole.classList.add('fullscreen');
-    }, 2000);
+    }, 1100);
     
     // 穴が全画面になったら画面遷移
     setTimeout(() => {
@@ -204,9 +204,9 @@ function enterTheHole() {
             setTimeout(() => {
                 UI.splashScreen.style.display = 'none';
                 manholeHole.classList.remove('visible', 'fullscreen');
-            }, 500);
-        }, 300);
-    }, 3500);
+            }, 300);
+        }, 200);
+    }, 1900);
 }
 
 async function loadRooms() {
