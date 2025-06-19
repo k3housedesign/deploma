@@ -799,9 +799,9 @@ input, textarea, .message-content {
     position: absolute;
     top: 10px;
     right: 10px;
-    background: rgba(200, 0, 0, 0.2);
-    border: 1px solid rgba(255, 0, 0, 0.3);
-    color: rgba(255, 100, 100, 0.8);
+    background: rgba(200, 0, 0, 0.3);
+    border: 2px solid rgba(255, 0, 0, 0.4);
+    color: rgba(255, 150, 150, 0.9);
     padding: 6px 12px;
     border-radius: 15px;
     font-size: 0.75rem;
@@ -810,10 +810,18 @@ input, textarea, .message-content {
     transition: all 0.3s ease;
     font-weight: 600;
     letter-spacing: 0.5px;
+    z-index: 10;
 }
 
 .room-card:hover .close-shop-btn {
     opacity: 1;
+}
+
+/* モバイルデバイスでは常に表示 */
+@media (hover: none) and (pointer: coarse) {
+    .close-shop-btn {
+        opacity: 0.8;
+    }
 }
 
 .close-shop-btn:hover {

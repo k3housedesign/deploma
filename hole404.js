@@ -381,6 +381,7 @@ function renderRooms() {
         roomCard.className = `room-card ${roomState}`;
         // 自分が作ったルームには「店を閉める」ボタンを表示
         const isOwner = appState.currentUser && room.createdBy === appState.currentUser.id;
+        console.log(`Room: ${room.roomName}, CreatedBy: ${room.createdBy}, CurrentUser: ${appState.currentUser?.id}, IsOwner: ${isOwner}`);
         const closeButton = isOwner ? 
             `<button class="close-shop-btn" onclick="confirmCloseShop('${room.id}', '${escapeHtml(room.roomName).replace(/'/g, "\\'")}')">店を閉める</button>` : '';
         
@@ -560,6 +561,13 @@ async function handleCreateRoom(e) {
         return;
     }
 
+    // プロフィール設定確認
+    if (!appState.currentUser) {
+        showToast('先にプロフィールを設定してください', 'error');
+        showProfileModal();
+        return;
+    }
+
     // 新規ルーム用の説明文
     const newRoomDescriptions = [
         '今宵開かれた秘密の場所',
@@ -568,6 +576,8 @@ async function handleCreateRoom(e) {
         '誰も知らない地下の一室'
     ];
     const randomDescription = newRoomDescriptions[Math.floor(Math.random() * newRoomDescriptions.length)];
+
+    console.log('Creating room with user ID:', appState.currentUser.id);
 
     if (appState.firebaseReady) {
         try {
@@ -587,7 +597,13 @@ async function handleCreateRoom(e) {
         }
     } else {
         // オフライン時のローカルルーム作成
-        const newRoom = { id: generateId('room'), roomName: roomName, activeUsers: 1, description: `${randomDescription}（オフライン）` };
+        const newRoom = { 
+            id: generateId('room'), 
+            roomName: roomName, 
+            activeUsers: 1, 
+            description: `${randomDescription}（オフライン）`,
+            createdBy: appState.currentUser.id
+        };
         appState.rooms.unshift(newRoom);
         renderRooms();
         closeCreateRoomModal();
