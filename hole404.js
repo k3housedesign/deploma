@@ -304,11 +304,16 @@ async function loadRooms() {
 
 function renderRooms() {
     UI.roomGrid.innerHTML = '';
-    appState.rooms.forEach(room => {
+    appState.rooms.forEach((room, index) => {
         const roomCard = document.createElement('div');
         roomCard.className = 'room-card';
         roomCard.dataset.roomId = room.id;
+        
+        // 一部のカードに縦書き風の装飾を追加
+        const verticalText = index % 3 === 0 ? '<div class="vertical-neon">営業中</div>' : '';
+        
         roomCard.innerHTML = `
+            ${verticalText}
             <div class="neon-sign">${escapeHtml(room.roomName)}</div>
             <div class="room-description">${escapeHtml(room.description || '新しく開かれた場所')}</div>
             <div class="room-status">${room.activeUsers || 0}人が佇んでいる</div>

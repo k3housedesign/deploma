@@ -316,62 +316,183 @@ input, textarea, .message-content {
     margin-bottom: 60px;
 }
 .room-card {
-    background: var(--card-background);
-    border: 1px solid var(--border-color);
-    border-radius: 15px;
+    background: #0a0a0a;
+    border: 3px solid;
+    border-radius: 8px;
     padding: 30px;
     cursor: pointer;
     transition: all 0.3s ease;
     position: relative;
     overflow: hidden;
+    box-shadow: 
+        inset 0 0 30px rgba(0,0,0,0.8),
+        0 0 20px rgba(0,0,0,0.5);
 }
-.room-card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 3px;
-    background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
-    transform: scaleX(0);
-    transition: transform 0.3s ease;
+
+/* 各ルームカードに異なるネオンカラー */
+.room-card:nth-child(4n+1) {
+    border-color: #00ff41;
+    background: radial-gradient(ellipse at center, rgba(0,255,65,0.1) 0%, #0a0a0a 70%);
 }
+.room-card:nth-child(4n+2) {
+    border-color: #ff006e;
+    background: radial-gradient(ellipse at center, rgba(255,0,110,0.1) 0%, #0a0a0a 70%);
+}
+.room-card:nth-child(4n+3) {
+    border-color: #ffaa00;
+    background: radial-gradient(ellipse at center, rgba(255,170,0,0.1) 0%, #0a0a0a 70%);
+}
+.room-card:nth-child(4n) {
+    border-color: #00b4ff;
+    background: radial-gradient(ellipse at center, rgba(0,180,255,0.1) 0%, #0a0a0a 70%);
+}
+
+/* ネオン枠の光彩効果 */
+.room-card:nth-child(4n+1) {
+    box-shadow: 
+        inset 0 0 30px rgba(0,255,65,0.2),
+        0 0 30px rgba(0,255,65,0.4),
+        0 0 50px rgba(0,255,65,0.2);
+}
+.room-card:nth-child(4n+2) {
+    box-shadow: 
+        inset 0 0 30px rgba(255,0,110,0.2),
+        0 0 30px rgba(255,0,110,0.4),
+        0 0 50px rgba(255,0,110,0.2);
+}
+.room-card:nth-child(4n+3) {
+    box-shadow: 
+        inset 0 0 30px rgba(255,170,0,0.2),
+        0 0 30px rgba(255,170,0,0.4),
+        0 0 50px rgba(255,170,0,0.2);
+}
+.room-card:nth-child(4n) {
+    box-shadow: 
+        inset 0 0 30px rgba(0,180,255,0.2),
+        0 0 30px rgba(0,180,255,0.4),
+        0 0 50px rgba(0,180,255,0.2);
+}
+
 .room-card:hover {
-    transform: translateY(-5px);
-    border-color: var(--primary-color);
-    box-shadow: 0 10px 30px rgba(255, 107, 53, 0.2);
+    transform: translateY(-5px) scale(1.02);
+    filter: brightness(1.2);
 }
-.room-card:hover::before {
-    transform: scaleX(1);
-}
+
+/* ネオンサインのテキスト */
 .neon-sign {
-    font-size: 1.8em;
-    font-weight: 700;
-    color: var(--primary-color);
-    text-shadow: 
-        0 0 5px var(--primary-color),
-        0 0 10px var(--primary-color),
-        0 0 15px var(--primary-color);
-    animation: neonFlicker 2s infinite alternate;
+    font-size: 2.2em;
+    font-weight: 900;
+    letter-spacing: 2px;
+    text-transform: uppercase;
     margin-bottom: 15px;
+    position: relative;
+    display: inline-block;
 }
-@keyframes neonFlicker {
+
+/* 各カードのネオンテキスト色 */
+.room-card:nth-child(4n+1) .neon-sign {
+    color: #00ff41;
+    text-shadow: 
+        0 0 10px #00ff41,
+        0 0 20px #00ff41,
+        0 0 40px #00ff41,
+        0 0 80px #00ff41;
+    animation: neonFlicker1 3s infinite;
+}
+.room-card:nth-child(4n+2) .neon-sign {
+    color: #ff006e;
+    text-shadow: 
+        0 0 10px #ff006e,
+        0 0 20px #ff006e,
+        0 0 40px #ff006e,
+        0 0 80px #ff006e;
+    animation: neonFlicker2 2.5s infinite;
+}
+.room-card:nth-child(4n+3) .neon-sign {
+    color: #ffaa00;
+    text-shadow: 
+        0 0 10px #ffaa00,
+        0 0 20px #ffaa00,
+        0 0 40px #ffaa00,
+        0 0 80px #ffaa00;
+    animation: neonFlicker3 4s infinite;
+}
+.room-card:nth-child(4n) .neon-sign {
+    color: #00b4ff;
+    text-shadow: 
+        0 0 10px #00b4ff,
+        0 0 20px #00b4ff,
+        0 0 40px #00b4ff,
+        0 0 80px #00b4ff;
+    animation: neonFlicker4 3.5s infinite;
+}
+
+/* 電球切れかかりの点滅アニメーション */
+@keyframes neonFlicker1 {
     0%, 100% { opacity: 1; }
-    50% { opacity: 0.8; }
+    4% { opacity: 0.9; }
+    6% { opacity: 0.85; }
+    8% { opacity: 0.95; }
+    10% { opacity: 0.9; }
+    11% { opacity: 0.8; }
+    12% { opacity: 1; }
+    15% { opacity: 0.95; }
+    16% { opacity: 0.98; }
+    86% { opacity: 1; }
+    87% { opacity: 0.5; }
+    88% { opacity: 0.6; }
+    89% { opacity: 0.5; }
+    90% { opacity: 1; }
+    95% { opacity: 0.96; }
+    97% { opacity: 0.93; }
+}
+
+@keyframes neonFlicker2 {
+    0%, 100% { opacity: 1; filter: brightness(1); }
+    10% { opacity: 0.97; filter: brightness(0.9); }
+    12% { opacity: 0.9; filter: brightness(0.8); }
+    14% { opacity: 1; filter: brightness(1); }
+    30% { opacity: 0.98; filter: brightness(0.95); }
+    32% { opacity: 0.7; filter: brightness(0.7); }
+    33% { opacity: 1; filter: brightness(1); }
+}
+
+@keyframes neonFlicker3 {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.95; }
+    52% { opacity: 0.3; }
+    54% { opacity: 0.2; }
+    56% { opacity: 0.9; }
+    58% { opacity: 1; }
+}
+
+@keyframes neonFlicker4 {
+    0%, 100% { opacity: 1; }
+    20% { opacity: 0.96; }
+    22% { opacity: 0.9; }
+    24% { opacity: 0.85; }
+    26% { opacity: 0.94; }
+    28% { opacity: 1; }
+    80% { opacity: 0.99; }
+    82% { opacity: 0.4; }
+    84% { opacity: 1; }
 }
 .room-description {
-    color: #aaa;
+    color: rgba(255,255,255,0.6);
     font-size: 0.9em;
     margin-bottom: 15px;
+    font-style: italic;
 }
 .room-status {
-    color: #666;
+    color: rgba(255,255,255,0.4);
     font-size: 0.8em;
+    text-transform: uppercase;
+    letter-spacing: 1px;
 }
 .create-room-btn {
-    background: linear-gradient(45deg, #333, #555);
-    border: 2px dashed #999;
-    border-radius: 15px;
+    background: #0a0a0a;
+    border: 3px solid #bf00ff;
+    border-radius: 8px;
     padding: 40px 30px;
     cursor: pointer;
     transition: all 0.3s ease;
@@ -380,22 +501,122 @@ input, textarea, .message-content {
     align-items: center;
     justify-content: center;
     min-height: 200px;
+    box-shadow: 
+        inset 0 0 30px rgba(191,0,255,0.2),
+        0 0 30px rgba(191,0,255,0.4),
+        0 0 50px rgba(191,0,255,0.2);
+    background: radial-gradient(ellipse at center, rgba(191,0,255,0.1) 0%, #0a0a0a 70%);
+    position: relative;
 }
 .create-room-btn:hover {
-    border-color: var(--primary-color);
-    background: linear-gradient(45deg, #444, #666);
+    transform: scale(1.05);
+    filter: brightness(1.3);
+    box-shadow: 
+        inset 0 0 40px rgba(191,0,255,0.3),
+        0 0 40px rgba(191,0,255,0.6),
+        0 0 70px rgba(191,0,255,0.4);
 }
 .create-room-btn .icon {
     font-size: 3em;
     margin-bottom: 15px;
-    color: #fff;
-}
-.create-room-btn:hover .icon {
-    color: var(--primary-color);
+    color: #bf00ff;
+    text-shadow: 
+        0 0 10px #bf00ff,
+        0 0 20px #bf00ff,
+        0 0 40px #bf00ff;
+    animation: neonPulse 2s infinite;
 }
 .create-room-btn div {
-    color: #fff;
-    font-size: 1.1em;
+    color: #bf00ff;
+    font-size: 1.2em;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    text-shadow: 
+        0 0 10px #bf00ff,
+        0 0 20px #bf00ff,
+        0 0 30px #bf00ff;
+}
+
+@keyframes neonPulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.8; transform: scale(0.95); }
+}
+
+/* 縦書きネオンサイン */
+.vertical-neon {
+    position: absolute;
+    right: 20px;
+    top: 20px;
+    writing-mode: vertical-rl;
+    text-orientation: upright;
+    font-size: 1.2em;
+    font-weight: 900;
+    letter-spacing: 4px;
+    padding: 8px 4px;
+    border: 2px solid;
+    border-radius: 4px;
+}
+
+.room-card:nth-child(4n+1) .vertical-neon {
+    color: #00ff41;
+    border-color: #00ff41;
+    text-shadow: 
+        0 0 5px #00ff41,
+        0 0 10px #00ff41,
+        0 0 20px #00ff41;
+    box-shadow: 
+        inset 0 0 10px rgba(0,255,65,0.3),
+        0 0 15px rgba(0,255,65,0.5);
+    animation: verticalBlink 5s infinite;
+}
+
+.room-card:nth-child(4n+2) .vertical-neon {
+    color: #ff006e;
+    border-color: #ff006e;
+    text-shadow: 
+        0 0 5px #ff006e,
+        0 0 10px #ff006e,
+        0 0 20px #ff006e;
+    box-shadow: 
+        inset 0 0 10px rgba(255,0,110,0.3),
+        0 0 15px rgba(255,0,110,0.5);
+    animation: verticalBlink 4s infinite;
+}
+
+.room-card:nth-child(4n+3) .vertical-neon {
+    color: #ffaa00;
+    border-color: #ffaa00;
+    text-shadow: 
+        0 0 5px #ffaa00,
+        0 0 10px #ffaa00,
+        0 0 20px #ffaa00;
+    box-shadow: 
+        inset 0 0 10px rgba(255,170,0,0.3),
+        0 0 15px rgba(255,170,0,0.5);
+    animation: verticalBlink 6s infinite;
+}
+
+.room-card:nth-child(4n) .vertical-neon {
+    color: #00b4ff;
+    border-color: #00b4ff;
+    text-shadow: 
+        0 0 5px #00b4ff,
+        0 0 10px #00b4ff,
+        0 0 20px #00b4ff;
+    box-shadow: 
+        inset 0 0 10px rgba(0,180,255,0.3),
+        0 0 15px rgba(0,180,255,0.5);
+    animation: verticalBlink 3.5s infinite;
+}
+
+@keyframes verticalBlink {
+    0%, 100% { opacity: 1; }
+    75% { opacity: 1; }
+    76% { opacity: 0.3; }
+    77% { opacity: 1; }
+    78% { opacity: 0.5; }
+    79% { opacity: 1; }
 }
 
 /* モーダル */
