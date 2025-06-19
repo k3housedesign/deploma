@@ -124,6 +124,7 @@ function initializeApp() {
 function setupEventListeners() {
     // スプラッシュ
     UI.enterButton.addEventListener('click', enterTheHole);
+    document.getElementById('manholeCover').addEventListener('click', enterTheHole);
 
     // ルーム作成
     UI.createRoomBtn.addEventListener('click', showCreateRoomModal);
@@ -172,11 +173,26 @@ function setupEventListeners() {
 // (以下、前回のJavaScriptコードが続く)
 
 function enterTheHole() {
-    UI.splashScreen.classList.add('hidden');
+    // マンホールのアニメーション開始
+    const manholeCover = document.getElementById('manholeCover');
+    const manholeHole = document.getElementById('manholeHole');
+    
+    // マンホールを回転させながら小さくする
+    manholeCover.classList.add('opening');
+    
+    // 少し遅れて穴を表示
     setTimeout(() => {
-        UI.splashScreen.style.display = 'none';
-        UI.mainContent.classList.add('active');
-        loadRooms();
+        manholeHole.classList.add('visible');
+    }, 500);
+    
+    // アニメーション完了後に画面遷移
+    setTimeout(() => {
+        UI.splashScreen.classList.add('hidden');
+        setTimeout(() => {
+            UI.splashScreen.style.display = 'none';
+            UI.mainContent.classList.add('active');
+            loadRooms();
+        }, 1500);
     }, 1500);
 }
 

@@ -92,6 +92,64 @@ input, textarea, .message-content {
     box-shadow: 
         inset 0 0 50px rgba(0,0,0,0.8),
         0 10px 30px rgba(0,0,0,0.5);
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.manhole-cover:hover {
+    transform: scale(1.05);
+}
+
+.manhole-cover.opening {
+    animation: manholeOpen 2s ease-out forwards;
+}
+
+@keyframes manholeOpen {
+    0% {
+        transform: rotate(0deg) scale(1);
+    }
+    50% {
+        transform: rotate(720deg) scale(0.9);
+    }
+    100% {
+        transform: rotate(720deg) scale(0);
+        opacity: 0;
+    }
+}
+
+.manhole-hole {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    background: radial-gradient(circle, #000 0%, rgba(0,0,0,0.8) 70%, transparent 100%);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    opacity: 0;
+    transition: all 1.5s ease-out;
+    z-index: -1;
+}
+
+.manhole-hole.visible {
+    width: 300px;
+    height: 300px;
+    opacity: 1;
+    animation: holeExpand 1.5s ease-out forwards;
+}
+
+@keyframes holeExpand {
+    0% {
+        width: 0;
+        height: 0;
+    }
+    100% {
+        width: 300px;
+        height: 300px;
+        box-shadow: 
+            inset 0 0 100px rgba(0,0,0,1),
+            0 0 50px rgba(0,0,0,0.8);
+    }
 }
 
 .manhole-cover::before {
