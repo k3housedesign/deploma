@@ -183,30 +183,33 @@ function enterTheHole() {
     // マンホールを回転させながら小さくする
     manholeCover.classList.add('opening');
     
-    // 少し遅れて穴を表示
+    // マンホールが少し回転してから穴を表示
     setTimeout(() => {
         manholeHole.classList.add('visible');
-    }, 300);
+    }, 600);
     
     // 穴が200pxになったら全画面に拡大
     setTimeout(() => {
         manholeHole.classList.add('fullscreen');
-    }, 1100);
+    }, 1400);
     
-    // 穴が全画面になったら画面遷移
+    // 穴が全画面になる前にコンテンツを準備
     setTimeout(() => {
         UI.mainContent.classList.add('active');
         loadRooms();
+    }, 1800);
+    
+    // 穴が完全に全画面になってからコンテンツを表示
+    setTimeout(() => {
+        UI.mainContent.classList.add('visible');
+        UI.splashScreen.classList.add('hidden');
         
-        // 少し遅れてスプラッシュ画面を非表示
+        // スプラッシュ画面のクリーンアップ
         setTimeout(() => {
-            UI.splashScreen.classList.add('hidden');
-            setTimeout(() => {
-                UI.splashScreen.style.display = 'none';
-                manholeHole.classList.remove('visible', 'fullscreen');
-            }, 300);
-        }, 200);
-    }, 1900);
+            UI.splashScreen.style.display = 'none';
+            manholeHole.classList.remove('visible', 'fullscreen');
+        }, 500);
+    }, 2200);
 }
 
 async function loadRooms() {
