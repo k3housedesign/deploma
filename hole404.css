@@ -288,6 +288,12 @@ input, textarea, .message-content {
     max-width: 1200px;
     margin: 0 auto;
     text-align: center;
+    opacity: 0;
+    transition: opacity 0.8s ease-out;
+}
+
+.main-content.visible .underground-plaza {
+    opacity: 1;
 }
 .plaza-title {
     font-size: 3em;

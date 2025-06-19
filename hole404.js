@@ -201,20 +201,42 @@ function enterTheHole() {
     
     // 穴が完全に全画面になってからコンテンツを表示
     setTimeout(() => {
-        UI.mainContent.classList.add('visible');
-        UI.splashScreen.classList.add('hidden');
+        // ルーム読み込み完了を待つ
+        const checkRoomsLoaded = setInterval(() => {
+            if (appState.roomsLoaded) {
+                clearInterval(checkRoomsLoaded);
+                UI.mainContent.classList.add('visible');
+                UI.splashScreen.classList.add('hidden');
+                
+                // スプラッシュ画面のクリーンアップ
+                setTimeout(() => {
+                    UI.splashScreen.style.display = 'none';
+                    manholeHole.classList.remove('visible', 'fullscreen');
+                }, 500);
+            }
+        }, 50);
         
-        // スプラッシュ画面のクリーンアップ
+        // 最大待機時間（3秒）
         setTimeout(() => {
-            UI.splashScreen.style.display = 'none';
-            manholeHole.classList.remove('visible', 'fullscreen');
-        }, 500);
+            clearInterval(checkRoomsLoaded);
+            UI.mainContent.classList.add('visible');
+            UI.splashScreen.classList.add('hidden');
+            
+            setTimeout(() => {
+                UI.splashScreen.style.display = 'none';
+                manholeHole.classList.remove('visible', 'fullscreen');
+            }, 500);
+        }, 3000);
     }, 2200);
 }
 
 async function loadRooms() {
+    // ルーム読み込み完了フラグを設定
+    appState.roomsLoaded = false;
+    
     if (!appState.firebaseReady) {
         loadDemoRooms();
+        appState.roomsLoaded = true;
         return;
     }
     
@@ -230,6 +252,7 @@ async function loadRooms() {
         }));
         renderRooms();
         updateActiveUserCounts();
+        appState.roomsLoaded = true;
     }, (error) => {
         console.error('ルームの購読エラー:', error);
         loadDemoRooms();
@@ -649,6 +672,7 @@ function loadDemoRooms() {
         { id: 'demo2', roomName: '錆びついたジャズバー', description: '古いピアノの音色が響く（デモ）', activeUsers: 7 }
     ];
     renderRooms();
+    appState.roomsLoaded = true;
 }
 
 function addDemoMessages() {
