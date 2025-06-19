@@ -635,6 +635,26 @@ input, textarea, .message-content {
     }
 }
 
+/* 新規開店の状態 */
+.room-card.new {
+    filter: brightness(1.1);
+}
+
+.vertical-neon.new {
+    color: #ffd700 !important;
+    border-color: #ffd700 !important;
+    text-shadow: 
+        0 0 10px #ffd700,
+        0 0 20px #ffd700,
+        0 0 30px #ffd700 !important;
+    animation: newShopPulse 1.5s infinite;
+}
+
+@keyframes newShopPulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.8; transform: scale(1.05); }
+}
+
 /* 非アクティブ状態のスタイル */
 .room-card.inactive {
     filter: brightness(0.7);
@@ -644,6 +664,33 @@ input, textarea, .message-content {
 .room-card.inactive:hover {
     filter: brightness(0.9);
     opacity: 1;
+}
+
+/* 廃業・逃走・事件の極暗状態 */
+.room-card.abandoned {
+    filter: brightness(0.3) grayscale(0.8);
+    opacity: 0.4;
+}
+
+.room-card.abandoned:hover {
+    filter: brightness(0.5) grayscale(0.5);
+    opacity: 0.7;
+}
+
+.vertical-neon.abandoned {
+    color: #666 !important;
+    border-color: #444 !important;
+    text-shadow: 0 0 5px rgba(255,255,255,0.1) !important;
+    animation: abandonedFlicker 15s infinite;
+}
+
+@keyframes abandonedFlicker {
+    0%, 100% { opacity: 0.3; }
+    10% { opacity: 0.2; }
+    11% { opacity: 0.3; }
+    80% { opacity: 0.3; }
+    81% { opacity: 0.1; }
+    82% { opacity: 0.3; }
 }
 
 /* 準備中・空室・静寂の暗めのネオン */
@@ -667,6 +714,35 @@ input, textarea, .message-content {
     opacity: 0.4;
 }
 
+/* 酩酊・陶酔の特殊状態 */
+.vertical-neon.drunk {
+    color: #ff00ff !important;
+    border-color: #ff00ff !important;
+    text-shadow: 
+        0 0 10px #ff00ff,
+        0 0 20px #ff00ff !important;
+    animation: drunkSway 3s infinite ease-in-out;
+}
+
+.vertical-neon.ecstasy {
+    color: #00ffff !important;
+    border-color: #00ffff !important;
+    text-shadow: 
+        0 0 10px #00ffff,
+        0 0 20px #00ffff !important;
+    animation: ecstasyGlow 2s infinite alternate;
+}
+
+@keyframes drunkSway {
+    0%, 100% { transform: rotate(-2deg); opacity: 0.7; }
+    50% { transform: rotate(2deg); opacity: 0.9; }
+}
+
+@keyframes ecstasyGlow {
+    0% { opacity: 0.5; filter: blur(0px); }
+    100% { opacity: 0.9; filter: blur(1px); }
+}
+
 @keyframes dimFlicker {
     0%, 100% { opacity: 0.6; }
     10% { opacity: 0.4; }
@@ -680,6 +756,42 @@ input, textarea, .message-content {
     45% { opacity: 0.6; }
     50% { opacity: 0.2; }
     55% { opacity: 0.6; }
+}
+
+/* 中国語看板のスタイル */
+.chinese-sign {
+    position: absolute;
+    left: 20px;
+    bottom: 20px;
+    font-size: 1.6em;
+    font-weight: 900;
+    opacity: 0.7;
+    font-family: 'Noto Sans TC', 'Microsoft JhengHei', sans-serif;
+}
+
+.room-card:nth-child(4n+1) .chinese-sign {
+    color: rgba(0,255,65,0.8);
+    text-shadow: 0 0 10px rgba(0,255,65,0.5);
+}
+
+.room-card:nth-child(4n+2) .chinese-sign {
+    color: rgba(255,0,110,0.8);
+    text-shadow: 0 0 10px rgba(255,0,110,0.5);
+}
+
+.room-card:nth-child(4n+3) .chinese-sign {
+    color: rgba(255,170,0,0.8);
+    text-shadow: 0 0 10px rgba(255,170,0,0.5);
+}
+
+.room-card:nth-child(4n) .chinese-sign {
+    color: rgba(0,180,255,0.8);
+    text-shadow: 0 0 10px rgba(0,180,255,0.5);
+}
+
+.room-card.abandoned .chinese-sign {
+    color: rgba(100,100,100,0.5);
+    text-shadow: none;
 }
 
 /* モーダル */

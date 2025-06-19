@@ -309,24 +309,59 @@ function renderRooms() {
         roomCard.className = 'room-card';
         roomCard.dataset.roomId = room.id;
         
-        // アクティブユーザー数に応じた縦書きサイン
+        // アクティブユーザー数と作成日時に応じた状態判定
         const activeUsers = room.activeUsers || 0;
+        const createdAt = room.createdAt?.toMillis ? room.createdAt.toMillis() : Date.now();
+        const daysSinceCreated = (Date.now() - createdAt) / (1000 * 60 * 60 * 24);
+        const hoursSinceCreated = (Date.now() - createdAt) / (1000 * 60 * 60);
+        
         let verticalText = '';
         let roomState = '';
         
         if (activeUsers > 0) {
             verticalText = '<div class="vertical-neon active">営業中</div>';
             roomState = 'active';
+        } else if (hoursSinceCreated < 24) {
+            // 新規作成から24時間以内
+            verticalText = '<div class="vertical-neon new">開店</div>';
+            roomState = 'new';
+        } else if (daysSinceCreated > 3) {
+            // 3日以上誰も入っていない
+            const abandonedStates = [
+                '<div class="vertical-neon abandoned">廃業中</div>',
+                '<div class="vertical-neon abandoned">逃走中</div>',
+                '<div class="vertical-neon abandoned">事件</div>'
+            ];
+            verticalText = abandonedStates[index % abandonedStates.length];
+            roomState = 'abandoned';
         } else {
-            // ランダムで異なる状態を表示
-            const states = [
+            // 1-3日の間誰も入っていない
+            const inactiveStates = [
                 '<div class="vertical-neon closed">準備中</div>',
                 '<div class="vertical-neon vacant">空室</div>',
-                '<div class="vertical-neon quiet">静寂</div>'
+                '<div class="vertical-neon quiet">静寂</div>',
+                '<div class="vertical-neon drunk">酩酊</div>',
+                '<div class="vertical-neon ecstasy">陶酔</div>'
             ];
-            verticalText = states[index % states.length];
+            verticalText = inactiveStates[index % inactiveStates.length];
             roomState = 'inactive';
         }
+        
+        // 中国語のランダム看板
+        const chineseSigns = [
+            '歡迎光臨',
+            '深夜營業',
+            '秘密基地',
+            '地下酒吧',
+            '隱藏房間',
+            '禁止進入',
+            '會員制',
+            '貴賓室',
+            '密談可',
+            '請勿打擾',
+            '夜總會',
+            '地下賭場'
+        ];
         
         // 雰囲気のある説明文のランダム選択
         const descriptions = [
@@ -341,10 +376,12 @@ function renderRooms() {
         ];
         
         const defaultDescription = room.description || descriptions[Math.floor(Math.random() * descriptions.length)];
+        const chineseSign = chineseSigns[Math.floor(Math.random() * chineseSigns.length)];
         
         roomCard.className = `room-card ${roomState}`;
         roomCard.innerHTML = `
             ${verticalText}
+            <div class="chinese-sign">${chineseSign}</div>
             <div class="neon-sign">${escapeHtml(room.roomName)}</div>
             <div class="room-description">${escapeHtml(defaultDescription)}</div>
             <div class="room-status">${activeUsers}人が佇んでいる</div>
