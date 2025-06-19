@@ -379,12 +379,18 @@ function renderRooms() {
         const chineseSign = chineseSigns[Math.floor(Math.random() * chineseSigns.length)];
         
         roomCard.className = `room-card ${roomState}`;
+        // 自分が作ったルームには「店を閉める」ボタンを表示
+        const isOwner = appState.currentUser && room.createdBy === appState.currentUser.id;
+        const closeButton = isOwner ? 
+            `<button class="close-shop-btn" onclick="confirmCloseShop('${room.id}', '${escapeHtml(room.roomName).replace(/'/g, "\\'")}')">店を閉める</button>` : '';
+        
         roomCard.innerHTML = `
             ${verticalText}
             <div class="chinese-sign">${chineseSign}</div>
             <div class="neon-sign">${escapeHtml(room.roomName)}</div>
             <div class="room-description">${escapeHtml(defaultDescription)}</div>
             <div class="room-status">${activeUsers}人が佇んでいる</div>
+            ${closeButton}
         `;
         UI.roomGrid.appendChild(roomCard);
     });
@@ -667,6 +673,130 @@ async function deleteMessage(messageId) {
 
 // グローバルスコープに登録
 window.deleteMessage = deleteMessage;
+
+// 店を閉める機能
+async function confirmCloseShop(roomId, roomName) {
+    // カスタム確認モーダルを作成
+    const modalHTML = `
+        <div class="modal-overlay active" id="closeShopModal">
+            <div class="modal close-shop-modal">
+                <h2 class="modal-title">店を閉める</h2>
+                <div class="close-shop-content">
+                    <p class="shop-name">「${roomName}」</p>
+                    <p class="close-message">この店を閉めようとしています。</p>
+                    <p class="memory-message">閉める前に、この場所の面影を残しますか？</p>
+                    <p class="memory-explanation">チャットログを書き出して、思い出として保存できます。</p>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-secondary" onclick="closeCloseShopModal()">やめる</button>
+                    <button type="button" class="btn btn-memory" onclick="exportMemoryAndClose('${roomId}', '${roomName}')">面影を残して閉める</button>
+                    <button type="button" class="btn btn-danger" onclick="closeShopImmediately('${roomId}', '${roomName}')">そのまま閉める</button>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    document.body.insertAdjacentHTML('beforeend', modalHTML);
+}
+
+function closeCloseShopModal() {
+    const modal = document.getElementById('closeShopModal');
+    if (modal) {
+        modal.remove();
+    }
+}
+
+async function exportMemoryAndClose(roomId, roomName) {
+    showToast('店の記憶を書き出しています...');
+    
+    try {
+        // メッセージを取得
+        const messagesQuery = query(collection(db, 'rooms', roomId, 'messages'), orderBy('createdAt'));
+        const snapshot = await getDocs(messagesQuery);
+        
+        if (snapshot.empty) {
+            showToast('記録するメッセージがありません', 'warning');
+        } else {
+            // ログを作成
+            const messages = [];
+            snapshot.forEach(doc => {
+                const data = doc.data();
+                messages.push({
+                    ...data,
+                    timestamp: data.createdAt ? data.createdAt.toMillis() : Date.now()
+                });
+            });
+            
+            // テキストファイルとして書き出し
+            const logText = `=== ${roomName} の記録 ===\n` +
+                `閉店日時: ${new Date().toLocaleString('ja-JP')}\n` +
+                `==================\n\n` +
+                messages.map(msg => {
+                    const time = new Date(msg.timestamp).toLocaleString('ja-JP');
+                    if (msg.type === 'system') {
+                        return `[${time}] ${msg.text}`;
+                    }
+                    return `[${time}] ${msg.authorName}: ${msg.text}`;
+                }).join('\n');
+            
+            const blob = new Blob([logText], { type: 'text/plain;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `${roomName}_最後の記録_${Date.now()}.txt`;
+            a.click();
+            URL.revokeObjectURL(url);
+            
+            showToast('面影を記録しました');
+        }
+        
+        // 少し待ってから削除
+        setTimeout(() => {
+            closeShopImmediately(roomId, roomName);
+        }, 1000);
+        
+    } catch (error) {
+        console.error('メモリー書き出しエラー:', error);
+        showToast('記録の書き出しに失敗しました', 'error');
+    }
+}
+
+async function closeShopImmediately(roomId, roomName) {
+    closeCloseShopModal();
+    
+    try {
+        // メッセージを全て削除
+        const messagesQuery = query(collection(db, 'rooms', roomId, 'messages'));
+        const snapshot = await getDocs(messagesQuery);
+        
+        const deletePromises = [];
+        snapshot.forEach(doc => {
+            deletePromises.push(deleteDoc(doc.ref));
+        });
+        
+        await Promise.all(deletePromises);
+        
+        // ルームを削除
+        await deleteDoc(doc(db, 'rooms', roomId));
+        
+        showToast(`「${roomName}」は静かに闇に消えていった...`);
+        
+        // 現在そのルームにいる場合は退室
+        if (appState.currentRoom && appState.currentRoom.id === roomId) {
+            leaveRoom();
+        }
+        
+    } catch (error) {
+        console.error('店を閉めるエラー:', error);
+        showToast('店を閉めることができませんでした', 'error');
+    }
+}
+
+// グローバルスコープに登録
+window.confirmCloseShop = confirmCloseShop;
+window.closeCloseShopModal = closeCloseShopModal;
+window.exportMemoryAndClose = exportMemoryAndClose;
+window.closeShopImmediately = closeShopImmediately;
 
 function generateIconSelector() {
     UI.iconSelector.innerHTML = '';
