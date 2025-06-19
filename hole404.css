@@ -563,6 +563,7 @@ input, textarea, .message-content {
     background: rgba(20, 20, 20, 0.6);
     border-left: 3px solid var(--border-color);
     animation: messageSlideIn 0.3s ease-out;
+    position: relative;
 }
 .message.system {
     background: rgba(255, 107, 53, 0.1);
@@ -608,6 +609,48 @@ input, textarea, .message-content {
     color: #ddd;
     line-height: 1.4;
     word-break: break-word;
+}
+
+.message-delete {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: rgba(255, 0, 0, 0.1);
+    border: 1px solid rgba(255, 0, 0, 0.3);
+    color: rgba(255, 100, 100, 0.8);
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    cursor: pointer;
+    opacity: 0;
+    transition: all 0.3s ease;
+}
+
+.message:hover .message-delete {
+    opacity: 1;
+}
+
+.message-delete:hover {
+    background: rgba(255, 0, 0, 0.2);
+    border-color: rgba(255, 0, 0, 0.5);
+    color: #ff6666;
+    transform: scale(1.05);
+}
+
+.message.deleting {
+    animation: fadeToBlack 0.8s ease-out forwards;
+}
+
+@keyframes fadeToBlack {
+    0% {
+        opacity: 1;
+        transform: translateX(0);
+    }
+    100% {
+        opacity: 0;
+        transform: translateX(-20px);
+        filter: brightness(0);
+    }
 }
 .chat-input {
     background: rgba(10, 10, 10, 0.9);

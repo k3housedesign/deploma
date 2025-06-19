@@ -9,7 +9,7 @@
 import { initializeApp as initializeFirebaseApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
 import { 
     getFirestore, collection, doc, addDoc, onSnapshot, 
-    query, orderBy, serverTimestamp, getDocs
+    query, orderBy, serverTimestamp, getDocs, deleteDoc
 } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
 import { 
     getDatabase, ref, set, remove, onDisconnect, onValue, off 
@@ -472,11 +472,14 @@ function addSystemMessage(text) {
 function renderMessage(message) {
     const messageEl = document.createElement('div');
     messageEl.className = `message ${message.type}`;
+    messageEl.dataset.messageId = message.id;
     
     if (message.type === 'system') {
         messageEl.innerHTML = `<div class="message-content">${escapeHtml(message.text)}</div>`;
     } else {
         const time = new Date(message.timestamp).toLocaleTimeString('ja-JP', { hour: '2-digit', minute: '2-digit' });
+        const isOwnMessage = appState.currentUser && message.authorName === appState.currentUser.nickname;
+        
         messageEl.innerHTML = `
             <div class="message-header">
                 <div class="message-avatar">${message.authorIcon}</div>
@@ -484,6 +487,7 @@ function renderMessage(message) {
                 <div class="message-time">${time}</div>
             </div>
             <div class="message-content">${escapeHtml(message.text).replace(/\n/g, '<br>')}</div>
+            ${isOwnMessage ? '<button class="message-delete" onclick="deleteMessage(\'' + message.id + '\')">闇に葬る</button>' : ''}
         `;
     }
     
@@ -493,6 +497,45 @@ function renderMessage(message) {
         UI.chatMessages.scrollTop = UI.chatMessages.scrollHeight;
     }
 }
+
+async function deleteMessage(messageId) {
+    if (!appState.currentRoom || !appState.firebaseReady) {
+        showToast('削除できませんでした', 'error');
+        return;
+    }
+    
+    // アニメーション開始
+    const messageEl = document.querySelector(`[data-message-id="${messageId}"]`);
+    if (messageEl) {
+        messageEl.classList.add('deleting');
+    }
+    
+    try {
+        // Firebaseから削除
+        await deleteDoc(doc(db, 'rooms', appState.currentRoom.id, 'messages', messageId));
+        
+        // ローカル配列からも削除
+        appState.messages = appState.messages.filter(msg => msg.id !== messageId);
+        
+        // アニメーション完了後にDOM要素を削除
+        setTimeout(() => {
+            if (messageEl) {
+                messageEl.remove();
+            }
+        }, 800);
+        
+        showToast('メッセージを闇に葬りました');
+    } catch (error) {
+        console.error('メッセージ削除エラー:', error);
+        showToast('削除に失敗しました', 'error');
+        if (messageEl) {
+            messageEl.classList.remove('deleting');
+        }
+    }
+}
+
+// グローバルスコープに登録
+window.deleteMessage = deleteMessage;
 
 function generateIconSelector() {
     UI.iconSelector.innerHTML = '';
