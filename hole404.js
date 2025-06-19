@@ -128,6 +128,10 @@ function initializeApp() {
     console.log('Room selection display:', UI.roomSelection.style.display);
     console.log('Chat screen active:', UI.chatScreen.classList.contains('active'));
     console.log('Plaza title exists:', document.querySelector('.plaza-title'));
+    console.log('Underground plaza computed style:', window.getComputedStyle(document.querySelector('.underground-plaza')));
+    console.log('Plaza title computed style:', window.getComputedStyle(document.querySelector('.plaza-title')));
+    console.log('Main content classes:', UI.mainContent.className);
+    console.log('Main content computed display:', window.getComputedStyle(UI.mainContent).display);
     
     // チャット画面が誤って表示されている場合は修正
     if (!appState.currentRoom && UI.chatScreen.classList.contains('active')) {
