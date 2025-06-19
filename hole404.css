@@ -264,6 +264,7 @@ input, textarea, .message-content {
     padding: 40px 20px;
     position: relative;
     display: block !important;
+    z-index: 1;
 }
 
 .room-selection::before {
@@ -1012,7 +1013,7 @@ input, textarea, .message-content {
     left: 0;
     right: 0;
     bottom: 0;
-    z-index: 100;
+    z-index: 1000;
 }
 .chat-screen.active { display: flex; }
 .chat-header {

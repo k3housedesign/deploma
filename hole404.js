@@ -450,6 +450,14 @@ async function enterRoom(roomId, roomName) {
     if (appState.firebaseReady) {
         await setUserOnlineStatus(roomId);
         await loadMessages(roomId);
+        
+        // ルームのアクティブユーザー数を即座に更新
+        const room = appState.rooms.find(r => r.id === roomId);
+        if (room) {
+            room.activeUsers = (room.activeUsers || 0) + 1;
+            // バックグラウンドでルーム一覧を更新
+            renderRooms();
+        }
     } else {
         addDemoMessages();
     }
@@ -458,6 +466,8 @@ async function enterRoom(roomId, roomName) {
 }
 
 async function leaveRoom() {
+    const leavingRoomId = appState.currentRoom?.id;
+    
     if (appState.currentRoom && appState.currentUser) {
         //退室メッセージは即時表示
         addSystemMessage(`${appState.currentUser.nickname} が闇に消えていった…`);
@@ -465,6 +475,12 @@ async function leaveRoom() {
         if (appState.firebaseReady && appState.statusRef) {
             await remove(appState.statusRef);
             appState.statusRef = null;
+        }
+        
+        // ルームのアクティブユーザー数を即座に更新
+        const room = appState.rooms.find(r => r.id === leavingRoomId);
+        if (room && room.activeUsers > 0) {
+            room.activeUsers--;
         }
     }
     
@@ -484,6 +500,9 @@ async function leaveRoom() {
     appState.messages = [];
     UI.chatMessages.innerHTML = '';
     UI.sendBtn.disabled = true;
+    
+    // ルーム一覧を再描画
+    renderRooms();
 }
 
 async function sendMessage() {
