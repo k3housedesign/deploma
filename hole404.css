@@ -297,16 +297,13 @@ input, textarea, .message-content {
     font-size: 3em;
     font-weight: 300;
     margin-bottom: 20px;
-    background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    color: var(--primary-color);
     text-shadow: 0 0 30px rgba(255, 107, 53, 0.3);
     display: block !important;
 }
 .plaza-subtitle {
     font-size: 1.2em;
-    color: var(--text-dark);
+    color: #888;
     margin-bottom: 60px;
     display: block !important;
 }
@@ -389,10 +386,13 @@ input, textarea, .message-content {
 .create-room-btn .icon {
     font-size: 3em;
     margin-bottom: 15px;
-    color: #666;
+    color: #999;
 }
 .create-room-btn:hover .icon {
     color: var(--primary-color);
+}
+.create-room-btn div {
+    color: #ccc;
 }
 
 /* モーダル */

@@ -139,6 +139,8 @@ function initializeApp() {
     console.log('Plaza title exists:', document.querySelector('.plaza-title'));
     console.log('Main content display:', window.getComputedStyle(UI.mainContent).display);
     console.log('Main content opacity:', window.getComputedStyle(UI.mainContent).opacity);
+    console.log('Splash screen display:', UI.splashScreen.style.display);
+    console.log('Main content classes:', UI.mainContent.className);
     
     // チャット画面が誤って表示されている場合は修正
     if (!appState.currentRoom && UI.chatScreen.classList.contains('active')) {
