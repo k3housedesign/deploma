@@ -619,6 +619,69 @@ input, textarea, .message-content {
     79% { opacity: 1; }
 }
 
+/* 営業中の明るいネオン */
+.vertical-neon.active {
+    animation: activePulse 2s infinite;
+}
+
+@keyframes activePulse {
+    0%, 100% { 
+        opacity: 1; 
+        filter: brightness(1);
+    }
+    50% { 
+        opacity: 0.9; 
+        filter: brightness(1.2);
+    }
+}
+
+/* 非アクティブ状態のスタイル */
+.room-card.inactive {
+    filter: brightness(0.7);
+    opacity: 0.85;
+}
+
+.room-card.inactive:hover {
+    filter: brightness(0.9);
+    opacity: 1;
+}
+
+/* 準備中・空室・静寂の暗めのネオン */
+.vertical-neon.closed,
+.vertical-neon.vacant,
+.vertical-neon.quiet {
+    opacity: 0.6;
+    filter: brightness(0.7);
+}
+
+.vertical-neon.closed {
+    animation: dimFlicker 8s infinite;
+}
+
+.vertical-neon.vacant {
+    animation: slowBlink 10s infinite;
+}
+
+.vertical-neon.quiet {
+    animation: none;
+    opacity: 0.4;
+}
+
+@keyframes dimFlicker {
+    0%, 100% { opacity: 0.6; }
+    10% { opacity: 0.4; }
+    11% { opacity: 0.6; }
+    50% { opacity: 0.5; }
+    51% { opacity: 0.6; }
+}
+
+@keyframes slowBlink {
+    0%, 100% { opacity: 0.6; }
+    45% { opacity: 0.6; }
+    50% { opacity: 0.2; }
+    55% { opacity: 0.6; }
+}
+
 /* モーダル */
 .modal-overlay {
     position: fixed;

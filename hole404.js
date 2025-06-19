@@ -309,14 +309,45 @@ function renderRooms() {
         roomCard.className = 'room-card';
         roomCard.dataset.roomId = room.id;
         
-        // 一部のカードに縦書き風の装飾を追加
-        const verticalText = index % 3 === 0 ? '<div class="vertical-neon">営業中</div>' : '';
+        // アクティブユーザー数に応じた縦書きサイン
+        const activeUsers = room.activeUsers || 0;
+        let verticalText = '';
+        let roomState = '';
         
+        if (activeUsers > 0) {
+            verticalText = '<div class="vertical-neon active">営業中</div>';
+            roomState = 'active';
+        } else {
+            // ランダムで異なる状態を表示
+            const states = [
+                '<div class="vertical-neon closed">準備中</div>',
+                '<div class="vertical-neon vacant">空室</div>',
+                '<div class="vertical-neon quiet">静寂</div>'
+            ];
+            verticalText = states[index % states.length];
+            roomState = 'inactive';
+        }
+        
+        // 雰囲気のある説明文のランダム選択
+        const descriptions = [
+            '煙草の煙が立ち込める密談の場',
+            '赤提灯が揺れる秘密の隠れ家',
+            'ネオンが瞬く深夜の社交場',
+            '路地裏に佇む名もなき酒場',
+            '古びた看板が目印の地下室',
+            '囁き声が響く裏路地の一角',
+            '夜の闇に紛れる密会所',
+            '錆びたドアの向こう側'
+        ];
+        
+        const defaultDescription = room.description || descriptions[Math.floor(Math.random() * descriptions.length)];
+        
+        roomCard.className = `room-card ${roomState}`;
         roomCard.innerHTML = `
             ${verticalText}
             <div class="neon-sign">${escapeHtml(room.roomName)}</div>
-            <div class="room-description">${escapeHtml(room.description || '新しく開かれた場所')}</div>
-            <div class="room-status">${room.activeUsers || 0}人が佇んでいる</div>
+            <div class="room-description">${escapeHtml(defaultDescription)}</div>
+            <div class="room-status">${activeUsers}人が佇んでいる</div>
         `;
         UI.roomGrid.appendChild(roomCard);
     });
@@ -344,9 +375,9 @@ function updateActiveUserCounts() {
         // UIに反映
         appState.rooms.forEach(room => {
             room.activeUsers = userCounts[room.id] || 0;
-            const card = UI.roomGrid.querySelector(`.room-card[data-room-id="${room.id}"] .room-status`);
-            if (card) card.textContent = `${room.activeUsers}人が佇んでいる`;
         });
+        // ルーム一覧を再描画して状態を更新
+        renderRooms();
     });
 }
 
@@ -486,11 +517,20 @@ async function handleCreateRoom(e) {
         return;
     }
 
+    // 新規ルーム用の説明文
+    const newRoomDescriptions = [
+        '今宵開かれた秘密の場所',
+        '新たに灯りがついた路地裏',
+        '扉が開かれたばかりの隠れ家',
+        '誰も知らない地下の一室'
+    ];
+    const randomDescription = newRoomDescriptions[Math.floor(Math.random() * newRoomDescriptions.length)];
+
     if (appState.firebaseReady) {
         try {
             const roomData = {
                 roomName: roomName,
-                description: '新しく開かれた場所',
+                description: randomDescription,
                 createdAt: serverTimestamp(),
                 createdBy: appState.currentUser.id,
             };
@@ -504,7 +544,7 @@ async function handleCreateRoom(e) {
         }
     } else {
         // オフライン時のローカルルーム作成
-        const newRoom = { id: generateId('room'), roomName: roomName, activeUsers: 1, description: '新しく開かれた場所（オフライン）' };
+        const newRoom = { id: generateId('room'), roomName: roomName, activeUsers: 1, description: `${randomDescription}（オフライン）` };
         appState.rooms.unshift(newRoom);
         renderRooms();
         closeCreateRoomModal();
