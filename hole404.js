@@ -53,7 +53,6 @@ const iconOptions = [
 // --- 初期化 ---
 
 document.addEventListener('DOMContentLoaded', () => {
-    console.log('DOM loaded, initializing app...');
     try {
         initializeApp();
     } catch (error) {
@@ -62,8 +61,6 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 function initializeApp() {
-    console.log('Starting initializeApp...');
-    
     // UI要素を初期化
     UI = {
         splashScreen: document.getElementById('splashScreen'),
@@ -98,8 +95,6 @@ function initializeApp() {
         currentUserNickname: document.getElementById('currentUserNickname'),
         logoutBtn: document.getElementById('logoutBtn'),
     };
-    
-    console.log('UI elements initialized:', UI.enterButton);
     
     // localStorageから既存のユーザー情報を復元
     const storedUser = localStorage.getItem('holeUserProfile');
@@ -151,7 +146,6 @@ function initializeApp() {
     }
     
     // イベントリスナーの設定
-    console.log('Setting up event listeners...');
     setupEventListeners();
     
     // モバイルUI調整
@@ -179,14 +173,10 @@ function initializeApp() {
 }
 
 function setupEventListeners() {
-    console.log('In setupEventListeners, UI.enterButton:', UI.enterButton);
-    
     // スプラッシュ
     if (UI.enterButton) {
-        console.log('Adding click listener to enterButton');
         UI.enterButton.addEventListener('click', enterTheHole);
     } else {
-        console.error('UI.enterButton is null!');
     }
     const manholeCover = document.getElementById('manholeCover');
     if (manholeCover) {
@@ -251,8 +241,6 @@ function setupEventListeners() {
 // (以下、前回のJavaScriptコードが続く)
 
 function enterTheHole() {
-    console.log('enterTheHole called!');
-    
     // マンホールのアニメーション開始
     const manholeCover = document.getElementById('manholeCover');
     const manholeHole = document.getElementById('manholeHole');
@@ -362,12 +350,27 @@ function handleLogout() {
             leaveRoom();
         }
         
-        // メイン画面を非表示
+        // メイン画面を完全にリセット
         UI.mainContent.classList.remove('active', 'visible');
         UI.roomSelection.style.display = 'none';
+        UI.chatScreen.classList.remove('active');
         
-        // スプラッシュ画面を表示
+        // スプラッシュ画面を初期状態に戻す
         UI.splashScreen.style.display = 'flex';
+        UI.splashScreen.classList.remove('hidden');
+        
+        // マンホールのアニメーションをリセット
+        const manholeCover = document.getElementById('manholeCover');
+        const manholeHole = document.getElementById('manholeHole');
+        if (manholeCover) manholeCover.classList.remove('opening');
+        if (manholeHole) {
+            manholeHole.classList.remove('visible', 'fullscreen');
+        }
+        
+        // ENTERボタンを再表示
+        if (UI.enterButton) {
+            UI.enterButton.classList.remove('hidden');
+        }
         
         showToast('地上へ戻りました。また会いましょう...', 'info');
     }
