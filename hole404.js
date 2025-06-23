@@ -63,6 +63,10 @@ const UI = {
     createRoomForm: document.getElementById('createRoomForm'),
     createRoomCancelBtn: document.getElementById('createRoomCancelBtn'),
     roomNameInput: document.getElementById('roomNameInput'),
+    // User Profile
+    currentUserIcon: document.getElementById('currentUserIcon'),
+    currentUserNickname: document.getElementById('currentUserNickname'),
+    logoutBtn: document.getElementById('logoutBtn'),
 };
 
 // アプリケーションの状態管理
@@ -186,6 +190,11 @@ function setupEventListeners() {
     UI.exportLogBtn.addEventListener('click', exportLog);
     UI.leaveRoomBtn.addEventListener('click', leaveRoom);
     
+    // ログアウトボタン
+    if (UI.logoutBtn) {
+        UI.logoutBtn.addEventListener('click', handleLogout);
+    }
+    
     // メッセージ入力
     UI.messageInput.addEventListener('keydown', (e) => {
         if (e.key === 'Enter' && !e.shiftKey) {
@@ -238,6 +247,7 @@ function enterTheHole() {
     setTimeout(() => {
         UI.mainContent.classList.add('active');
         loadRooms();
+        updateUserDisplay();
     }, 1800);
     
     // 穴が完全に全画面になってからコンテンツを表示
@@ -281,6 +291,36 @@ function enterTheHole() {
             }, 500);
         }, 3000);
     }, 2200);
+}
+
+function updateUserDisplay() {
+    if (appState.currentUser && UI.currentUserIcon && UI.currentUserNickname) {
+        UI.currentUserIcon.textContent = appState.currentUser.icon || '👤';
+        UI.currentUserNickname.textContent = appState.currentUser.nickname || '名無し';
+    }
+}
+
+function handleLogout() {
+    // 確認ダイアログ
+    if (confirm('本当に地上へ戻りますか？\n（仮面を外して地下世界から去ります）')) {
+        // localStorageからユーザー情報を削除
+        localStorage.removeItem('holeUserProfile');
+        appState.currentUser = null;
+        
+        // チャット画面が開いていたら閉じる
+        if (UI.chatScreen.classList.contains('active')) {
+            leaveRoom();
+        }
+        
+        // メイン画面を非表示
+        UI.mainContent.classList.remove('active', 'visible');
+        UI.roomSelection.style.display = 'none';
+        
+        // スプラッシュ画面を表示
+        UI.splashScreen.style.display = 'flex';
+        
+        showToast('地上へ戻りました。また会いましょう...', 'info');
+    }
 }
 
 async function loadRooms() {
@@ -568,6 +608,7 @@ function handleProfileSubmit(e) {
     };
     localStorage.setItem('holeUserProfile', JSON.stringify(appState.currentUser));
     closeProfileModal();
+    updateUserDisplay();
 
     const pendingRoomJson = localStorage.getItem('pendingRoom');
     if (pendingRoomJson) {

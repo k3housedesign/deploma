@@ -32,6 +32,16 @@
         <!-- ルーム選択画面 -->
         <div class="room-selection" id="roomSelection">
             <div class="underground-plaza">
+                <div class="user-profile-section">
+                    <div class="current-user-info">
+                        <span class="user-icon" id="currentUserIcon"></span>
+                        <span class="user-nickname" id="currentUserNickname"></span>
+                    </div>
+                    <button class="logout-btn" id="logoutBtn">
+                        <span class="logout-icon">🚪</span>
+                        <span class="logout-text">地上へ戻る</span>
+                    </button>
+                </div>
                 <h1 class="plaza-title">地下街広場</h1>
                 <p class="plaza-subtitle">薄暗い路地裏で、今夜は誰と出会うだろうか</p>
                 
@@ -107,17 +117,4 @@
             <form id="createRoomForm">
                 <div class="form-group">
                     <label class="form-label">場所の名前</label>
-                    <input type="text" id="roomNameInput" class="form-input" maxlength="30" placeholder="猥雑な麻雀クラブ">
-                </div>
-                <div class="modal-actions">
-                    <button type="button" class="btn btn-secondary" id="createRoomCancelBtn">キャンセル</button>
-                    <button type="submit" class="btn btn-primary">路地裏を開く</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- JavaScriptファイルを読み込み -->
-    <script type="module" src="hole404.js"></script>
-</body>
-</html>
+                    <input type="text" id="roomNameInput" 

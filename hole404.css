@@ -1002,6 +1002,61 @@ input, textarea, .message-content {
     color: white;
 }
 
+/* ユーザープロファイルセクション */
+.user-profile-section {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    z-index: 100;
+}
+
+.current-user-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(20, 20, 20, 0.8);
+    padding: 8px 15px;
+    border-radius: 25px;
+    border: 1px solid var(--border-color);
+}
+
+.user-icon {
+    font-size: 1.5em;
+}
+
+.user-nickname {
+    color: var(--text-secondary);
+    font-size: 0.9em;
+}
+
+.logout-btn {
+    background: linear-gradient(45deg, #8b0000, #ff4500);
+    border: none;
+    border-radius: 25px;
+    padding: 8px 20px;
+    color: white;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.9em;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 10px rgba(139, 0, 0, 0.3);
+}
+
+.logout-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 20px rgba(255, 69, 0, 0.4);
+    background: linear-gradient(45deg, #a50000, #ff6347);
+}
+
+.logout-icon {
+    font-size: 1.2em;
+}
+
 /* チャット画面 */
 .chat-screen {
     height: 100vh;
@@ -1227,6 +1282,11 @@ input, textarea, .message-content {
     .modal-title { font-size: 1.5em; margin-bottom: 20px; }
     .icon-selector { grid-template-columns: repeat(auto-fit, minmax(50px, 1fr)); gap: 8px; }
     .icon-option { width: 50px; height: 50px; font-size: 1.3em; }
+    .user-profile-section { top: 10px; right: 10px; gap: 10px; }
+    .current-user-info { padding: 6px 12px; gap: 8px; }
+    .user-icon { font-size: 1.2em; }
+    .user-nickname { font-size: 0.85em; }
+    .logout-btn { padding: 6px 15px; font-size: 0.85em; }
     .chat-header { padding: 15px; flex-direction: column; align-items: flex-start; gap: 10px; }
     .room-info h2 { font-size: 1.2em; }
     .room-info p { font-size: 0.8em; word-break: break-all; }
