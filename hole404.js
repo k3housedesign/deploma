@@ -93,6 +93,18 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 function initializeApp() {
+    // localStorageから既存のユーザー情報を復元
+    const storedUser = localStorage.getItem('holeUserProfile');
+    if (storedUser) {
+        try {
+            appState.currentUser = JSON.parse(storedUser);
+            console.log('ユーザー情報を復元しました:', appState.currentUser.nickname);
+        } catch (error) {
+            console.error('ユーザー情報の復元に失敗:', error);
+            localStorage.removeItem('holeUserProfile');
+        }
+    }
+    
     // スプラッシュ画面が既に非表示の場合（リロード時など）、メインコンテンツを表示
     if (UI.splashScreen.style.display === 'none' || !UI.splashScreen.offsetParent) {
         console.log('Splash screen already hidden, showing main content directly');
@@ -428,7 +440,7 @@ function updateActiveUserCounts() {
 function handleRoomEntry(room) {
     if (!appState.currentUser) {
         showProfileModal();
-        sessionStorage.setItem('pendingRoom', JSON.stringify(room));
+        localStorage.setItem('pendingRoom', JSON.stringify(room));
         return;
     }
     enterRoom(room.id, room.roomName);
@@ -554,12 +566,12 @@ function handleProfileSubmit(e) {
         nickname: nickname,
         icon: selectedIconEl.dataset.icon
     };
-    sessionStorage.setItem('holeUserProfile', JSON.stringify(appState.currentUser));
+    localStorage.setItem('holeUserProfile', JSON.stringify(appState.currentUser));
     closeProfileModal();
 
-    const pendingRoomJson = sessionStorage.getItem('pendingRoom');
+    const pendingRoomJson = localStorage.getItem('pendingRoom');
     if (pendingRoomJson) {
-        sessionStorage.removeItem('pendingRoom');
+        localStorage.removeItem('pendingRoom');
         const pendingRoom = JSON.parse(pendingRoomJson);
         handleRoomEntry(pendingRoom);
     } else {
@@ -993,7 +1005,7 @@ function checkRoomFromUrl() {
         const newUrl = window.location.pathname;
         window.history.replaceState({}, '', newUrl);
         
-        const storedUser = sessionStorage.getItem('holeUserProfile');
+        const storedUser = localStorage.getItem('holeUserProfile');
         if (storedUser) {
             appState.currentUser = JSON.parse(storedUser);
             // enterTheHoleが呼ばれていない場合があるので、直接ルームに入る
