@@ -352,24 +352,36 @@ function handleLogout() {
         
         // メイン画面を完全にリセット
         UI.mainContent.classList.remove('active', 'visible');
+        UI.mainContent.style.display = 'none';
         UI.roomSelection.style.display = 'none';
         UI.chatScreen.classList.remove('active');
+        UI.chatScreen.style.display = 'none';
         
         // スプラッシュ画面を初期状態に戻す
         UI.splashScreen.style.display = 'flex';
         UI.splashScreen.classList.remove('hidden');
+        UI.splashScreen.style.opacity = '1';
+        UI.splashScreen.style.pointerEvents = 'auto';
         
         // マンホールのアニメーションをリセット
         const manholeCover = document.getElementById('manholeCover');
         const manholeHole = document.getElementById('manholeHole');
-        if (manholeCover) manholeCover.classList.remove('opening');
+        if (manholeCover) {
+            manholeCover.classList.remove('opening');
+            manholeCover.style.opacity = '1';
+            manholeCover.style.visibility = 'visible';
+        }
         if (manholeHole) {
             manholeHole.classList.remove('visible', 'fullscreen');
+            manholeHole.style.width = '0';
+            manholeHole.style.height = '0';
         }
         
         // ENTERボタンを再表示
         if (UI.enterButton) {
             UI.enterButton.classList.remove('hidden');
+            UI.enterButton.style.opacity = '1';
+            UI.enterButton.style.visibility = 'visible';
         }
         
         showToast('地上へ戻りました。また会いましょう...', 'info');
