@@ -2,6 +2,23 @@
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;700&display=swap');
 
 /* --- ご指定のコードスニペットから反映 --- */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    font-size: 16px;
+    -webkit-text-size-adjust: 100%;
+}
+
+html, body {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
 body {
     font-family: 'Noto Sans JP', sans-serif;
     background: #0a0a0a;
@@ -1272,6 +1289,14 @@ input, textarea, .message-content {
 
 /* レスポンシブデザイン */
 @media (max-width: 768px) {
+    html { font-size: 16px !important; }
+    body { 
+        font-size: 16px !important;
+        -webkit-text-size-adjust: 100% !important;
+    }
+    .splash-screen h1 { font-size: 3em; }
+    .splash-screen .subtitle { font-size: 1em; }
+    .underground-plaza { padding: 60px 15px; }
     .plaza-title { font-size: 2.5em; margin-bottom: 15px; }
     .plaza-subtitle { font-size: 1em; margin-bottom: 40px; }
     .room-grid { grid-template-columns: 1fr; gap: 20px; margin-bottom: 40px; }
@@ -1300,7 +1325,7 @@ input, textarea, .message-content {
     .message-time { font-size: 0.75em; }
     .message-content { font-size: 0.9em; line-height: 1.3; }
     .chat-input { padding: 15px; gap: 12px; }
-    .message-input { padding: 10px 15px; border-radius: 18px; font-size: 16px; max-height: 80px; }
+    .message-input { padding: 10px 15px; border-radius: 18px; font-size: 16px !important; max-height: 80px; }
     .send-btn { width: 40px; height: 40px; font-size: 1.1em; flex-shrink: 0; }
     .user-counter { bottom: 15px; right: 15px; padding: 8px 15px; font-size: 12px; border-radius: 15px; }
     .toast { top: 15px; right: 15px; left: 15px; padding: 12px 15px; font-size: 0.9em; }
