@@ -5,15 +5,7 @@
     下記の initializeApp 内に統合・実装されています。
 */
 
-// Firebase SDKのインポート
-import { initializeApp as initializeFirebaseApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
-import { 
-    getFirestore, collection, doc, addDoc, onSnapshot, 
-    query, orderBy, serverTimestamp, getDocs, deleteDoc
-} from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
-import { 
-    getDatabase, ref, set, remove, onDisconnect, onValue, off 
-} from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js';
+// Firebase compatバージョンを使用（HTMLで読み込み済み）
 
 // --- セキュリティに関する重要事項 ---
 // このAPIキーはクライアントサイドで参照可能ですが、バックエンドのセキュリティは
@@ -125,9 +117,9 @@ function initializeApp() {
     }
     
     try {
-        const app = initializeFirebaseApp(firebaseConfig);
-        db = getFirestore(app);
-        rtdb = getDatabase(app);
+        firebase.initializeApp(firebaseConfig);
+        db = firebase.firestore();
+        rtdb = firebase.database();
         appState.firebaseReady = true;
         console.log('Firebase初期化成功');
         monitorFirebaseConnection();
@@ -355,8 +347,8 @@ async function loadRooms() {
     // 既存のリスナーを解除
     if (appState.listeners.room) appState.listeners.room();
 
-    const roomsQuery = query(collection(db, 'rooms'), orderBy('createdAt', 'desc'));
-    appState.listeners.room = onSnapshot(roomsQuery, (snapshot) => {
+    const roomsQuery = db.collection('rooms').orderBy('createdAt', 'desc');
+    appState.listeners.room = roomsQuery.onSnapshot((snapshot) => {
         appState.rooms = snapshot.docs.map(doc => ({
             id: doc.id,
             ...doc.data(),
@@ -468,8 +460,8 @@ function renderRooms() {
 
 function updateActiveUserCounts() {
     if (!appState.firebaseReady) return;
-    const statusRef = ref(rtdb, 'status');
-    onValue(statusRef, (snapshot) => {
+    const statusRef = rtdb.ref('status');
+    statusRef.on('value', (snapshot) => {
         const allStatus = snapshot.val() || {};
         const userCounts = {};
         
@@ -542,7 +534,7 @@ async function leaveRoom() {
         addSystemMessage(`${appState.currentUser.nickname} が闇に消えていった…`);
 
         if (appState.firebaseReady && appState.statusRef) {
-            await remove(appState.statusRef);
+            await appState.statusRef.remove();
             appState.statusRef = null;
         }
         
@@ -583,13 +575,13 @@ async function sendMessage() {
         text: text,
         authorName: appState.currentUser.nickname,
         authorIcon: appState.currentUser.icon,
-        createdAt: serverTimestamp(),
+        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
         type: 'user'
     };
 
     if (appState.firebaseReady) {
         try {
-            await addDoc(collection(db, 'rooms', appState.currentRoom.id, 'messages'), messageData);
+            await db.collection('rooms').doc(appState.currentRoom.id).collection('messages').add(messageData);
         } catch (error) {
             console.error('メッセージ送信エラー:', error);
             showToast('送信失敗', 'error');
@@ -673,10 +665,10 @@ async function handleCreateRoom(e) {
             const roomData = {
                 roomName: roomName,
                 description: randomDescription,
-                createdAt: serverTimestamp(),
+                createdAt: firebase.firestore.FieldValue.serverTimestamp(),
                 createdBy: appState.currentUser.id,
             };
-            const docRef = await addDoc(collection(db, 'rooms'), roomData);
+            const docRef = await db.collection('rooms').add(roomData);
             closeCreateRoomModal();
             enterRoom(docRef.id, roomName);
             showToast(`${roomName} を開きました`);
@@ -761,7 +753,7 @@ async function deleteMessage(messageId) {
     
     try {
         // Firebaseから削除
-        await deleteDoc(doc(db, 'rooms', appState.currentRoom.id, 'messages', messageId));
+        await db.collection('rooms').doc(appState.currentRoom.id).collection('messages').doc(messageId).delete();
         
         // ローカル配列からも削除
         appState.messages = appState.messages.filter(msg => msg.id !== messageId);
@@ -823,8 +815,8 @@ async function exportMemoryAndClose(roomId, roomName) {
     
     try {
         // メッセージを取得
-        const messagesQuery = query(collection(db, 'rooms', roomId, 'messages'), orderBy('createdAt'));
-        const snapshot = await getDocs(messagesQuery);
+        const messagesQuery = db.collection('rooms').doc(roomId).collection('messages').orderBy('createdAt');
+        const snapshot = await messagesQuery.get();
         
         if (snapshot.empty) {
             showToast('記録するメッセージがありません', 'warning');
@@ -878,18 +870,18 @@ async function closeShopImmediately(roomId, roomName) {
     
     try {
         // メッセージを全て削除
-        const messagesQuery = query(collection(db, 'rooms', roomId, 'messages'));
-        const snapshot = await getDocs(messagesQuery);
+        const messagesQuery = db.collection('rooms').doc(roomId).collection('messages');
+        const snapshot = await messagesQuery.get();
         
         const deletePromises = [];
         snapshot.forEach(doc => {
-            deletePromises.push(deleteDoc(doc.ref));
+            deletePromises.push(doc.ref.delete());
         });
         
         await Promise.all(deletePromises);
         
         // ルームを削除
-        await deleteDoc(doc(db, 'rooms', roomId));
+        await db.collection('rooms').doc(roomId).delete();
         
         showToast(`「${roomName}」は静かに闇に消えていった...`);
         
@@ -980,9 +972,9 @@ function exportLog() {
 
 async function setUserOnlineStatus(roomId) {
     if (!appState.currentUser) return;
-    appState.statusRef = ref(rtdb, `status/${appState.currentUser.id}/${roomId}`);
-    await set(appState.statusRef, { state: 'online', nickname: appState.currentUser.nickname });
-    onDisconnect(appState.statusRef).remove();
+    appState.statusRef = rtdb.ref(`status/${appState.currentUser.id}/${roomId}`);
+    await appState.statusRef.set({ state: 'online', nickname: appState.currentUser.nickname });
+    appState.statusRef.onDisconnect().remove();
 }
 
 async function loadMessages(roomId) {
@@ -991,8 +983,8 @@ async function loadMessages(roomId) {
     appState.messages = [];
     UI.chatMessages.innerHTML = '';
     
-    const messagesQuery = query(collection(db, 'rooms', roomId, 'messages'), orderBy('createdAt'));
-    appState.listeners.messages = onSnapshot(messagesQuery, (snapshot) => {
+    const messagesQuery = db.collection('rooms').doc(roomId).collection('messages').orderBy('createdAt');
+    appState.listeners.messages = messagesQuery.onSnapshot((snapshot) => {
         snapshot.docChanges().forEach((change) => {
             if (change.type === 'added') {
                 const data = change.doc.data();
@@ -1013,8 +1005,8 @@ async function loadMessages(roomId) {
 }
 
 function monitorFirebaseConnection() {
-    const connectedRef = ref(rtdb, '.info/connected');
-    onValue(connectedRef, (snap) => {
+    const connectedRef = rtdb.ref('.info/connected');
+    connectedRef.on('value', (snap) => {
         const isConnected = snap.val() === true;
         console.log(isConnected ? "Firebaseに接続" : "Firebaseから切断");
         if (!isConnected) showToast('接続が不安定です', 'warning');
@@ -1025,7 +1017,7 @@ function cleanupBeforeUnload() {
     if (appState.listeners.room) appState.listeners.room();
     if (appState.listeners.messages) appState.listeners.messages();
     if (appState.firebaseReady && appState.statusRef) {
-        remove(appState.statusRef); // 同期的に実行
+        appState.statusRef.remove(); // 同期的に実行
     }
 }
 
