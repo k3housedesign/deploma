@@ -35,39 +35,8 @@ const firebaseConfig = {
 let db, rtdb;
 
 // UI要素のキャッシュ
-const UI = {
-    splashScreen: document.getElementById('splashScreen'),
-    mainContent: document.getElementById('mainContent'),
-    roomSelection: document.getElementById('roomSelection'),
-    chatScreen: document.getElementById('chatScreen'),
-    userCount: document.getElementById('userCount'),
-    roomGrid: document.getElementById('roomGrid'),
-    chatMessages: document.getElementById('chatMessages'),
-    messageInput: document.getElementById('messageInput'),
-    sendBtn: document.getElementById('sendBtn'),
-    currentRoomName: document.getElementById('currentRoomName'),
-    currentRoomUrl: document.getElementById('currentRoomUrl'),
-    // Buttons
-    enterButton: document.getElementById('enterButton'),
-    createRoomBtn: document.getElementById('createRoomBtn'),
-    copyUrlBtn: document.getElementById('copyUrlBtn'),
-    exportLogBtn: document.getElementById('exportLogBtn'),
-    leaveRoomBtn: document.getElementById('leaveRoomBtn'),
-    // Modals & Forms
-    profileModal: document.getElementById('profileModal'),
-    profileForm: document.getElementById('profileForm'),
-    profileCancelBtn: document.getElementById('profileCancelBtn'),
-    nicknameInput: document.getElementById('nicknameInput'),
-    iconSelector: document.getElementById('iconSelector'),
-    createRoomModal: document.getElementById('createRoomModal'),
-    createRoomForm: document.getElementById('createRoomForm'),
-    createRoomCancelBtn: document.getElementById('createRoomCancelBtn'),
-    roomNameInput: document.getElementById('roomNameInput'),
-    // User Profile
-    currentUserIcon: document.getElementById('currentUserIcon'),
-    currentUserNickname: document.getElementById('currentUserNickname'),
-    logoutBtn: document.getElementById('logoutBtn'),
-};
+// UI要素は後で初期化
+let UI = {};
 
 // アプリケーションの状態管理
 const appState = {
@@ -97,6 +66,41 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 function initializeApp() {
+    // UI要素を初期化
+    UI = {
+        splashScreen: document.getElementById('splashScreen'),
+        mainContent: document.getElementById('mainContent'),
+        roomSelection: document.getElementById('roomSelection'),
+        chatScreen: document.getElementById('chatScreen'),
+        userCount: document.getElementById('userCount'),
+        roomGrid: document.getElementById('roomGrid'),
+        chatMessages: document.getElementById('chatMessages'),
+        messageInput: document.getElementById('messageInput'),
+        sendBtn: document.getElementById('sendBtn'),
+        currentRoomName: document.getElementById('currentRoomName'),
+        currentRoomUrl: document.getElementById('currentRoomUrl'),
+        // Buttons
+        enterButton: document.getElementById('enterButton'),
+        createRoomBtn: document.getElementById('createRoomBtn'),
+        copyUrlBtn: document.getElementById('copyUrlBtn'),
+        exportLogBtn: document.getElementById('exportLogBtn'),
+        leaveRoomBtn: document.getElementById('leaveRoomBtn'),
+        // Modals & Forms
+        profileModal: document.getElementById('profileModal'),
+        profileForm: document.getElementById('profileForm'),
+        profileCancelBtn: document.getElementById('profileCancelBtn'),
+        nicknameInput: document.getElementById('nicknameInput'),
+        iconSelector: document.getElementById('iconSelector'),
+        createRoomModal: document.getElementById('createRoomModal'),
+        createRoomForm: document.getElementById('createRoomForm'),
+        createRoomCancelBtn: document.getElementById('createRoomCancelBtn'),
+        roomNameInput: document.getElementById('roomNameInput'),
+        // User Profile
+        currentUserIcon: document.getElementById('currentUserIcon'),
+        currentUserNickname: document.getElementById('currentUserNickname'),
+        logoutBtn: document.getElementById('logoutBtn'),
+    };
+    
     // localStorageから既存のユーザー情報を復元
     const storedUser = localStorage.getItem('holeUserProfile');
     if (storedUser) {
