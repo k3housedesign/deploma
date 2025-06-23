@@ -122,6 +122,11 @@ function initializeApp() {
         UI.mainContent.classList.add('visible');
         UI.roomSelection.style.display = 'block';
         loadRooms();
+        
+        // ユーザーがログインしていない場合はプロフィール設定画面を表示
+        if (!appState.currentUser) {
+            showProfileModal();
+        }
     }
     
     try {
@@ -273,6 +278,13 @@ function enterTheHole() {
         UI.mainContent.classList.add('active');
         loadRooms();
         updateUserDisplay();
+        
+        // ユーザーがログインしていない場合はプロフィール設定画面を表示
+        if (!appState.currentUser) {
+            setTimeout(() => {
+                showProfileModal();
+            }, 500);
+        }
     }, 1800);
     
     // 穴が完全に全画面になってからコンテンツを表示
@@ -319,9 +331,22 @@ function enterTheHole() {
 }
 
 function updateUserDisplay() {
+    const userProfileSection = document.querySelector('.user-profile-section');
+    
     if (appState.currentUser && UI.currentUserIcon && UI.currentUserNickname) {
+        // ログイン中：ユーザー情報を表示
         UI.currentUserIcon.textContent = appState.currentUser.icon || '👤';
         UI.currentUserNickname.textContent = appState.currentUser.nickname || '名無し';
+        
+        // ユーザープロファイルセクションを表示
+        if (userProfileSection) {
+            userProfileSection.style.display = 'flex';
+        }
+    } else {
+        // ログアウト中：ユーザープロファイルセクションを非表示
+        if (userProfileSection) {
+            userProfileSection.style.display = 'none';
+        }
     }
 }
 
