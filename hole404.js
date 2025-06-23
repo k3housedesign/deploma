@@ -103,6 +103,8 @@ function initializeApp() {
         try {
             appState.currentUser = JSON.parse(storedUser);
             console.log('ユーザー情報を復元しました:', appState.currentUser.nickname);
+            // 初期化時にもユーザー情報を表示
+            setTimeout(() => updateUserDisplay(), 100);
         } catch (error) {
             console.error('ユーザー情報の復元に失敗:', error);
             localStorage.removeItem('holeUserProfile');
@@ -169,7 +171,10 @@ function initializeApp() {
 function setupEventListeners() {
     // スプラッシュ
     UI.enterButton.addEventListener('click', enterTheHole);
-    document.getElementById('manholeCover').addEventListener('click', enterTheHole);
+    const manholeCover = document.getElementById('manholeCover');
+    if (manholeCover) {
+        manholeCover.addEventListener('click', enterTheHole);
+    }
 
     // ルーム作成
     UI.createRoomBtn.addEventListener('click', showCreateRoomModal);
@@ -719,7 +724,14 @@ function renderMessage(message) {
     const shouldScroll = UI.chatMessages.scrollTop + UI.chatMessages.clientHeight >= UI.chatMessages.scrollHeight - 50;
     UI.chatMessages.appendChild(messageEl);
     if (shouldScroll) {
-        UI.chatMessages.scrollTop = UI.chatMessages.scrollHeight;
+        // 少し遅延を入れてからスクロール（DOMの更新を待つ）
+        setTimeout(() => {
+            UI.chatMessages.scrollTop = UI.chatMessages.scrollHeight;
+            // モバイルでの追加スクロール調整
+            if (window.innerWidth <= 768) {
+                messageEl.scrollIntoView({ behavior: 'smooth', block: 'end' });
+            }
+        }, 50);
     }
 }
 

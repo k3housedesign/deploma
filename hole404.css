@@ -1332,7 +1332,7 @@ input, textarea, .message-content {
             bottom: env(safe-area-inset-bottom);
         }
         .chat-messages {
-            padding-bottom: calc(80px + env(safe-area-inset-bottom));
+            padding-bottom: calc(100px + env(safe-area-inset-bottom));
         }
     }
 }
