@@ -54,10 +54,16 @@ const iconOptions = [
 
 document.addEventListener('DOMContentLoaded', () => {
     console.log('DOM loaded, initializing app...');
-    initializeApp();
+    try {
+        initializeApp();
+    } catch (error) {
+        console.error('Error in initializeApp:', error);
+    }
 });
 
 function initializeApp() {
+    console.log('Starting initializeApp...');
+    
     // UI要素を初期化
     UI = {
         splashScreen: document.getElementById('splashScreen'),
@@ -92,6 +98,8 @@ function initializeApp() {
         currentUserNickname: document.getElementById('currentUserNickname'),
         logoutBtn: document.getElementById('logoutBtn'),
     };
+    
+    console.log('UI elements initialized:', UI.enterButton);
     
     // localStorageから既存のユーザー情報を復元
     const storedUser = localStorage.getItem('holeUserProfile');
@@ -138,6 +146,7 @@ function initializeApp() {
     }
     
     // イベントリスナーの設定
+    console.log('Setting up event listeners...');
     setupEventListeners();
     
     // モバイルUI調整
@@ -165,9 +174,14 @@ function initializeApp() {
 }
 
 function setupEventListeners() {
+    console.log('In setupEventListeners, UI.enterButton:', UI.enterButton);
+    
     // スプラッシュ
     if (UI.enterButton) {
+        console.log('Adding click listener to enterButton');
         UI.enterButton.addEventListener('click', enterTheHole);
+    } else {
+        console.error('UI.enterButton is null!');
     }
     const manholeCover = document.getElementById('manholeCover');
     if (manholeCover) {
@@ -232,6 +246,8 @@ function setupEventListeners() {
 // (以下、前回のJavaScriptコードが続く)
 
 function enterTheHole() {
+    console.log('enterTheHole called!');
+    
     // マンホールのアニメーション開始
     const manholeCover = document.getElementById('manholeCover');
     const manholeHole = document.getElementById('manholeHole');
