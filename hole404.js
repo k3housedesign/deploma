@@ -170,30 +170,34 @@ function initializeApp() {
 
 function setupEventListeners() {
     // スプラッシュ
-    UI.enterButton.addEventListener('click', enterTheHole);
+    if (UI.enterButton) {
+        UI.enterButton.addEventListener('click', enterTheHole);
+    }
     const manholeCover = document.getElementById('manholeCover');
     if (manholeCover) {
         manholeCover.addEventListener('click', enterTheHole);
     }
 
     // ルーム作成
-    UI.createRoomBtn.addEventListener('click', showCreateRoomModal);
-    UI.createRoomForm.addEventListener('submit', handleCreateRoom);
-    UI.createRoomCancelBtn.addEventListener('click', closeCreateRoomModal);
+    if (UI.createRoomBtn) UI.createRoomBtn.addEventListener('click', showCreateRoomModal);
+    if (UI.createRoomForm) UI.createRoomForm.addEventListener('submit', handleCreateRoom);
+    if (UI.createRoomCancelBtn) UI.createRoomCancelBtn.addEventListener('click', closeCreateRoomModal);
 
     // プロフィール設定
-    UI.profileForm.addEventListener('submit', handleProfileSubmit);
-    UI.profileCancelBtn.addEventListener('click', closeProfileModal);
-    UI.iconSelector.addEventListener('click', (e) => {
-        const option = e.target.closest('.icon-option');
-        if (option) selectIcon(option);
-    });
+    if (UI.profileForm) UI.profileForm.addEventListener('submit', handleProfileSubmit);
+    if (UI.profileCancelBtn) UI.profileCancelBtn.addEventListener('click', closeProfileModal);
+    if (UI.iconSelector) {
+        UI.iconSelector.addEventListener('click', (e) => {
+            const option = e.target.closest('.icon-option');
+            if (option) selectIcon(option);
+        });
+    }
 
     // チャットアクション
-    UI.sendBtn.addEventListener('click', sendMessage);
-    UI.copyUrlBtn.addEventListener('click', copyRoomUrl);
-    UI.exportLogBtn.addEventListener('click', exportLog);
-    UI.leaveRoomBtn.addEventListener('click', leaveRoom);
+    if (UI.sendBtn) UI.sendBtn.addEventListener('click', sendMessage);
+    if (UI.copyUrlBtn) UI.copyUrlBtn.addEventListener('click', copyRoomUrl);
+    if (UI.exportLogBtn) UI.exportLogBtn.addEventListener('click', exportLog);
+    if (UI.leaveRoomBtn) UI.leaveRoomBtn.addEventListener('click', leaveRoom);
     
     // ログアウトボタン
     if (UI.logoutBtn) {
@@ -201,24 +205,28 @@ function setupEventListeners() {
     }
     
     // メッセージ入力
-    UI.messageInput.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter' && !e.shiftKey) {
-            e.preventDefault();
-            sendMessage();
-        }
-    });
-    UI.messageInput.addEventListener('input', () => {
-        UI.sendBtn.disabled = !UI.messageInput.value.trim();
-    });
+    if (UI.messageInput) {
+        UI.messageInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                sendMessage();
+            }
+        });
+        UI.messageInput.addEventListener('input', () => {
+            if (UI.sendBtn) UI.sendBtn.disabled = !UI.messageInput.value.trim();
+        });
+    }
 
     // ルーム選択 (イベント委任)
-    UI.roomGrid.addEventListener('click', (e) => {
-        const card = e.target.closest('.room-card');
-        if (card && card.dataset.roomId) {
-            const room = appState.rooms.find(r => r.id === card.dataset.roomId);
-            if (room) handleRoomEntry(room);
-        }
-    });
+    if (UI.roomGrid) {
+        UI.roomGrid.addEventListener('click', (e) => {
+            const card = e.target.closest('.room-card');
+            if (card && card.dataset.roomId) {
+                const room = appState.rooms.find(r => r.id === card.dataset.roomId);
+                if (room) handleRoomEntry(room);
+            }
+        });
+    }
     
     // ページ離脱時のクリーンアップ
     window.addEventListener('beforeunload', cleanupBeforeUnload);
