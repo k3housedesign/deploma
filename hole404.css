@@ -1240,6 +1240,7 @@ input, textarea, .message-content {
 /* チャット画面 */
 .chat-screen {
     height: 100vh;
+    height: 100dvh; /* Dynamic viewport height for mobile */
     display: none;
     flex-direction: column;
     background: linear-gradient(135deg, var(--background-light) 0%, #000 100%);
@@ -1254,7 +1255,7 @@ input, textarea, .message-content {
     display: flex;
     flex-direction: column;
     height: 100vh;
-    overflow: hidden;
+    height: 100dvh; /* Dynamic viewport height for mobile */
 }
 .chat-header {
     background: rgba(10, 10, 10, 0.9);
@@ -1403,6 +1404,7 @@ input, textarea, .message-content {
     align-items: flex-end;
     flex-shrink: 0;
     z-index: 100;
+    min-height: 80px;
 }
 .message-input {
     flex: 1;
@@ -1485,7 +1487,7 @@ input, textarea, .message-content {
     .room-info p { font-size: 0.8em; word-break: break-all; }
     .chat-actions { display: flex; flex-wrap: wrap; gap: 8px; width: 100%; }
     .action-btn { padding: 6px 12px; font-size: 0.8em; flex: 1; min-width: calc(50% - 4px); text-align: center; }
-    .chat-messages { padding: 15px; padding-bottom: 60px; }
+    .chat-messages { padding: 15px; }
     .message { margin-bottom: 12px; padding: 10px 12px; border-radius: 12px; }
     .message-header { gap: 8px; margin-bottom: 6px; }
     .message-avatar { width: 28px; height: 28px; font-size: 1em; }
@@ -1514,18 +1516,15 @@ input, textarea, .message-content {
 }
 
 @supports (padding: max(0px)) {
-    .chat-screen { padding-bottom: env(safe-area-inset-bottom); }
+    .chat-screen { 
+        padding-bottom: env(safe-area-inset-bottom);
+    }
     .chat-input { 
         padding-bottom: calc(20px + env(safe-area-inset-bottom)); 
-        margin-bottom: env(safe-area-inset-bottom);
     }
     @media (max-width: 768px) {
         .chat-input { 
             padding-bottom: calc(15px + env(safe-area-inset-bottom));
-            bottom: env(safe-area-inset-bottom);
-        }
-        .chat-messages {
-            padding-bottom: calc(100px + env(safe-area-inset-bottom));
         }
     }
 }
