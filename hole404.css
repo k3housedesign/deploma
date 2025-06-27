@@ -353,6 +353,7 @@ body:has(.chat-screen.active) .user-counter {
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: 30px;
     margin-bottom: 60px;
+    touch-action: pan-y;
 }
 .room-card {
     background: #0a0a0a;
@@ -360,12 +361,15 @@ body:has(.chat-screen.active) .user-counter {
     border-radius: 8px;
     padding: 30px;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
     position: relative;
     overflow: hidden;
     box-shadow: 
         inset 0 0 30px rgba(0,0,0,0.8),
         0 0 20px rgba(0,0,0,0.5);
+    will-change: transform;
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
 }
 
 /* 各ルームカードに異なるネオンカラー */
@@ -412,9 +416,11 @@ body:has(.chat-screen.active) .user-counter {
         0 0 50px rgba(0,180,255,0.2);
 }
 
-.room-card:hover {
-    transform: translateY(-5px) scale(1.02);
-    filter: brightness(1.2);
+@media (hover: hover) {
+    .room-card:hover {
+        transform: translateY(-5px) scale(1.02);
+        filter: brightness(1.2);
+    }
 }
 
 /* ネオンサインのテキスト */
@@ -464,6 +470,13 @@ body:has(.chat-screen.active) .user-counter {
         0 0 40px #00b4ff,
         0 0 80px #00b4ff;
     animation: neonFlicker4 3.5s infinite;
+}
+
+/* モバイルではアニメーションを無効化 */
+@media (prefers-reduced-motion: reduce), (hover: none) and (pointer: coarse) {
+    .neon-sign, .vertical-neon {
+        animation: none !important;
+    }
 }
 
 /* 電球切れかかりの点滅アニメーション */
@@ -1564,7 +1577,11 @@ body:has(.chat-screen.active) .user-counter {
 
 @media (hover: none) and (pointer: coarse) {
     .room-card:hover { transform: none; }
-    .room-card:active { transform: scale(0.98); transition: transform 0.1s; }
+    .room-card:active { 
+        transform: scale(0.98); 
+        transition: transform 0.1s;
+        opacity: 0.9;
+    }
     .enter-button:hover, .btn:hover, .send-btn:hover { transform: none; }
     .enter-button:active, .btn:active { transform: scale(0.95); }
     .action-btn:hover { background: rgba(255, 107, 53, 0.1); }
