@@ -260,6 +260,23 @@ input, textarea, .message-content {
     backdrop-filter: blur(10px);
 }
 
+/* チャット画面表示時はユーザーカウンターを非表示 */
+body:has(.chat-screen.active) .user-counter {
+    display: none;
+}
+
+/* :has()をサポートしないブラウザ用のフォールバック */
+@media (max-width: 768px) {
+    .user-counter {
+        bottom: 15px;
+        right: 15px;
+        padding: 8px 15px;
+        font-size: 12px;
+        border-radius: 15px;
+        z-index: 50; /* チャット画面より下に */
+    }
+}
+
 /* メインコンテンツ */
 .main-content {
     min-height: 100vh;
