@@ -654,19 +654,10 @@ async function enterRoom(roomId, roomName) {
     
     addSystemMessage(`${appState.currentUser.nickname} が足音を立てて入ってきた…`);
     
-    // 部屋に入った後、確実に最新メッセージまでスクロール
+    // 部屋に入った後、スムーズに最新メッセージまでスクロール
     setTimeout(() => {
-        forceScrollToBottom();
-    }, 500);
-    
-    // さらに追加で確実にスクロール
-    setTimeout(() => {
-        UI.chatMessages.scrollTop = UI.chatMessages.scrollHeight;
-    }, 1000);
-    
-    setTimeout(() => {
-        UI.chatMessages.scrollTop = UI.chatMessages.scrollHeight;
-    }, 1500);
+        smoothScrollToBottom();
+    }, 800);
 }
 
 async function leaveRoom() {
@@ -1165,13 +1156,13 @@ async function loadMessages(roomId) {
             }
         });
         
-        // 初回ロード完了時に最下部へ強制スクロール
+        // 初回ロード完了時
         if (appState.isLoadingMessages) {
             appState.isLoadingMessages = false;
-            // 強制的に最新メッセージへスクロール
+            // 初回は即座に最下部へ（スムーズでなく確実性を優先）
             setTimeout(() => {
-                scrollToLatestMessage();
-            }, 50);
+                UI.chatMessages.scrollTop = UI.chatMessages.scrollHeight;
+            }, 100);
         }
     }, (error) => {
         console.error('メッセージの購読エラー:', error);
@@ -1201,61 +1192,18 @@ function scrollToLatestMessage() {
     });
 }
 
-function forceScrollToBottom() {
-    // より強力なスクロール強制実行
-    showDebugMessage('🔄 強制スクロール開始');
+function smoothScrollToBottom() {
+    // スムーズなスクロール処理
+    const targetScrollTop = UI.chatMessages.scrollHeight;
     
-    // 即座に実行
-    UI.chatMessages.scrollTop = UI.chatMessages.scrollHeight;
-    
-    // 100ms後
-    setTimeout(() => {
-        UI.chatMessages.scrollTop = UI.chatMessages.scrollHeight;
-        showDebugMessage(`📊 スクロール: ${UI.chatMessages.scrollTop}/${UI.chatMessages.scrollHeight}`);
-    }, 100);
-    
-    // 300ms後
-    setTimeout(() => {
-        UI.chatMessages.scrollTop = UI.chatMessages.scrollHeight;
-        const lastMessage = UI.chatMessages.lastElementChild;
-        if (lastMessage) {
-            lastMessage.scrollIntoView({ behavior: 'auto', block: 'end' });
-            showDebugMessage('⬇️ 最後のメッセージへスクロール実行');
-        }
-    }, 300);
-    
-    // 500ms後 - 最終確認
-    setTimeout(() => {
-        UI.chatMessages.scrollTop = UI.chatMessages.scrollHeight;
-        showDebugMessage(`✅ 最終位置: ${UI.chatMessages.scrollTop}`);
-    }, 500);
-}
-
-function showDebugMessage(text) {
-    // スマホでも見やすいデバッグメッセージを画面上部に表示
-    const debugDiv = document.createElement('div');
-    debugDiv.style.cssText = `
-        position: fixed;
-        top: 10px;
-        left: 10px;
-        right: 10px;
-        background: rgba(255, 107, 53, 0.9);
-        color: white;
-        padding: 8px;
-        border-radius: 5px;
-        z-index: 9999;
-        font-size: 12px;
-        text-align: center;
-    `;
-    debugDiv.textContent = text;
-    document.body.appendChild(debugDiv);
-    
-    // 3秒後に自動削除
-    setTimeout(() => {
-        if (debugDiv.parentNode) {
-            debugDiv.parentNode.removeChild(debugDiv);
-        }
-    }, 3000);
+    // 最後のメッセージ要素を使った確実なスクロール
+    const lastMessage = UI.chatMessages.lastElementChild;
+    if (lastMessage) {
+        lastMessage.scrollIntoView({ behavior: 'smooth', block: 'end' });
+    } else {
+        // フォールバック: 直接スクロール
+        UI.chatMessages.scrollTop = targetScrollTop;
+    }
 }
 
 function monitorFirebaseConnection() {
