@@ -1399,8 +1399,8 @@ input, textarea, .message-content {
     }
 }
 .chat-input {
-    background: #ff0000; /* DEBUG: 赤色で目立たせる */
-    border-top: 2px solid #00ff00; /* DEBUG: 緑の境界線 */
+    background: rgba(10, 10, 10, 0.95);
+    border-top: 1px solid var(--border-color);
     padding: 20px;
     display: flex;
     gap: 15px;
