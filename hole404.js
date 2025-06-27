@@ -5,15 +5,7 @@
     下記の initializeApp 内に統合・実装されています。
 */
 
-// Firebase SDKのインポート
-import { initializeApp as initializeFirebaseApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
-import { 
-    getFirestore, collection, doc, addDoc, onSnapshot, 
-    query, orderBy, serverTimestamp, getDocs, deleteDoc, updateDoc, increment
-} from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
-import { 
-    getDatabase, ref, set, remove, onDisconnect, onValue, off 
-} from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js';
+// Firebase compatバージョンを使用（HTMLで読み込み済み）
 
 // --- セキュリティに関する重要事項 ---
 // このAPIキーはクライアントサイドで参照可能ですが、バックエンドのセキュリティは
@@ -35,35 +27,8 @@ const firebaseConfig = {
 let db, rtdb;
 
 // UI要素のキャッシュ
-const UI = {
-    splashScreen: document.getElementById('splashScreen'),
-    mainContent: document.getElementById('mainContent'),
-    roomSelection: document.getElementById('roomSelection'),
-    chatScreen: document.getElementById('chatScreen'),
-    userCount: document.getElementById('userCount'),
-    roomGrid: document.getElementById('roomGrid'),
-    chatMessages: document.getElementById('chatMessages'),
-    messageInput: document.getElementById('messageInput'),
-    sendBtn: document.getElementById('sendBtn'),
-    currentRoomName: document.getElementById('currentRoomName'),
-    currentRoomUrl: document.getElementById('currentRoomUrl'),
-    // Buttons
-    enterButton: document.getElementById('enterButton'),
-    createRoomBtn: document.getElementById('createRoomBtn'),
-    copyUrlBtn: document.getElementById('copyUrlBtn'),
-    exportLogBtn: document.getElementById('exportLogBtn'),
-    leaveRoomBtn: document.getElementById('leaveRoomBtn'),
-    // Modals & Forms
-    profileModal: document.getElementById('profileModal'),
-    profileForm: document.getElementById('profileForm'),
-    profileCancelBtn: document.getElementById('profileCancelBtn'),
-    nicknameInput: document.getElementById('nicknameInput'),
-    iconSelector: document.getElementById('iconSelector'),
-    createRoomModal: document.getElementById('createRoomModal'),
-    createRoomForm: document.getElementById('createRoomForm'),
-    createRoomCancelBtn: document.getElementById('createRoomCancelBtn'),
-    roomNameInput: document.getElementById('roomNameInput'),
-};
+// UI要素は後で初期化
+let UI = {};
 
 // アプリケーションの状態管理
 const appState = {
@@ -88,11 +53,63 @@ const iconOptions = [
 // --- 初期化 ---
 
 document.addEventListener('DOMContentLoaded', () => {
-    console.log('DOM loaded, initializing app...');
-    initializeApp();
+    try {
+        initializeApp();
+    } catch (error) {
+        console.error('Error in initializeApp:', error);
+    }
 });
 
 function initializeApp() {
+    // UI要素を初期化
+    UI = {
+        splashScreen: document.getElementById('splashScreen'),
+        mainContent: document.getElementById('mainContent'),
+        roomSelection: document.getElementById('roomSelection'),
+        chatScreen: document.getElementById('chatScreen'),
+        userCount: document.getElementById('userCount'),
+        roomGrid: document.getElementById('roomGrid'),
+        chatMessages: document.getElementById('chatMessages'),
+        messageInput: document.getElementById('messageInput'),
+        sendBtn: document.getElementById('sendBtn'),
+        currentRoomName: document.getElementById('currentRoomName'),
+        currentRoomUrl: document.getElementById('currentRoomUrl'),
+        // Buttons
+        enterButton: document.getElementById('enterButton'),
+        createRoomBtn: document.getElementById('createRoomBtn'),
+        copyUrlBtn: document.getElementById('copyUrlBtn'),
+        exportLogBtn: document.getElementById('exportLogBtn'),
+        leaveRoomBtn: document.getElementById('leaveRoomBtn'),
+        // Modals & Forms
+        profileModal: document.getElementById('profileModal'),
+        profileForm: document.getElementById('profileForm'),
+        profileCancelBtn: document.getElementById('profileCancelBtn'),
+        nicknameInput: document.getElementById('nicknameInput'),
+        iconSelector: document.getElementById('iconSelector'),
+        createRoomModal: document.getElementById('createRoomModal'),
+        createRoomForm: document.getElementById('createRoomForm'),
+        createRoomCancelBtn: document.getElementById('createRoomCancelBtn'),
+        roomNameInput: document.getElementById('roomNameInput'),
+        // User Profile
+        currentUserIcon: document.getElementById('currentUserIcon'),
+        currentUserNickname: document.getElementById('currentUserNickname'),
+        logoutBtn: document.getElementById('logoutBtn'),
+    };
+    
+    // localStorageから既存のユーザー情報を復元
+    const storedUser = localStorage.getItem('holeUserProfile');
+    if (storedUser) {
+        try {
+            appState.currentUser = JSON.parse(storedUser);
+            console.log('ユーザー情報を復元しました:', appState.currentUser.nickname);
+            // 初期化時にもユーザー情報を表示
+            setTimeout(() => updateUserDisplay(), 100);
+        } catch (error) {
+            console.error('ユーザー情報の復元に失敗:', error);
+            localStorage.removeItem('holeUserProfile');
+        }
+    }
+    
     // スプラッシュ画面が既に非表示の場合（リロード時など）、メインコンテンツを表示
     if (UI.splashScreen.style.display === 'none' || !UI.splashScreen.offsetParent) {
         console.log('Splash screen already hidden, showing main content directly');
@@ -100,12 +117,17 @@ function initializeApp() {
         UI.mainContent.classList.add('visible');
         UI.roomSelection.style.display = 'block';
         loadRooms();
+        
+        // ユーザーがログインしていない場合はプロフィール設定画面を表示
+        if (!appState.currentUser) {
+            showProfileModal();
+        }
     }
     
     try {
-        const app = initializeFirebaseApp(firebaseConfig);
-        db = getFirestore(app);
-        rtdb = getDatabase(app);
+        firebase.initializeApp(firebaseConfig);
+        db = firebase.firestore();
+        rtdb = firebase.database();
         appState.firebaseReady = true;
         console.log('Firebase初期化成功');
         monitorFirebaseConnection();
@@ -152,47 +174,64 @@ function initializeApp() {
 
 function setupEventListeners() {
     // スプラッシュ
-    UI.enterButton.addEventListener('click', enterTheHole);
-    document.getElementById('manholeCover').addEventListener('click', enterTheHole);
+    if (UI.enterButton) {
+        UI.enterButton.addEventListener('click', enterTheHole);
+    } else {
+    }
+    const manholeCover = document.getElementById('manholeCover');
+    if (manholeCover) {
+        manholeCover.addEventListener('click', enterTheHole);
+    }
 
     // ルーム作成
-    UI.createRoomBtn.addEventListener('click', showCreateRoomModal);
-    UI.createRoomForm.addEventListener('submit', handleCreateRoom);
-    UI.createRoomCancelBtn.addEventListener('click', closeCreateRoomModal);
+    if (UI.createRoomBtn) UI.createRoomBtn.addEventListener('click', showCreateRoomModal);
+    if (UI.createRoomForm) UI.createRoomForm.addEventListener('submit', handleCreateRoom);
+    if (UI.createRoomCancelBtn) UI.createRoomCancelBtn.addEventListener('click', closeCreateRoomModal);
 
     // プロフィール設定
-    UI.profileForm.addEventListener('submit', handleProfileSubmit);
-    UI.profileCancelBtn.addEventListener('click', closeProfileModal);
-    UI.iconSelector.addEventListener('click', (e) => {
-        const option = e.target.closest('.icon-option');
-        if (option) selectIcon(option);
-    });
+    if (UI.profileForm) UI.profileForm.addEventListener('submit', handleProfileSubmit);
+    if (UI.profileCancelBtn) UI.profileCancelBtn.addEventListener('click', closeProfileModal);
+    if (UI.iconSelector) {
+        UI.iconSelector.addEventListener('click', (e) => {
+            const option = e.target.closest('.icon-option');
+            if (option) selectIcon(option);
+        });
+    }
 
     // チャットアクション
-    UI.sendBtn.addEventListener('click', sendMessage);
-    UI.copyUrlBtn.addEventListener('click', copyRoomUrl);
-    UI.exportLogBtn.addEventListener('click', exportLog);
-    UI.leaveRoomBtn.addEventListener('click', leaveRoom);
+    if (UI.sendBtn) UI.sendBtn.addEventListener('click', sendMessage);
+    if (UI.copyUrlBtn) UI.copyUrlBtn.addEventListener('click', copyRoomUrl);
+    if (UI.exportLogBtn) UI.exportLogBtn.addEventListener('click', exportLog);
+    if (UI.leaveRoomBtn) UI.leaveRoomBtn.addEventListener('click', leaveRoom);
+    
+    // ログアウトボタン
+    if (UI.logoutBtn) {
+        UI.logoutBtn.addEventListener('click', handleLogout);
+    }
     
     // メッセージ入力
-    UI.messageInput.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter' && !e.shiftKey) {
-            e.preventDefault();
-            sendMessage();
-        }
-    });
-    UI.messageInput.addEventListener('input', () => {
-        UI.sendBtn.disabled = !UI.messageInput.value.trim();
-    });
+    if (UI.messageInput) {
+        UI.messageInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                sendMessage();
+            }
+        });
+        UI.messageInput.addEventListener('input', () => {
+            if (UI.sendBtn) UI.sendBtn.disabled = !UI.messageInput.value.trim();
+        });
+    }
 
     // ルーム選択 (イベント委任)
-    UI.roomGrid.addEventListener('click', (e) => {
-        const card = e.target.closest('.room-card');
-        if (card && card.dataset.roomId) {
-            const room = appState.rooms.find(r => r.id === card.dataset.roomId);
-            if (room) handleRoomEntry(room);
-        }
-    });
+    if (UI.roomGrid) {
+        UI.roomGrid.addEventListener('click', (e) => {
+            const card = e.target.closest('.room-card');
+            if (card && card.dataset.roomId) {
+                const room = appState.rooms.find(r => r.id === card.dataset.roomId);
+                if (room) handleRoomEntry(room);
+            }
+        });
+    }
     
     // ページ離脱時のクリーンアップ
     window.addEventListener('beforeunload', cleanupBeforeUnload);
@@ -226,6 +265,14 @@ function enterTheHole() {
     setTimeout(() => {
         UI.mainContent.classList.add('active');
         loadRooms();
+        updateUserDisplay();
+        
+        // ユーザーがログインしていない場合はプロフィール設定画面を表示
+        if (!appState.currentUser) {
+            setTimeout(() => {
+                showProfileModal();
+            }, 500);
+        }
     }, 1800);
     
     // 穴が完全に全画面になってからコンテンツを表示
@@ -271,6 +318,76 @@ function enterTheHole() {
     }, 2200);
 }
 
+function updateUserDisplay() {
+    const userProfileSection = document.querySelector('.user-profile-section');
+    
+    if (appState.currentUser && UI.currentUserIcon && UI.currentUserNickname) {
+        // ログイン中：ユーザー情報を表示
+        UI.currentUserIcon.textContent = appState.currentUser.icon || '👤';
+        UI.currentUserNickname.textContent = appState.currentUser.nickname || '名無し';
+        
+        // ユーザープロファイルセクションを表示
+        if (userProfileSection) {
+            userProfileSection.style.display = 'flex';
+        }
+    } else {
+        // ログアウト中：ユーザープロファイルセクションを非表示
+        if (userProfileSection) {
+            userProfileSection.style.display = 'none';
+        }
+    }
+}
+
+function handleLogout() {
+    // 確認ダイアログ
+    if (confirm('本当に地上へ戻りますか？\n（仮面を外して地下世界から去ります）')) {
+        // localStorageからユーザー情報を削除
+        localStorage.removeItem('holeUserProfile');
+        appState.currentUser = null;
+        
+        // チャット画面が開いていたら閉じる
+        if (UI.chatScreen.classList.contains('active')) {
+            leaveRoom();
+        }
+        
+        // メイン画面を完全にリセット
+        UI.mainContent.classList.remove('active', 'visible');
+        UI.mainContent.style.display = 'none';
+        UI.roomSelection.style.display = 'none';
+        UI.chatScreen.classList.remove('active');
+        UI.chatScreen.style.display = 'none';
+        
+        // スプラッシュ画面を初期状態に戻す
+        UI.splashScreen.style.display = 'flex';
+        UI.splashScreen.classList.remove('hidden');
+        UI.splashScreen.style.opacity = '1';
+        UI.splashScreen.style.pointerEvents = 'auto';
+        
+        // マンホールのアニメーションをリセット
+        const manholeCover = document.getElementById('manholeCover');
+        const manholeHole = document.getElementById('manholeHole');
+        if (manholeCover) {
+            manholeCover.classList.remove('opening');
+            manholeCover.style.opacity = '1';
+            manholeCover.style.visibility = 'visible';
+        }
+        if (manholeHole) {
+            manholeHole.classList.remove('visible', 'fullscreen');
+            manholeHole.style.width = '0';
+            manholeHole.style.height = '0';
+        }
+        
+        // ENTERボタンを再表示
+        if (UI.enterButton) {
+            UI.enterButton.classList.remove('hidden');
+            UI.enterButton.style.opacity = '1';
+            UI.enterButton.style.visibility = 'visible';
+        }
+        
+        showToast('地上へ戻りました。また会いましょう...', 'info');
+    }
+}
+
 async function loadRooms() {
     console.log('Loading rooms...');
     // ルーム読み込み完了フラグを設定
@@ -286,8 +403,8 @@ async function loadRooms() {
     // 既存のリスナーを解除
     if (appState.listeners.room) appState.listeners.room();
 
-    const roomsQuery = query(collection(db, 'rooms'), orderBy('createdAt', 'desc'));
-    appState.listeners.room = onSnapshot(roomsQuery, (snapshot) => {
+    const roomsQuery = db.collection('rooms').orderBy('createdAt', 'desc');
+    appState.listeners.room = roomsQuery.onSnapshot((snapshot) => {
         appState.rooms = snapshot.docs.map(doc => ({
             id: doc.id,
             ...doc.data(),
@@ -309,66 +426,42 @@ function renderRooms() {
         roomCard.className = 'room-card';
         roomCard.dataset.roomId = room.id;
         
-        // アクティブユーザー数と各種時間データ
+        // アクティブユーザー数と作成日時に応じた状態判定
         const activeUsers = room.activeUsers || 0;
         const createdAt = room.createdAt?.toMillis ? room.createdAt.toMillis() : Date.now();
-        const lastVisited = room.lastVisited?.toMillis ? room.lastVisited.toMillis() : createdAt;
-        const totalVisits = room.totalVisits || 0;
-        
         const daysSinceCreated = (Date.now() - createdAt) / (1000 * 60 * 60 * 24);
         const hoursSinceCreated = (Date.now() - createdAt) / (1000 * 60 * 60);
-        const hoursSinceLastVisit = (Date.now() - lastVisited) / (1000 * 60 * 60);
         
         let verticalText = '';
         let roomState = '';
-        let brightnessModifier = 1.0;
         
         if (activeUsers > 0) {
-            // 現在人がいる部屋：100%ネオン + 中国語で人数表示
-            let peopleText = '';
-            if (activeUsers === 1) peopleText = '独人';
-            else if (activeUsers === 2) peopleText = '少人';
-            else if (activeUsers === 3) peopleText = '公室';
-            else if (activeUsers <= 5) peopleText = '人多';
-            else if (activeUsers <= 10) peopleText = '很多';
-            else peopleText = '满人';
-            
-            verticalText = `<div class="vertical-neon active">${peopleText}</div>`;
+            verticalText = '<div class="vertical-neon active">営業中</div>';
             roomState = 'active';
-            brightnessModifier = 1.0;
+        } else if (hoursSinceCreated < 24) {
+            // 新規作成から24時間以内
+            verticalText = '<div class="vertical-neon new">開店</div>';
+            roomState = 'new';
+        } else if (daysSinceCreated > 3) {
+            // 3日以上誰も入っていない
+            const abandonedStates = [
+                '<div class="vertical-neon abandoned">廃業中</div>',
+                '<div class="vertical-neon abandoned">逃走中</div>',
+                '<div class="vertical-neon abandoned">事件</div>'
+            ];
+            verticalText = abandonedStates[index % abandonedStates.length];
+            roomState = 'abandoned';
         } else {
-            // 誰もいない部屋：最後のコメント時刻で明るさを決定
-            if (hoursSinceLastVisit <= 3) {
-                // 3時間以内
-                verticalText = '<div class="vertical-neon recent-3h">近时</div>';
-                roomState = 'recent-3h';
-                brightnessModifier = 0.8;
-            } else if (hoursSinceLastVisit <= 12) {
-                // 12時間以内
-                verticalText = '<div class="vertical-neon recent-12h">半日</div>';
-                roomState = 'recent-12h';
-                brightnessModifier = 0.6;
-            } else if (hoursSinceLastVisit <= 24) {
-                // 1日以内
-                verticalText = '<div class="vertical-neon recent-1d">昨日</div>';
-                roomState = 'recent-1d';
-                brightnessModifier = 0.4;
-            } else if (hoursSinceLastVisit <= 72) {
-                // 3日以内
-                verticalText = '<div class="vertical-neon recent-3d">三日</div>';
-                roomState = 'recent-3d';
-                brightnessModifier = 0.2;
-            } else {
-                // 3日以上
-                const abandonedStates = [
-                    '<div class="vertical-neon abandoned">廃業</div>',
-                    '<div class="vertical-neon abandoned">消失</div>',
-                    '<div class="vertical-neon abandoned">古迹</div>'
-                ];
-                verticalText = abandonedStates[index % abandonedStates.length];
-                roomState = 'abandoned';
-                brightnessModifier = 0.1;
-            }
+            // 1-3日の間誰も入っていない
+            const inactiveStates = [
+                '<div class="vertical-neon closed">準備中</div>',
+                '<div class="vertical-neon vacant">空室</div>',
+                '<div class="vertical-neon quiet">静寂</div>',
+                '<div class="vertical-neon drunk">酩酊</div>',
+                '<div class="vertical-neon ecstasy">陶酔</div>'
+            ];
+            verticalText = inactiveStates[index % inactiveStates.length];
+            roomState = 'inactive';
         }
         
         // 中国語のランダム看板
@@ -423,8 +516,8 @@ function renderRooms() {
 
 function updateActiveUserCounts() {
     if (!appState.firebaseReady) return;
-    const statusRef = ref(rtdb, 'status');
-    onValue(statusRef, (snapshot) => {
+    const statusRef = rtdb.ref('status');
+    statusRef.on('value', (snapshot) => {
         const allStatus = snapshot.val() || {};
         const userCounts = {};
         
@@ -452,7 +545,7 @@ function updateActiveUserCounts() {
 function handleRoomEntry(room) {
     if (!appState.currentUser) {
         showProfileModal();
-        sessionStorage.setItem('pendingRoom', JSON.stringify(room));
+        localStorage.setItem('pendingRoom', JSON.stringify(room));
         return;
     }
     enterRoom(room.id, room.roomName);
@@ -482,17 +575,6 @@ async function enterRoom(roomId, roomName) {
             // バックグラウンドでルーム一覧を更新
             renderRooms();
         }
-        
-        // 最終訪問時刻と訪問回数を更新
-        try {
-            const roomRef = doc(db, 'rooms', roomId);
-            await updateDoc(roomRef, {
-                lastVisited: serverTimestamp(),
-                totalVisits: increment(1)
-            });
-        } catch (error) {
-            console.error('訪問記録更新エラー:', error);
-        }
     } else {
         addDemoMessages();
     }
@@ -508,7 +590,7 @@ async function leaveRoom() {
         addSystemMessage(`${appState.currentUser.nickname} が闇に消えていった…`);
 
         if (appState.firebaseReady && appState.statusRef) {
-            await remove(appState.statusRef);
+            await appState.statusRef.remove();
             appState.statusRef = null;
         }
         
@@ -549,29 +631,13 @@ async function sendMessage() {
         text: text,
         authorName: appState.currentUser.nickname,
         authorIcon: appState.currentUser.icon,
-        createdAt: serverTimestamp(),
+        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
         type: 'user'
     };
 
     if (appState.firebaseReady) {
         try {
-            await addDoc(collection(db, 'rooms', appState.currentRoom.id, 'messages'), messageData);
-            
-            // メッセージ送信時にも部屋のlastVisitedを更新（人の気配が戻った）
-            const roomRef = doc(db, 'rooms', appState.currentRoom.id);
-            await updateDoc(roomRef, {
-                lastVisited: serverTimestamp(),
-                totalVisits: increment(1)
-            });
-            console.log('メッセージ送信時にlastVisited更新:', appState.currentRoom.id);
-            
-            // 部屋リストを即座に更新（退出時に反映されるように）
-            setTimeout(() => {
-                if (appState.firebaseReady) {
-                    renderRooms();
-                    updateActiveUserCounts();
-                }
-            }, 500);
+            await db.collection('rooms').doc(appState.currentRoom.id).collection('messages').add(messageData);
         } catch (error) {
             console.error('メッセージ送信エラー:', error);
             showToast('送信失敗', 'error');
@@ -605,12 +671,13 @@ function handleProfileSubmit(e) {
         nickname: nickname,
         icon: selectedIconEl.dataset.icon
     };
-    sessionStorage.setItem('holeUserProfile', JSON.stringify(appState.currentUser));
+    localStorage.setItem('holeUserProfile', JSON.stringify(appState.currentUser));
     closeProfileModal();
+    updateUserDisplay();
 
-    const pendingRoomJson = sessionStorage.getItem('pendingRoom');
+    const pendingRoomJson = localStorage.getItem('pendingRoom');
     if (pendingRoomJson) {
-        sessionStorage.removeItem('pendingRoom');
+        localStorage.removeItem('pendingRoom');
         const pendingRoom = JSON.parse(pendingRoomJson);
         handleRoomEntry(pendingRoom);
     } else {
@@ -654,12 +721,10 @@ async function handleCreateRoom(e) {
             const roomData = {
                 roomName: roomName,
                 description: randomDescription,
-                createdAt: serverTimestamp(),
+                createdAt: firebase.firestore.FieldValue.serverTimestamp(),
                 createdBy: appState.currentUser.id,
-                lastVisited: serverTimestamp(),
-                totalVisits: 0
             };
-            const docRef = await addDoc(collection(db, 'rooms'), roomData);
+            const docRef = await db.collection('rooms').add(roomData);
             closeCreateRoomModal();
             enterRoom(docRef.id, roomName);
             showToast(`${roomName} を開きました`);
@@ -674,9 +739,7 @@ async function handleCreateRoom(e) {
             roomName: roomName, 
             activeUsers: 1, 
             description: `${randomDescription}（オフライン）`,
-            createdBy: appState.currentUser.id,
-            lastVisited: Date.now(),
-            totalVisits: 0
+            createdBy: appState.currentUser.id
         };
         appState.rooms.unshift(newRoom);
         renderRooms();
@@ -721,7 +784,14 @@ function renderMessage(message) {
     const shouldScroll = UI.chatMessages.scrollTop + UI.chatMessages.clientHeight >= UI.chatMessages.scrollHeight - 50;
     UI.chatMessages.appendChild(messageEl);
     if (shouldScroll) {
-        UI.chatMessages.scrollTop = UI.chatMessages.scrollHeight;
+        // 少し遅延を入れてからスクロール（DOMの更新を待つ）
+        setTimeout(() => {
+            UI.chatMessages.scrollTop = UI.chatMessages.scrollHeight;
+            // モバイルでの追加スクロール調整
+            if (window.innerWidth <= 768) {
+                messageEl.scrollIntoView({ behavior: 'smooth', block: 'end' });
+            }
+        }, 50);
     }
 }
 
@@ -739,7 +809,7 @@ async function deleteMessage(messageId) {
     
     try {
         // Firebaseから削除
-        await deleteDoc(doc(db, 'rooms', appState.currentRoom.id, 'messages', messageId));
+        await db.collection('rooms').doc(appState.currentRoom.id).collection('messages').doc(messageId).delete();
         
         // ローカル配列からも削除
         appState.messages = appState.messages.filter(msg => msg.id !== messageId);
@@ -801,8 +871,8 @@ async function exportMemoryAndClose(roomId, roomName) {
     
     try {
         // メッセージを取得
-        const messagesQuery = query(collection(db, 'rooms', roomId, 'messages'), orderBy('createdAt'));
-        const snapshot = await getDocs(messagesQuery);
+        const messagesQuery = db.collection('rooms').doc(roomId).collection('messages').orderBy('createdAt');
+        const snapshot = await messagesQuery.get();
         
         if (snapshot.empty) {
             showToast('記録するメッセージがありません', 'warning');
@@ -856,18 +926,18 @@ async function closeShopImmediately(roomId, roomName) {
     
     try {
         // メッセージを全て削除
-        const messagesQuery = query(collection(db, 'rooms', roomId, 'messages'));
-        const snapshot = await getDocs(messagesQuery);
+        const messagesQuery = db.collection('rooms').doc(roomId).collection('messages');
+        const snapshot = await messagesQuery.get();
         
         const deletePromises = [];
         snapshot.forEach(doc => {
-            deletePromises.push(deleteDoc(doc.ref));
+            deletePromises.push(doc.ref.delete());
         });
         
         await Promise.all(deletePromises);
         
         // ルームを削除
-        await deleteDoc(doc(db, 'rooms', roomId));
+        await db.collection('rooms').doc(roomId).delete();
         
         showToast(`「${roomName}」は静かに闇に消えていった...`);
         
@@ -958,9 +1028,9 @@ function exportLog() {
 
 async function setUserOnlineStatus(roomId) {
     if (!appState.currentUser) return;
-    appState.statusRef = ref(rtdb, `status/${appState.currentUser.id}/${roomId}`);
-    await set(appState.statusRef, { state: 'online', nickname: appState.currentUser.nickname });
-    onDisconnect(appState.statusRef).remove();
+    appState.statusRef = rtdb.ref(`status/${appState.currentUser.id}/${roomId}`);
+    await appState.statusRef.set({ state: 'online', nickname: appState.currentUser.nickname });
+    appState.statusRef.onDisconnect().remove();
 }
 
 async function loadMessages(roomId) {
@@ -969,8 +1039,8 @@ async function loadMessages(roomId) {
     appState.messages = [];
     UI.chatMessages.innerHTML = '';
     
-    const messagesQuery = query(collection(db, 'rooms', roomId, 'messages'), orderBy('createdAt'));
-    appState.listeners.messages = onSnapshot(messagesQuery, (snapshot) => {
+    const messagesQuery = db.collection('rooms').doc(roomId).collection('messages').orderBy('createdAt');
+    appState.listeners.messages = messagesQuery.onSnapshot((snapshot) => {
         snapshot.docChanges().forEach((change) => {
             if (change.type === 'added') {
                 const data = change.doc.data();
@@ -991,8 +1061,8 @@ async function loadMessages(roomId) {
 }
 
 function monitorFirebaseConnection() {
-    const connectedRef = ref(rtdb, '.info/connected');
-    onValue(connectedRef, (snap) => {
+    const connectedRef = rtdb.ref('.info/connected');
+    connectedRef.on('value', (snap) => {
         const isConnected = snap.val() === true;
         console.log(isConnected ? "Firebaseに接続" : "Firebaseから切断");
         if (!isConnected) showToast('接続が不安定です', 'warning');
@@ -1003,7 +1073,7 @@ function cleanupBeforeUnload() {
     if (appState.listeners.room) appState.listeners.room();
     if (appState.listeners.messages) appState.listeners.messages();
     if (appState.firebaseReady && appState.statusRef) {
-        remove(appState.statusRef); // 同期的に実行
+        appState.statusRef.remove(); // 同期的に実行
     }
 }
 
@@ -1048,7 +1118,7 @@ function checkRoomFromUrl() {
         const newUrl = window.location.pathname;
         window.history.replaceState({}, '', newUrl);
         
-        const storedUser = sessionStorage.getItem('holeUserProfile');
+        const storedUser = localStorage.getItem('holeUserProfile');
         if (storedUser) {
             appState.currentUser = JSON.parse(storedUser);
             // enterTheHoleが呼ばれていない場合があるので、直接ルームに入る
