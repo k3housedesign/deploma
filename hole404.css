@@ -1309,7 +1309,13 @@ body:has(.chat-screen.active) .user-counter {
     transition: all 0.3s ease;
     font-size: 0.9em;
 }
-.action-btn:hover { background: rgba(255, 107, 53, 0.2); }
+.action-btn:hover { 
+    background: rgba(255, 107, 53, 0.2); 
+}
+.action-btn:active {
+    background: rgba(255, 107, 53, 0.4);
+    transform: scale(0.95);
+}
 .chat-messages {
     flex: 1;
     min-height: 0; /* Important for flex children */

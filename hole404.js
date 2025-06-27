@@ -202,7 +202,16 @@ function setupEventListeners() {
     if (UI.sendBtn) UI.sendBtn.addEventListener('click', sendMessage);
     if (UI.copyUrlBtn) UI.copyUrlBtn.addEventListener('click', copyRoomUrl);
     if (UI.exportLogBtn) UI.exportLogBtn.addEventListener('click', exportLog);
-    if (UI.leaveRoomBtn) UI.leaveRoomBtn.addEventListener('click', leaveRoom);
+    if (UI.leaveRoomBtn) {
+        UI.leaveRoomBtn.addEventListener('click', () => {
+            // 即座にフィードバックを提供
+            UI.leaveRoomBtn.disabled = true;
+            UI.leaveRoomBtn.textContent = '退室中...';
+            setTimeout(() => {
+                leaveRoom();
+            }, 100);
+        });
+    }
     
     // ログアウトボタン
     if (UI.logoutBtn) {
@@ -224,24 +233,52 @@ function setupEventListeners() {
 
     // ルーム選択 (イベント委任)
     if (UI.roomGrid) {
-        // Add both click and touchend for better mobile support
-        ['click', 'touchend'].forEach(eventType => {
-            UI.roomGrid.addEventListener(eventType, (e) => {
-                // Prevent double-firing on devices that support both touch and click
-                if (eventType === 'touchend') {
-                    e.preventDefault();
+        let touchStartY = 0;
+        let touchStartTime = 0;
+        let isScrolling = false;
+        
+        // タッチ開始を記録
+        UI.roomGrid.addEventListener('touchstart', (e) => {
+            touchStartY = e.touches[0].clientY;
+            touchStartTime = Date.now();
+            isScrolling = false;
+        }, { passive: true });
+        
+        // スクロール中かどうかを判定
+        UI.roomGrid.addEventListener('touchmove', (e) => {
+            const touchMoveY = e.touches[0].clientY;
+            const distance = Math.abs(touchMoveY - touchStartY);
+            if (distance > 10) { // 10px以上移動したらスクロールと判定
+                isScrolling = true;
+            }
+        }, { passive: true });
+        
+        // クリックイベント（デスクトップ用）
+        UI.roomGrid.addEventListener('click', (e) => {
+            const card = e.target.closest('.room-card');
+            if (card && card.dataset.roomId && !card.querySelector('.close-shop-btn')?.contains(e.target)) {
+                const room = appState.rooms.find(r => r.id === card.dataset.roomId);
+                if (room) {
+                    handleRoomEntry(room);
                 }
-                
+            }
+        });
+        
+        // タッチ終了（モバイル用）
+        UI.roomGrid.addEventListener('touchend', (e) => {
+            const touchDuration = Date.now() - touchStartTime;
+            // スクロール中でなく、短いタップ（300ms以下）の場合のみ反応
+            if (!isScrolling && touchDuration < 300) {
                 const card = e.target.closest('.room-card');
                 if (card && card.dataset.roomId && !card.querySelector('.close-shop-btn')?.contains(e.target)) {
+                    e.preventDefault(); // デフォルトのクリックを防ぐ
                     const room = appState.rooms.find(r => r.id === card.dataset.roomId);
                     if (room) {
-                        console.log('Room card clicked/touched:', room.roomName);
                         handleRoomEntry(room);
                     }
                 }
-            }, { passive: false });
-        });
+            }
+        }, { passive: false });
     }
     
     // ページ離脱時のクリーンアップ
@@ -634,6 +671,12 @@ async function leaveRoom() {
         if (room && room.activeUsers > 0) {
             room.activeUsers--;
         }
+    }
+    
+    // ボタンをリセット
+    if (UI.leaveRoomBtn) {
+        UI.leaveRoomBtn.disabled = false;
+        UI.leaveRoomBtn.textContent = '🚪 立ち去る';
     }
     
     if (appState.listeners.messages) {
