@@ -280,7 +280,7 @@ input, textarea, .message-content {
     background: var(--background-dark);
     padding: 40px 20px;
     position: relative;
-    display: block !important;
+    display: block;
     z-index: 1;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
@@ -1247,10 +1247,18 @@ input, textarea, .message-content {
     bottom: 0;
     z-index: 1000;
     background: linear-gradient(135deg, var(--background-light) 0%, #000 100%);
+    /* Mobile optimization */
+    transform: translateZ(0);
+    -webkit-transform: translateZ(0);
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
 }
 .chat-screen.active { 
-    display: flex;
+    display: flex !important;
     flex-direction: column;
+    /* Ensure visibility on mobile */
+    visibility: visible;
+    opacity: 1;
 }
 .chat-header {
     background: rgba(10, 10, 10, 0.9);
@@ -1460,6 +1468,33 @@ input, textarea, .message-content {
     body { 
         font-size: 16px !important;
         -webkit-text-size-adjust: 100% !important;
+    }
+    /* Fix chat screen display on mobile */
+    .chat-screen {
+        position: fixed !important;
+        width: 100vw !important;
+        height: 100vh !important;
+        height: 100dvh !important; /* Dynamic viewport height for mobile */
+        max-width: 100vw !important;
+        max-height: 100vh !important;
+    }
+    .chat-screen.active {
+        display: flex !important;
+        z-index: 9999 !important;
+    }
+    /* Hide room selection when chat is active */
+    body:has(.chat-screen.active) .room-selection {
+        display: none !important;
+    }
+    /* Ensure main content doesn't interfere */
+    .main-content {
+        position: relative;
+        z-index: 1;
+    }
+    /* Fix viewport issues on mobile */
+    .main-content, .room-selection, .underground-plaza {
+        max-width: 100vw !important;
+        overflow-x: hidden !important;
     }
     .splash-screen h1 { font-size: 3em; }
     .splash-screen .subtitle { font-size: 1em; }

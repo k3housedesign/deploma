@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Chat Layout Test</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: sans-serif;
+            background: #0a0a0a;
+            color: white;
+        }
+        
+        .chat-container {
+            height: 100vh;
+            height: 100dvh;
+            display: flex;
+            flex-direction: column;
+            background: #1a1a1a;
+        }
+        
+        .chat-header {
+            background: #2a2a2a;
+            padding: 15px;
+            border-bottom: 1px solid #444;
+            flex-shrink: 0;
+        }
+        
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            background: #0a0a0a;
+            min-height: 0; /* Important for flex children */
+        }
+        
+        .message {
+            background: #2a2a2a;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+        }
+        
+        .chat-input {
+            background: #1a1a1a;
+            border-top: 1px solid #444;
+            padding: 15px;
+            display: flex;
+            gap: 10px;
+            flex-shrink: 0;
+        }
+        
+        .message-input {
+            flex: 1;
+            background: #2a2a2a;
+            border: 1px solid #444;
+            color: white;
+            padding: 10px;
+            border-radius: 20px;
+            resize: none;
+            font-size: 16px;
+        }
+        
+        .send-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #ff6b35;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 18px;
+        }
+        
+        .debug-info {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            background: rgba(0,0,0,0.8);
+            padding: 10px;
+            font-size: 12px;
+            border: 1px solid #444;
+            z-index: 9999;
+        }
+        
+        .highlight {
+            border: 2px solid red !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="debug-info">
+        <div>Container Height: <span id="containerHeight">0</span>px</div>
+        <div>Messages Height: <span id="messagesHeight">0</span>px</div>
+        <div>Input Height: <span id="inputHeight">0</span>px</div>
+        <div>Input Visible: <span id="inputVisible">false</span></div>
+        <div>Input Position: <span id="inputPosition">0</span></div>
+    </div>
+
+    <div class="chat-container">
+        <div class="chat-header">
+            <h2>Test Chat Room</h2>
+        </div>
+        
+        <div class="chat-messages" id="messages">
+            <div class="message">Test message 1</div>
+            <div class="message">Test message 2</div>
+            <div class="message">Test message 3</div>
+            <div class="message">Test message 4</div>
+            <div class="message">Test message 5</div>
+            <div class="message">Test message 6</div>
+            <div class="message">Test message 7</div>
+            <div class="message">Test message 8</div>
+            <div class="message">Test message 9</div>
+            <div class="message">Test message 10</div>
+        </div>
+        
+        <div class="chat-input highlight" id="chatInput">
+            <textarea class="message-input" placeholder="Type a message..." rows="1"></textarea>
+            <button class="send-btn">➤</button>
+        </div>
+    </div>
+
+    <script>
+        function updateDebugInfo() {
+            const container = document.querySelector('.chat-container');
+            const messages = document.getElementById('messages');
+            const input = document.getElementById('chatInput');
+            
+            const inputRect = input.getBoundingClientRect();
+            const isVisible = inputRect.top < window.innerHeight && inputRect.bottom > 0;
+            
+            document.getElementById('containerHeight').textContent = container.offsetHeight;
+            document.getElementById('messagesHeight').textContent = messages.offsetHeight;
+            document.getElementById('inputHeight').textContent = input.offsetHeight;
+            document.getElementById('inputVisible').textContent = isVisible;
+            document.getElementById('inputPosition').textContent = `top: ${inputRect.top}, bottom: ${inputRect.bottom}`;
+        }
+        
+        window.addEventListener('load', updateDebugInfo);
+        window.addEventListener('resize', updateDebugInfo);
+        setInterval(updateDebugInfo, 1000);
+    </script>
+</body>
+</html>

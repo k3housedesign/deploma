@@ -224,12 +224,23 @@ function setupEventListeners() {
 
     // ルーム選択 (イベント委任)
     if (UI.roomGrid) {
-        UI.roomGrid.addEventListener('click', (e) => {
-            const card = e.target.closest('.room-card');
-            if (card && card.dataset.roomId) {
-                const room = appState.rooms.find(r => r.id === card.dataset.roomId);
-                if (room) handleRoomEntry(room);
-            }
+        // Add both click and touchend for better mobile support
+        ['click', 'touchend'].forEach(eventType => {
+            UI.roomGrid.addEventListener(eventType, (e) => {
+                // Prevent double-firing on devices that support both touch and click
+                if (eventType === 'touchend') {
+                    e.preventDefault();
+                }
+                
+                const card = e.target.closest('.room-card');
+                if (card && card.dataset.roomId && !card.querySelector('.close-shop-btn')?.contains(e.target)) {
+                    const room = appState.rooms.find(r => r.id === card.dataset.roomId);
+                    if (room) {
+                        console.log('Room card clicked/touched:', room.roomName);
+                        handleRoomEntry(room);
+                    }
+                }
+            }, { passive: false });
         });
     }
     
@@ -558,8 +569,26 @@ async function enterRoom(roomId, roomName) {
     // URLパラメータを使わない（GitHub Pagesでの問題を避けるため）
     // history.pushState({}, '', `/hole404.html?room=${roomId}`);
     
+    // Mobile-specific fix: Force display changes
     UI.roomSelection.style.display = 'none';
+    UI.roomSelection.style.visibility = 'hidden';
+    
+    // Ensure chat screen is properly shown
+    UI.chatScreen.style.display = 'flex';
     UI.chatScreen.classList.add('active');
+    
+    // Force a reflow to ensure CSS changes are applied
+    UI.chatScreen.offsetHeight;
+    
+    // Mobile debug logging
+    if (window.innerWidth <= 768) {
+        console.log('Mobile room entry:', {
+            roomSelectionDisplay: window.getComputedStyle(UI.roomSelection).display,
+            chatScreenDisplay: window.getComputedStyle(UI.chatScreen).display,
+            chatScreenClasses: UI.chatScreen.className,
+            chatScreenVisibility: window.getComputedStyle(UI.chatScreen).visibility
+        });
+    }
     
     UI.currentRoomName.textContent = roomName;
     UI.currentRoomUrl.textContent = window.location.href;
@@ -606,8 +635,14 @@ async function leaveRoom() {
         appState.listeners.messages = null;
     }
     
+    // Mobile-specific fix: Ensure proper transition
     UI.chatScreen.classList.remove('active');
+    UI.chatScreen.style.display = 'none';
     UI.roomSelection.style.display = 'block';
+    UI.roomSelection.style.visibility = 'visible';
+    
+    // Force a reflow
+    UI.roomSelection.offsetHeight;
     // URLをクリーンに保つ
     if (window.location.search) {
         history.pushState({}, '', window.location.pathname);
@@ -1092,6 +1127,24 @@ function adjustMobileUI() {
         UI.messageInput.addEventListener('focus', () => {
             setTimeout(() => { UI.chatMessages.scrollTop = UI.chatMessages.scrollHeight; }, 300);
         });
+        
+        // Add touch event handling for better mobile support
+        UI.roomGrid.addEventListener('touchstart', (e) => {
+            const card = e.target.closest('.room-card');
+            if (card) {
+                card.classList.add('touching');
+            }
+        });
+        
+        UI.roomGrid.addEventListener('touchend', (e) => {
+            const card = e.target.closest('.room-card');
+            if (card) {
+                card.classList.remove('touching');
+            }
+        });
+        
+        // Don't lock body scroll globally as it can cause issues
+        // Instead, we'll handle this per screen
     }
     // テキストエリアの自動高さ調整
     UI.messageInput.addEventListener('input', () => {
