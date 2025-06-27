@@ -9,7 +9,7 @@
 import { initializeApp as initializeFirebaseApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
 import { 
     getFirestore, collection, doc, addDoc, onSnapshot, 
-    query, orderBy, serverTimestamp, getDocs, deleteDoc
+    query, orderBy, serverTimestamp, getDocs, deleteDoc, updateDoc, increment
 } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
 import { 
     getDatabase, ref, set, remove, onDisconnect, onValue, off 
@@ -309,42 +309,66 @@ function renderRooms() {
         roomCard.className = 'room-card';
         roomCard.dataset.roomId = room.id;
         
-        // アクティブユーザー数と作成日時に応じた状態判定
+        // アクティブユーザー数と各種時間データ
         const activeUsers = room.activeUsers || 0;
         const createdAt = room.createdAt?.toMillis ? room.createdAt.toMillis() : Date.now();
+        const lastVisited = room.lastVisited?.toMillis ? room.lastVisited.toMillis() : createdAt;
+        const totalVisits = room.totalVisits || 0;
+        
         const daysSinceCreated = (Date.now() - createdAt) / (1000 * 60 * 60 * 24);
         const hoursSinceCreated = (Date.now() - createdAt) / (1000 * 60 * 60);
+        const hoursSinceLastVisit = (Date.now() - lastVisited) / (1000 * 60 * 60);
         
         let verticalText = '';
         let roomState = '';
+        let brightnessModifier = 1.0;
         
         if (activeUsers > 0) {
-            verticalText = '<div class="vertical-neon active">営業中</div>';
+            // 現在人がいる部屋：100%ネオン + 中国語で人数表示
+            let peopleText = '';
+            if (activeUsers === 1) peopleText = '独人';
+            else if (activeUsers === 2) peopleText = '少人';
+            else if (activeUsers === 3) peopleText = '公室';
+            else if (activeUsers <= 5) peopleText = '人多';
+            else if (activeUsers <= 10) peopleText = '很多';
+            else peopleText = '满人';
+            
+            verticalText = `<div class="vertical-neon active">${peopleText}</div>`;
             roomState = 'active';
-        } else if (hoursSinceCreated < 24) {
-            // 新規作成から24時間以内
-            verticalText = '<div class="vertical-neon new">開店</div>';
-            roomState = 'new';
-        } else if (daysSinceCreated > 3) {
-            // 3日以上誰も入っていない
-            const abandonedStates = [
-                '<div class="vertical-neon abandoned">廃業中</div>',
-                '<div class="vertical-neon abandoned">逃走中</div>',
-                '<div class="vertical-neon abandoned">事件</div>'
-            ];
-            verticalText = abandonedStates[index % abandonedStates.length];
-            roomState = 'abandoned';
+            brightnessModifier = 1.0;
         } else {
-            // 1-3日の間誰も入っていない
-            const inactiveStates = [
-                '<div class="vertical-neon closed">準備中</div>',
-                '<div class="vertical-neon vacant">空室</div>',
-                '<div class="vertical-neon quiet">静寂</div>',
-                '<div class="vertical-neon drunk">酩酊</div>',
-                '<div class="vertical-neon ecstasy">陶酔</div>'
-            ];
-            verticalText = inactiveStates[index % inactiveStates.length];
-            roomState = 'inactive';
+            // 誰もいない部屋：最後のコメント時刻で明るさを決定
+            if (hoursSinceLastVisit <= 3) {
+                // 3時間以内
+                verticalText = '<div class="vertical-neon recent-3h">近时</div>';
+                roomState = 'recent-3h';
+                brightnessModifier = 0.8;
+            } else if (hoursSinceLastVisit <= 12) {
+                // 12時間以内
+                verticalText = '<div class="vertical-neon recent-12h">半日</div>';
+                roomState = 'recent-12h';
+                brightnessModifier = 0.6;
+            } else if (hoursSinceLastVisit <= 24) {
+                // 1日以内
+                verticalText = '<div class="vertical-neon recent-1d">昨日</div>';
+                roomState = 'recent-1d';
+                brightnessModifier = 0.4;
+            } else if (hoursSinceLastVisit <= 72) {
+                // 3日以内
+                verticalText = '<div class="vertical-neon recent-3d">三日</div>';
+                roomState = 'recent-3d';
+                brightnessModifier = 0.2;
+            } else {
+                // 3日以上
+                const abandonedStates = [
+                    '<div class="vertical-neon abandoned">廃業</div>',
+                    '<div class="vertical-neon abandoned">消失</div>',
+                    '<div class="vertical-neon abandoned">古迹</div>'
+                ];
+                verticalText = abandonedStates[index % abandonedStates.length];
+                roomState = 'abandoned';
+                brightnessModifier = 0.1;
+            }
         }
         
         // 中国語のランダム看板
@@ -458,6 +482,17 @@ async function enterRoom(roomId, roomName) {
             // バックグラウンドでルーム一覧を更新
             renderRooms();
         }
+        
+        // 最終訪問時刻と訪問回数を更新
+        try {
+            const roomRef = doc(db, 'rooms', roomId);
+            await updateDoc(roomRef, {
+                lastVisited: serverTimestamp(),
+                totalVisits: increment(1)
+            });
+        } catch (error) {
+            console.error('訪問記録更新エラー:', error);
+        }
     } else {
         addDemoMessages();
     }
@@ -521,6 +556,22 @@ async function sendMessage() {
     if (appState.firebaseReady) {
         try {
             await addDoc(collection(db, 'rooms', appState.currentRoom.id, 'messages'), messageData);
+            
+            // メッセージ送信時にも部屋のlastVisitedを更新（人の気配が戻った）
+            const roomRef = doc(db, 'rooms', appState.currentRoom.id);
+            await updateDoc(roomRef, {
+                lastVisited: serverTimestamp(),
+                totalVisits: increment(1)
+            });
+            console.log('メッセージ送信時にlastVisited更新:', appState.currentRoom.id);
+            
+            // 部屋リストを即座に更新（退出時に反映されるように）
+            setTimeout(() => {
+                if (appState.firebaseReady) {
+                    renderRooms();
+                    updateActiveUserCounts();
+                }
+            }, 500);
         } catch (error) {
             console.error('メッセージ送信エラー:', error);
             showToast('送信失敗', 'error');
@@ -605,6 +656,8 @@ async function handleCreateRoom(e) {
                 description: randomDescription,
                 createdAt: serverTimestamp(),
                 createdBy: appState.currentUser.id,
+                lastVisited: serverTimestamp(),
+                totalVisits: 0
             };
             const docRef = await addDoc(collection(db, 'rooms'), roomData);
             closeCreateRoomModal();
@@ -621,7 +674,9 @@ async function handleCreateRoom(e) {
             roomName: roomName, 
             activeUsers: 1, 
             description: `${randomDescription}（オフライン）`,
-            createdBy: appState.currentUser.id
+            createdBy: appState.currentUser.id,
+            lastVisited: Date.now(),
+            totalVisits: 0
         };
         appState.rooms.unshift(newRoom);
         renderRooms();
