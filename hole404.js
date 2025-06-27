@@ -577,10 +577,10 @@ async function enterRoom(roomId, roomName) {
     UI.chatScreen.style.display = 'flex';
     UI.chatScreen.classList.add('active');
     
-    // Hide user counter when in chat
+    // Hide user counter when in chat - with !important to override CSS
     const userCounter = document.querySelector('.user-counter');
     if (userCounter) {
-        userCounter.style.display = 'none';
+        userCounter.style.setProperty('display', 'none', 'important');
     }
     
     // Force a reflow to ensure CSS changes are applied
@@ -650,7 +650,7 @@ async function leaveRoom() {
     // Show user counter again when leaving chat
     const userCounter = document.querySelector('.user-counter');
     if (userCounter) {
-        userCounter.style.display = 'block';
+        userCounter.style.removeProperty('display');
     }
     
     // Force a reflow

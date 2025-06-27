@@ -16,6 +16,9 @@ html {
 html, body {
     width: 100%;
     height: 100%;
+}
+
+html {
     overflow: hidden;
 }
 
@@ -24,6 +27,7 @@ body {
     background: #0a0a0a;
     color: #ffffff;
     overflow-x: hidden;
+    overflow-y: auto;
     /* モバイル用のスクロール改善 */
     -webkit-overflow-scrolling: touch;
     overscroll-behavior: contain;
@@ -299,8 +303,6 @@ body:has(.chat-screen.active) .user-counter {
     position: relative;
     display: block;
     z-index: 1;
-    overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
 }
 
 .room-selection::before {
