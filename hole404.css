@@ -611,6 +611,11 @@ body:has(.chat-screen.active) .user-counter {
     /* 部屋の暗さの影響を受けないように独立した明るさを保つ */
     filter: none !important;
     opacity: 1 !important;
+    z-index: 100;
+    /* 親要素のフィルターを無効化 */
+    transform: translateZ(0);
+    will-change: transform;
+    isolation: isolate;
 }
 
 .room-card:nth-child(4n+1) .vertical-neon {
@@ -716,24 +721,42 @@ body:has(.chat-screen.active) .user-counter {
 
 /* 非アクティブ状態のスタイル */
 .room-card.inactive {
-    filter: brightness(0.7);
-    opacity: 0.85;
+    position: relative;
 }
 
-.room-card.inactive:hover {
-    filter: brightness(0.9);
-    opacity: 1;
+.room-card.inactive::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.3);
+    pointer-events: none;
+}
+
+.room-card.inactive:hover::before {
+    background: rgba(0, 0, 0, 0.1);
 }
 
 /* 廃業・逃走・事件の極暗状態 */
 .room-card.abandoned {
-    filter: brightness(0.3) grayscale(0.8);
-    opacity: 0.4;
+    position: relative;
 }
 
-.room-card.abandoned:hover {
-    filter: brightness(0.5) grayscale(0.5);
-    opacity: 0.7;
+.room-card.abandoned::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.7);
+    pointer-events: none;
+}
+
+.room-card.abandoned:hover::before {
+    background: rgba(0, 0, 0, 0.5);
 }
 
 /* 時間ベースの明るさ状態 */
@@ -779,13 +802,10 @@ body:has(.chat-screen.active) .user-counter {
 }
 
 .vertical-neon.abandoned {
-    /* 常時点灯 - 暗めの色で表示 */
-    color: #666 !important;
-    border-color: #666 !important;
-    text-shadow: 
-        0 0 5px #666,
-        0 0 10px #666 !important;
-    opacity: 0.8 !important;
+    /* 常時点灯 - フィルター無効化 */
+    filter: none !important;
+    opacity: 1 !important;
+    transform: translateZ(0);
 }
 
 /* 電球が切れかかっているような点滅エフェクト */
@@ -846,8 +866,10 @@ body:has(.chat-screen.active) .user-counter {
 .vertical-neon.quiet,
 .vertical-neon.drunk,
 .vertical-neon.ecstasy {
-    /* 常時点灯 - 状態に応じた色で表示 */
-    opacity: 0.9 !important;
+    /* 常時点灯 - フィルター無効化 */
+    filter: none !important;
+    opacity: 1 !important;
+    transform: translateZ(0);
 }
 
 @keyframes dimFlicker {
@@ -878,35 +900,16 @@ body:has(.chat-screen.active) .user-counter {
     82% { opacity: 0.3; }
 }
 
-/* 準備中・空室・静寂の暗めのネオン */
-.vertical-neon.closed,
-.vertical-neon.vacant,
-.vertical-neon.quiet {
-    opacity: 0.6;
-    filter: brightness(0.7);
-}
-
-.vertical-neon.closed {
-    animation: dimFlicker 8s infinite;
-}
-
-.vertical-neon.vacant {
-    animation: slowBlink 10s infinite;
-}
-
-.vertical-neon.quiet {
-    animation: none;
-    opacity: 0.4;
-}
-
 /* 酩酊・陶酔の特殊状態 */
 .vertical-neon.drunk {
     color: #ff00ff !important;
     border-color: #ff00ff !important;
     text-shadow: 
         0 0 10px #ff00ff,
-        0 0 20px #ff00ff !important;
-    animation: drunkSway 3s infinite ease-in-out;
+        0 0 20px #ff00ff,
+        0 0 30px #ff00ff !important;
+    filter: none !important;
+    opacity: 1 !important;
 }
 
 .vertical-neon.ecstasy {
@@ -914,8 +917,10 @@ body:has(.chat-screen.active) .user-counter {
     border-color: #00ffff !important;
     text-shadow: 
         0 0 10px #00ffff,
-        0 0 20px #00ffff !important;
-    animation: ecstasyGlow 2s infinite alternate;
+        0 0 20px #00ffff,
+        0 0 30px #00ffff !important;
+    filter: none !important;
+    opacity: 1 !important;
 }
 
 /* 時間ベースの明るさ状態 */
@@ -1674,4 +1679,22 @@ body:has(.chat-screen.active) .user-counter {
         opacity: 0.9;
     }
     .enter-button:hover, .btn:hover, .send-btn:hover { transform: none; }
-    .enter-button:acti
+    .enter-button:active, .btn:active { transform: scale(0.95); }
+    .action-btn:hover { background: rgba(255, 107, 53, 0.1); }
+    .action-btn:active { background: rgba(255, 107, 53, 0.3); }
+    .send-btn:active { transform: scale(0.9); }
+}
+
+@supports (padding: max(0px)) {
+    .chat-screen { 
+        padding-bottom: env(safe-area-inset-bottom);
+    }
+    .chat-input { 
+        padding-bottom: calc(20px + env(safe-area-inset-bottom)); 
+    }
+    @media (max-width: 768px) {
+        .chat-input { 
+            padding-bottom: calc(15px + env(safe-area-inset-bottom));
+        }
+    }
+}
