@@ -1752,64 +1752,97 @@ body:has(.chat-screen.active) .user-counter {
 
 /* 最終アクセス時刻に基づく照度クラス */
 .room-card.lighting-recent-3h .neon-sign {
-    filter: brightness(1) !important;
-    opacity: 0.9 !important;
+    filter: brightness(1.1) !important;
+    opacity: 1 !important;
+    color: #ffffff;
+    text-shadow: 
+        0 0 10px rgba(255,255,255,0.8),
+        0 0 20px rgba(255,255,255,0.6),
+        0 0 30px rgba(255,255,255,0.4);
 }
 
 .room-card.lighting-recent-12h .neon-sign {
-    filter: brightness(0.8) !important;
-    opacity: 0.8 !important;
+    filter: brightness(0.9) !important;
+    opacity: 0.9 !important;
+    color: #e0e0e0;
+    text-shadow: 
+        0 0 8px rgba(255,255,255,0.6),
+        0 0 16px rgba(255,255,255,0.4);
 }
 
 .room-card.lighting-recent-24h .neon-sign {
-    filter: brightness(0.6) !important;
-    opacity: 0.7 !important;
+    filter: brightness(0.7) !important;
+    opacity: 0.8 !important;
+    color: #c0c0c0;
+    text-shadow: 
+        0 0 6px rgba(255,255,255,0.4),
+        0 0 12px rgba(255,255,255,0.2);
 }
 
 .room-card.lighting-recent-48h .neon-sign {
-    filter: brightness(0.4) !important;
-    opacity: 0.6 !important;
+    filter: brightness(0.5) !important;
+    opacity: 0.7 !important;
+    color: #a0a0a0;
+    text-shadow: 
+        0 0 4px rgba(255,255,255,0.3);
 }
 
 .room-card.lighting-recent-72h .neon-sign {
-    filter: brightness(0.3) !important;
-    opacity: 0.5 !important;
+    filter: brightness(0.4) !important;
+    opacity: 0.6 !important;
+    color: #808080;
+    text-shadow: 
+        0 0 3px rgba(255,255,255,0.2);
 }
 
 .room-card.lighting-off .neon-sign {
-    filter: brightness(0.2) !important;
-    opacity: 0.3 !important;
+    filter: brightness(0.3) !important;
+    opacity: 0.5 !important;
+    color: #606060;
+    text-shadow: none;
 }
 
-/* 説明文と人数表示も同様に調整 */
+/* 説明文と人数表示、中国語看板も同様に調整 */
 .room-card.lighting-recent-3h .room-description,
-.room-card.lighting-recent-3h .room-status {
-    opacity: 0.8;
+.room-card.lighting-recent-3h .room-status,
+.room-card.lighting-recent-3h .chinese-sign {
+    opacity: 0.9;
+    filter: brightness(1);
 }
 
 .room-card.lighting-recent-12h .room-description,
-.room-card.lighting-recent-12h .room-status {
-    opacity: 0.6;
+.room-card.lighting-recent-12h .room-status,
+.room-card.lighting-recent-12h .chinese-sign {
+    opacity: 0.8;
+    filter: brightness(0.9);
 }
 
 .room-card.lighting-recent-24h .room-description,
-.room-card.lighting-recent-24h .room-status {
-    opacity: 0.5;
+.room-card.lighting-recent-24h .room-status,
+.room-card.lighting-recent-24h .chinese-sign {
+    opacity: 0.7;
+    filter: brightness(0.8);
 }
 
 .room-card.lighting-recent-48h .room-description,
-.room-card.lighting-recent-48h .room-status {
-    opacity: 0.4;
+.room-card.lighting-recent-48h .room-status,
+.room-card.lighting-recent-48h .chinese-sign {
+    opacity: 0.6;
+    filter: brightness(0.7);
 }
 
 .room-card.lighting-recent-72h .room-description,
-.room-card.lighting-recent-72h .room-status {
-    opacity: 0.3;
+.room-card.lighting-recent-72h .room-status,
+.room-card.lighting-recent-72h .chinese-sign {
+    opacity: 0.5;
+    filter: brightness(0.6);
 }
 
 .room-card.lighting-off .room-description,
-.room-card.lighting-off .room-status {
-    opacity: 0.2;
+.room-card.lighting-off .room-status,
+.room-card.lighting-off .chinese-sign {
+    opacity: 0.4;
+    filter: brightness(0.5);
 }
 
 /* 新規開店（lighting-new）の明るいネオン */
