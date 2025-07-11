@@ -95,9 +95,19 @@
   - すべての状態で `filter: none !important` と `opacity: 1 !important`
   - 明るい色とグロー効果を維持
 
+#### 5. 部屋名ネオンサインも明るく表示（2025-07-11 16:00）
+**hole404.css の追加変更:**
+- `.neon-sign`（部屋名）にも同様の処理を追加
+  - `filter: none !important` と `opacity: 1 !important`
+  - `z-index: 50` で擬似要素より上に表示
+- 他の要素の視認性も改善
+  - `.room-description`: opacity 0.6→0.7、z-index: 30
+  - `.room-status`: opacity 0.4→0.6、z-index: 30
+  - `.chinese-sign`: z-index: 50
+
 **次の作業:**
-- 部屋の名前部分のネオン表示ロジックを実装
-- 最終アクセス時刻の記録機能を追加
+- 最終アクセス時刻記録機能の実装
+- 在室状況タグの実装
 
 ---
 

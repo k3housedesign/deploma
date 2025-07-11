@@ -432,6 +432,13 @@ body:has(.chat-screen.active) .user-counter {
     margin-bottom: 15px;
     position: relative;
     display: inline-block;
+    /* 部屋の暗さの影響を受けないように独立した明るさを保つ */
+    filter: none !important;
+    opacity: 1 !important;
+    z-index: 50;
+    transform: translateZ(0);
+    will-change: transform;
+    isolation: isolate;
 }
 
 /* 各カードのネオンテキスト色 */
@@ -530,16 +537,20 @@ body:has(.chat-screen.active) .user-counter {
     84% { opacity: 1; }
 }
 .room-description {
-    color: rgba(255,255,255,0.6);
+    color: rgba(255,255,255,0.7);
     font-size: 0.9em;
     margin-bottom: 15px;
     font-style: italic;
+    position: relative;
+    z-index: 30;
 }
 .room-status {
-    color: rgba(255,255,255,0.4);
+    color: rgba(255,255,255,0.6);
     font-size: 0.8em;
     text-transform: uppercase;
     letter-spacing: 1px;
+    position: relative;
+    z-index: 30;
 }
 .create-room-btn {
     background: #0a0a0a;
@@ -1074,6 +1085,7 @@ body:has(.chat-screen.active) .user-counter {
     bottom: 20px;
     font-size: 1.6em;
     font-weight: 900;
+    z-index: 50;
     opacity: 0.7;
     font-family: 'Noto Sans TC', 'Microsoft JhengHei', sans-serif;
 }
