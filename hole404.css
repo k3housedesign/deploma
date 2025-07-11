@@ -423,8 +423,8 @@ body:has(.chat-screen.active) .user-counter {
     }
 }
 
-/* ネオンサインのテキスト */
-.neon-sign {
+/* ネオンサインのテキスト - 基本設定 */
+.room-card .neon-sign {
     font-size: 2.2em;
     font-weight: 900;
     letter-spacing: 2px;
@@ -432,45 +432,18 @@ body:has(.chat-screen.active) .user-counter {
     margin-bottom: 15px;
     position: relative;
     display: inline-block;
-    /* 部屋のフィルターの影響を受ける（時間経過で暗くなる） */
+    /* デフォルトは暗め */
+    opacity: 0.5;
+    filter: brightness(0.6);
 }
 
-/* 各カードのネオンテキスト色 */
-.room-card:nth-child(4n+1) .neon-sign {
-    color: #00ff41;
+/* 部屋名ネオンサインのデフォルトスタイル - 暗めの設定 */
+.neon-sign {
+    color: rgba(255,255,255,0.4);
     text-shadow: 
-        0 0 10px #00ff41,
-        0 0 20px #00ff41,
-        0 0 40px #00ff41,
-        0 0 80px #00ff41;
-    animation: neonFlicker1 3s infinite;
-}
-.room-card:nth-child(4n+2) .neon-sign {
-    color: #ff006e;
-    text-shadow: 
-        0 0 10px #ff006e,
-        0 0 20px #ff006e,
-        0 0 40px #ff006e,
-        0 0 80px #ff006e;
-    animation: neonFlicker2 2.5s infinite;
-}
-.room-card:nth-child(4n+3) .neon-sign {
-    color: #ffaa00;
-    text-shadow: 
-        0 0 10px #ffaa00,
-        0 0 20px #ffaa00,
-        0 0 40px #ffaa00,
-        0 0 80px #ffaa00;
-    animation: neonFlicker3 4s infinite;
-}
-.room-card:nth-child(4n) .neon-sign {
-    color: #00b4ff;
-    text-shadow: 
-        0 0 10px #00b4ff,
-        0 0 20px #00b4ff,
-        0 0 40px #00b4ff,
-        0 0 80px #00b4ff;
-    animation: neonFlicker4 3.5s infinite;
+        0 0 5px rgba(255,255,255,0.2),
+        0 0 10px rgba(255,255,255,0.1);
+    /* アニメーションは削除 - 時間経過で明るさが変化 */
 }
 
 /* モバイルではアニメーションを無効化 */
@@ -623,61 +596,7 @@ body:has(.chat-screen.active) .user-counter {
     isolation: isolate;
 }
 
-.room-card:nth-child(4n+1) .vertical-neon {
-    color: #00ff41 !important;
-    border-color: #00ff41 !important;
-    text-shadow: 
-        0 0 5px #00ff41,
-        0 0 10px #00ff41,
-        0 0 20px #00ff41,
-        0 0 30px #00ff41 !important;
-    box-shadow: 
-        inset 0 0 10px rgba(0,255,65,0.3),
-        0 0 15px rgba(0,255,65,0.5),
-        0 0 25px rgba(0,255,65,0.3) !important;
-}
-
-.room-card:nth-child(4n+2) .vertical-neon {
-    color: #ff006e !important;
-    border-color: #ff006e !important;
-    text-shadow: 
-        0 0 5px #ff006e,
-        0 0 10px #ff006e,
-        0 0 20px #ff006e,
-        0 0 30px #ff006e !important;
-    box-shadow: 
-        inset 0 0 10px rgba(255,0,110,0.3),
-        0 0 15px rgba(255,0,110,0.5),
-        0 0 25px rgba(255,0,110,0.3) !important;
-}
-
-.room-card:nth-child(4n+3) .vertical-neon {
-    color: #ffaa00 !important;
-    border-color: #ffaa00 !important;
-    text-shadow: 
-        0 0 5px #ffaa00,
-        0 0 10px #ffaa00,
-        0 0 20px #ffaa00,
-        0 0 30px #ffaa00 !important;
-    box-shadow: 
-        inset 0 0 10px rgba(255,170,0,0.3),
-        0 0 15px rgba(255,170,0,0.5),
-        0 0 25px rgba(255,170,0,0.3) !important;
-}
-
-.room-card:nth-child(4n) .vertical-neon {
-    color: #00b4ff !important;
-    border-color: #00b4ff !important;
-    text-shadow: 
-        0 0 5px #00b4ff,
-        0 0 10px #00b4ff,
-        0 0 20px #00b4ff,
-        0 0 30px #00b4ff !important;
-    box-shadow: 
-        inset 0 0 10px rgba(0,180,255,0.3),
-        0 0 15px rgba(0,180,255,0.5),
-        0 0 25px rgba(0,180,255,0.3) !important;
-}
+/* nth-child rules removed to allow specific color classes to work properly */
 
 @keyframes verticalBlink {
     0%, 100% { opacity: 1; }
@@ -716,9 +635,13 @@ body:has(.chat-screen.active) .user-counter {
     }
 }
 
-/* 新規開店の状態 */
-.room-card.new {
-    filter: brightness(1.1);
+/* 新規開店の状態 - 誰も入ってない場合は暗く */
+.room-card.new .neon-sign,
+.room-card.new .room-description,
+.room-card.new .room-status,
+.room-card.new .chinese-sign {
+    filter: brightness(0.5);
+    opacity: 0.6;
 }
 
 .vertical-neon.new {
@@ -751,7 +674,7 @@ body:has(.chat-screen.active) .user-counter {
     50% { opacity: 0.8; transform: scale(1.05); }
 }
 
-/* アクティブ状態（営業中）のスタイル */
+/* アクティブ状態（営業中）のスタイル - 部屋名も明るく表示 */
 .room-card.active .neon-sign {
     filter: brightness(1.2) !important;
     opacity: 1 !important;
