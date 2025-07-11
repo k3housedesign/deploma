@@ -39,6 +39,30 @@
             color: #ff6b35;
             margin-bottom: 15px;
             text-shadow: 0 0 5px #ff6b35;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .close-button {
+            width: 30px;
+            height: 30px;
+            background: transparent;
+            border: 1px solid #ff6b35;
+            color: #ff6b35;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+        
+        .close-button:hover {
+            background: #ff6b35;
+            color: #000;
+            transform: rotate(90deg);
         }
         
         .edit-group {
@@ -357,7 +381,10 @@
 <body>
     <!-- 編集パネル -->
     <div class="edit-panel" id="editPanel" style="display: none;">
-        <h3>ネオン編集パネル</h3>
+        <h3>
+            <span>ネオン編集パネル</span>
+            <button class="close-button" onclick="closeEditPanel()">×</button>
+        </h3>
         
         <div class="edit-group">
             <label>編集対象: <span id="editTarget">-</span></label>
@@ -990,6 +1017,16 @@
             document.getElementById('opacitySlider').value = originalStyles.opacity * 100;
             document.getElementById('brightnessSlider').value = originalStyles.brightness;
             document.getElementById('animationSelect').value = 'none';
+        }
+        
+        // 編集パネルを閉じる
+        function closeEditPanel() {
+            document.getElementById('editPanel').style.display = 'none';
+            if (currentElement) {
+                currentElement.classList.remove('selected');
+                currentElement = null;
+            }
+            // 生成されたCSSはそのまま保持
         }
         
         // ユーティリティ関数
