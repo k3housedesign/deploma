@@ -1,7 +1,7 @@
 /* hole2.css */
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;700&display=swap');
 
-/* --- Reset and Base Styles --- */
+/* --- ãæå®ã®ã³ã¼ãã¹ããããããåæ  --- */
 * {
     margin: 0;
     padding: 0;
@@ -28,25 +28,25 @@ body {
     color: #ffffff;
     overflow-x: hidden;
     overflow-y: auto;
-    /* Mobile scroll optimization */
+    /* ã¢ãã¤ã«ç¨ã®ã¹ã¯ã­ã¼ã«æ¹å */
     -webkit-overflow-scrolling: touch;
     overscroll-behavior: contain;
 }
 
-/* Mobile focus optimization */
+/* ã¢ãã¤ã«ç¨ã®ãã©ã¼ã«ã¹æ¹å */
 .message-input:focus {
     transform: none;
     -webkit-transform: none;
 }
 
-/* iOS Safari input field fixes */
+/* iOS Safariç¨ã®å¥åãã£ã¼ã«ãä¿®æ­£ */
 input, textarea {
     -webkit-appearance: none;
     -webkit-border-radius: 0;
     border-radius: inherit;
 }
 
-/* Remove tap highlight on mobile */
+/* ã¢ãã¤ã«ã§ã®ã¿ãããã¤ã©ã¤ãåé¤ */
 * {
     -webkit-tap-highlight-color: transparent;
     -webkit-touch-callout: none;
@@ -54,12 +54,12 @@ input, textarea {
     user-select: none;
 }
 
-/* Enable text selection for specific elements */
+/* é¸æå¯è½ã«ããã¹ãè¦ç´  */
 input, textarea, .message-content {
     -webkit-user-select: text;
     user-select: text;
 }
-/* --- End of Reset --- */
+/* --- ããã¾ã§ --- */
 
 
 :root {
@@ -82,7 +82,7 @@ input, textarea, .message-content {
     box-sizing: border-box;
 }
 
-/* Splash Screen */
+/* ã¹ãã©ãã·ã¥ã¹ã¯ãªã¼ã³ */
 .splash-screen {
     position: fixed;
     top: 0;
@@ -103,7 +103,7 @@ input, textarea, .message-content {
     pointer-events: none;
 }
 
-/* Continue with previous CSS code */
+/* (ä»¥ä¸ãååã®CSSã³ã¼ããç¶ã) */
 .manhole-cover {
     width: 200px;
     height: 200px;
@@ -122,7 +122,7 @@ input, textarea, .message-content {
     transform: scale(1.05);
 }
 
-/* Different neon colors for each room card */
+.manhole-cover.opening {
     animation: manholeOpen 1.2s ease-out forwards;
 }
 
@@ -140,7 +140,7 @@ input, textarea, .message-content {
         transform: rotate(0deg) scale(1);
     }
     50% {
-/* Brighten active state background */
+        transform: rotate(360deg) scale(0.9);
     }
     100% {
         transform: rotate(720deg) scale(0);
@@ -166,7 +166,7 @@ input, textarea, .message-content {
     width: 200px;
     height: 200px;
     opacity: 1;
-/* Remove neon frame coloring effects - simple borderless design */
+    animation: holeExpand 0.8s ease-out forwards;
 }
 
 .manhole-hole.fullscreen {
@@ -175,7 +175,7 @@ input, textarea, .message-content {
 
 @keyframes holeExpand {
     0% {
-/* Neon sign text - base settings */
+        width: 0;
         height: 0;
     }
     100% {
@@ -186,7 +186,7 @@ input, textarea, .message-content {
             0 0 50px rgba(0,0,0,0.8);
     }
 }
-/* Room name neon sign default style - dark settings */
+
 @keyframes holeFullscreen {
     0% {
         width: 200px;
@@ -196,14 +196,14 @@ input, textarea, .message-content {
         width: 200vmax;
         height: 200vmax;
         opacity: 1;
-/* Disable animations on mobile */
+    }
 }
 
 .manhole-cover::before {
     content: '';
     position: absolute;
     top: 50%;
-/* Flickering animation for neon lights */
+    left: 50%;
     width: 160px;
     height: 160px;
     background: repeating-conic-gradient(
@@ -264,12 +264,12 @@ input, textarea, .message-content {
     backdrop-filter: blur(10px);
 }
 
-/* Hide user counter when chat screen is active */
+/* ãã£ããç»é¢è¡¨ç¤ºæã¯ã¦ã¼ã¶ã¼ã«ã¦ã³ã¿ã¼ãéè¡¨ç¤º */
 body:has(.chat-screen.active) .user-counter {
     display: none;
 }
 
-/* Fallback for browsers without has() support */
+/* :has()ããµãã¼ãããªããã©ã¦ã¶ç¨ã®ãã©ã¼ã«ããã¯ */
 @media (max-width: 768px) {
     .user-counter {
         bottom: 15px;
@@ -277,7 +277,7 @@ body:has(.chat-screen.active) .user-counter {
         padding: 8px 15px;
         font-size: 12px;
         border-radius: 15px;
-        z-index: 50; /* Below chat screen */
+        z-index: 50; /* ãã£ããç»é¢ããä¸ã« */
     }
 }
 
@@ -323,7 +323,7 @@ body:has(.chat-screen.active) .user-counter {
 
 .main-content.visible .room-selection::before {
     opacity: 0.5;
-/* Vertical neon sign */
+}
 .underground-plaza {
     max-width: 1200px;
     margin: 0 auto;
@@ -357,7 +357,7 @@ body:has(.chat-screen.active) .user-counter {
 }
 .room-card {
     background: #0a0a0a;
-/* Bright neon for open business */
+    border: none;
     border-radius: 8px;
     padding: 30px;
     cursor: pointer;
@@ -385,7 +385,7 @@ body:has(.chat-screen.active) .user-counter {
 }
 .room-card:nth-child(4n) {
     border-color: transparent;
-/* New opening state - bright and eye-catching */
+    background: radial-gradient(ellipse at center, rgba(0,180,255,0.05) 0%, #0a0a0a 70%);
 }
 
 /* ã¢ã¯ãã£ãç¶æã®èæ¯ãæãã */
@@ -440,7 +440,7 @@ body:has(.chat-screen.active) .user-counter {
     text-shadow: 
         0 0 5px rgba(255,255,255,0.2),
         0 0 10px rgba(255,255,255,0.1);
-/* Active state (open) style - room name brightly displayed */
+    opacity: 0.5;
     filter: brightness(0.6);
 }
 
@@ -453,7 +453,7 @@ body:has(.chat-screen.active) .user-counter {
 
 /* é»çåããããã®ç¹æ»ã¢ãã¡ã¼ã·ã§ã³ */
 @keyframes neonFlicker1 {
-/* Inactive state style */
+    0%, 100% { opacity: 1; }
     4% { opacity: 0.9; }
     6% { opacity: 0.85; }
     8% { opacity: 0.95; }
@@ -475,7 +475,7 @@ body:has(.chat-screen.active) .user-counter {
     0%, 100% { opacity: 1; filter: brightness(1); }
     10% { opacity: 0.97; filter: brightness(0.9); }
     12% { opacity: 0.9; filter: brightness(0.8); }
-/* Extreme states - closed, runaway, incident */
+    14% { opacity: 1; filter: brightness(1); }
     30% { opacity: 0.98; filter: brightness(0.95); }
     32% { opacity: 0.7; filter: brightness(0.7); }
     33% { opacity: 1; filter: brightness(1); }
@@ -496,7 +496,7 @@ body:has(.chat-screen.active) .user-counter {
     22% { opacity: 0.9; }
     24% { opacity: 0.85; }
     26% { opacity: 0.94; }
-/* Border and box-shadow lightness changes */
+    28% { opacity: 1; }
     80% { opacity: 0.99; }
     82% { opacity: 0.4; }
     84% { opacity: 1; }
@@ -535,7 +535,7 @@ body:has(.chat-screen.active) .user-counter {
         0 0 50px rgba(191,0,255,0.2);
     background: radial-gradient(ellipse at center, rgba(191,0,255,0.1) 0%, #0a0a0a 70%);
     position: relative;
-/* Time-based dimming states */
+}
 .create-room-btn:hover {
     transform: scale(1.05);
     filter: brightness(1.3);
@@ -577,7 +577,7 @@ body:has(.chat-screen.active) .user-counter {
     right: 20px;
     top: 20px;
     writing-mode: vertical-rl;
-/* Closed - gray */
+    text-orientation: upright;
     font-size: 1.2em;
     font-weight: 900;
     letter-spacing: 4px;
@@ -588,7 +588,7 @@ body:has(.chat-screen.active) .user-counter {
     filter: none !important;
     opacity: 1 !important;
     z-index: 100;
-/* Runaway - yellow */
+    /* è¦ªè¦ç´ ã®ãã£ã«ã¿ã¼ãç¡å¹å */
     transform: translateZ(0);
     will-change: transform;
     isolation: isolate;
@@ -606,7 +606,7 @@ body:has(.chat-screen.active) .user-counter {
 }
 
 /* å¶æ¥­ä¸­ã®æããããªã³ */
-/* Incident - red */
+.vertical-neon.active {
     /* å¸¸æç¹ç¯ - ãã«ç¹ç¯ */
     filter: brightness(1.2) !important;
     opacity: 1 !important;
@@ -631,7 +631,7 @@ body:has(.chat-screen.active) .user-counter {
         opacity: 0.9; 
         filter: brightness(1.2);
     }
-/* Broken neon flickering effects */
+}
 
 /* æ°è¦éåºã®ç¶æ - æããç¹ç¯ããã¦ç®ç«ããã */
 .room-card.new .neon-sign {
@@ -683,7 +683,7 @@ body:has(.chat-screen.active) .user-counter {
     }
 }
 
-/* 1-3 days inactive room - white */
+@keyframes newShopPulse {
     0%, 100% { opacity: 1; transform: scale(1); }
     50% { opacity: 0.8; transform: scale(1.05); }
 }
@@ -723,7 +723,7 @@ body:has(.chat-screen.active) .user-counter {
     opacity: 1;
 }
 
-/* Old individual styles removed - unified to inactive-white */
+/* å»æ¥­ã»éèµ°ã»äºä»¶ã®æ¥µæç¶æ */
 .room-card.abandoned {
     position: relative;
 }
@@ -869,7 +869,7 @@ body:has(.chat-screen.active) .user-counter {
 }
 
 @keyframes incidentPulse {
-/* Chinese sign styles */
+    0%, 100% { 
         opacity: 1; 
         transform: scale(1);
     }
@@ -906,7 +906,7 @@ body:has(.chat-screen.active) .user-counter {
         filter: brightness(0.8);
     }
     65% { 
-/* Close shop button */
+        opacity: 0.2;
         filter: brightness(0.4);
     }
     66% { 
@@ -929,7 +929,7 @@ body:has(.chat-screen.active) .user-counter {
         opacity: 0.2;
         filter: brightness(0.4);
     }
-/* Always show on mobile devices */
+}
 
 /* 1-3æ¥æ¾ç½®é¨å± - ç½è² */
 .vertical-neon.inactive-white {
@@ -944,7 +944,7 @@ body:has(.chat-screen.active) .user-counter {
 }
 
 @keyframes dimFlicker {
-/* Close shop modal */
+    0%, 100% { 
         opacity: 0.85;
         filter: brightness(1.0);
     }
@@ -1000,7 +1000,7 @@ body:has(.chat-screen.active) .user-counter {
     text-shadow: 
         0 0 8px #ff6347,
         0 0 12px #ff6347 !important;
-/* Modal */
+    animation: recent1dDim 4s infinite ease-in-out;
     opacity: 0.4;
 }
 
@@ -1113,7 +1113,7 @@ body:has(.chat-screen.active) .user-counter {
     }
     50% { 
         opacity: 0.25; 
-/* User profile section */
+        filter: brightness(0.7);
     }
 }
 
@@ -1168,7 +1168,7 @@ body:has(.chat-screen.active) .user-counter {
     cursor: pointer;
     opacity: 0;
     transition: all 0.3s ease;
-/* Chat screen */
+    font-weight: 600;
     letter-spacing: 0.5px;
     z-index: 10;
 }
@@ -1381,7 +1381,7 @@ body:has(.chat-screen.active) .user-counter {
     border-radius: 25px;
     border: 1px solid var(--border-color);
 }
-/* Toast notifications */
+
 .user-icon {
     font-size: 1.5em;
 }
@@ -1399,7 +1399,7 @@ body:has(.chat-screen.active) .user-counter {
     color: white;
     cursor: pointer;
     display: flex;
-/* Responsive design */
+    align-items: center;
     gap: 8px;
     font-size: 0.9em;
     transition: all 0.3s ease;
@@ -1502,7 +1502,7 @@ body:has(.chat-screen.active) .user-counter {
     text-align: center;
     font-style: italic;
     color: var(--primary-color);
-/* Last access time-based dimming classes - colorful neon */
+}
 .message.bot {
     background: rgba(247, 147, 30, 0.1);
     border-left-color: var(--secondary-color);
@@ -1544,7 +1544,7 @@ body:has(.chat-screen.active) .user-counter {
 
 .message-delete {
     position: absolute;
-/* 12 hours or more - slightly dimmer neon */
+    top: 10px;
     right: 10px;
     background: rgba(255, 0, 0, 0.1);
     border: 1px solid rgba(255, 0, 0, 0.3);
@@ -1581,7 +1581,7 @@ body:has(.chat-screen.active) .user-counter {
         opacity: 0;
         transform: translateX(-20px);
         filter: brightness(0);
-/* 24 hours or more - dimmer neon */
+    }
 }
 .chat-input {
     background: rgba(10, 10, 10, 0.95);
@@ -1618,7 +1618,7 @@ body:has(.chat-screen.active) .user-counter {
     cursor: pointer;
     display: flex;
     align-items: center;
-/* 48 hours or more - very dim neon */
+    justify-content: center;
     font-size: 1.2em;
     transition: all 0.3s ease;
 }
@@ -1651,7 +1651,7 @@ body:has(.chat-screen.active) .user-counter {
 @media (max-width: 768px) {
     html { font-size: 16px !important; }
     body { 
-/* 72 hours or more - extremely dim neon */
+        font-size: 16px !important;
         -webkit-text-size-adjust: 100% !important;
     }
     /* Fix chat screen display on mobile */
@@ -1684,7 +1684,7 @@ body:has(.chat-screen.active) .user-counter {
     .splash-screen h1 { font-size: 3em; }
     .splash-screen .subtitle { font-size: 1em; }
     .underground-plaza { padding: 60px 15px; }
-/* 72+ hours - almost off but still has color trace */
+    .plaza-title { font-size: 2.5em; margin-bottom: 15px; }
     .plaza-subtitle { font-size: 1em; margin-bottom: 40px; }
     .room-grid { grid-template-columns: 1fr; gap: 20px; margin-bottom: 40px; }
     .room-card { padding: 20px; }
@@ -1713,7 +1713,7 @@ body:has(.chat-screen.active) .user-counter {
     .message-content { font-size: 0.9em; line-height: 1.3; }
     .chat-input { padding: 15px; gap: 12px; }
     .message-input { padding: 10px 15px; border-radius: 18px; font-size: 16px !important; max-height: 80px; }
-/* Adjust description, popularity display, and Chinese signs similarly */
+    .send-btn { width: 40px; height: 40px; font-size: 1.1em; flex-shrink: 0; }
     .user-counter { bottom: 15px; right: 15px; padding: 8px 15px; font-size: 12px; border-radius: 15px; }
     .toast { top: 15px; right: 15px; left: 15px; padding: 12px 15px; font-size: 0.9em; }
     .manhole-cover { width: 150px; height: 150px; margin-bottom: 30px; }
@@ -1756,13 +1756,13 @@ body:has(.chat-screen.active) .user-counter {
     filter: brightness(1.1) !important;
     opacity: 1 !important;
     color: #00ff41;
-/* New opening (lighting-new) bright neon */
+    text-shadow: 
         0 0 10px #00ff41,
         0 0 20px #00ff41,
         0 0 40px #00ff41;
 }
 
-/* Open business (lighting-bright) bright neon - most vivid */
+.room-card.lighting-recent-3h:nth-child(4n+2) .neon-sign {
     filter: brightness(1.1) !important;
     opacity: 1 !important;
     color: #ff006e;
@@ -1803,7 +1803,7 @@ body:has(.chat-screen.active) .user-counter {
 }
 
 .room-card.lighting-recent-12h:nth-child(4n+2) .neon-sign {
-/* Chinese sign colorful neon (0-3 hours) */
+    filter: brightness(0.9) !important;
     opacity: 0.9 !important;
     color: #cc0055;
     text-shadow: 
@@ -1824,8 +1824,8 @@ body:has(.chat-screen.active) .user-counter {
     filter: brightness(0.9) !important;
     opacity: 0.9 !important;
     color: #0099cc;
-/* Time-elapsed dimming control - colorful neon */
-/* 0-3 hours: bright - colorful neon */
+    text-shadow: 
+        0 0 8px #0099cc,
         0 0 16px #0099cc;
 }
 
@@ -1866,7 +1866,7 @@ body:has(.chat-screen.active) .user-counter {
         0 0 12px #007799;
 }
 
-/* 3-12 hours: slightly dimmer - colorful neon */
+/* 48æéä»¥å - ããªãæãããªã³ */
 .room-card.lighting-recent-48h:nth-child(4n+1) .neon-sign {
     filter: brightness(0.5) !important;
     opacity: 0.7 !important;
@@ -1903,7 +1903,7 @@ body:has(.chat-screen.active) .user-counter {
 .room-card.lighting-recent-72h:nth-child(4n+1) .neon-sign {
     filter: brightness(0.4) !important;
     opacity: 0.6 !important;
-/* 12-24 hours: normal - colorful neon */
+    color: #004400;
     text-shadow: 
         0 0 3px #004400;
 }
@@ -1940,7 +1940,7 @@ body:has(.chat-screen.active) .user-counter {
     text-shadow: none;
 }
 
-/* 24-48 hours: quite dim - colorful neon */
+.room-card.lighting-off:nth-child(4n+2) .neon-sign {
     filter: brightness(0.3) !important;
     opacity: 0.5 !important;
     color: #330011;
@@ -1973,7 +1973,7 @@ body:has(.chat-screen.active) .user-counter {
 .room-card.lighting-recent-12h .room-status,
 .room-card.lighting-recent-12h .chinese-sign {
     opacity: 0.8;
-/* 48-72 hours: dim - colorful neon */
+    filter: brightness(0.9);
 }
 
 .room-card.lighting-recent-24h .room-description,
@@ -2006,7 +2006,7 @@ body:has(.chat-screen.active) .user-counter {
 
 /* æ°è¦éåºï¼lighting-newï¼ã®æããããªã³ */
 .room-card.lighting-new .neon-sign {
-/* 72+ hours: almost off - colorful neon */
+    filter: brightness(1.2) !important;
     opacity: 1 !important;
 }
 
