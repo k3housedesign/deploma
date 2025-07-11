@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HOLE管理者ページ - ネオンシステム設定</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;700&display=swap">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Noto Sans JP', sans-serif;
+            background: #0a0a0a;
+            color: #ffffff;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        
+        .admin-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        h1 {
+            color: #ff6b35;
+            text-shadow: 0 0 10px #ff6b35;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        h2 {
+            color: #f7931e;
+            margin: 30px 0 20px;
+            text-shadow: 0 0 5px #f7931e;
+        }
+        
+        .preview-section {
+            background: rgba(20, 20, 20, 0.8);
+            border: 1px solid #333;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .neon-preview {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .preview-card {
+            background: #1a1a1a;
+            border: 1px solid #444;
+            border-radius: 4px;
+            padding: 15px;
+            text-align: center;
+        }
+        
+        .vertical-neon-preview {
+            writing-mode: vertical-rl;
+            font-size: 14px;
+            padding: 10px 5px;
+            border: 2px solid;
+            border-radius: 3px;
+            font-weight: bold;
+            letter-spacing: 2px;
+            display: inline-block;
+            margin: 10px;
+        }
+        
+        .room-neon-preview {
+            font-size: 24px;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+        
+        /* 縦書きネオンのスタイル */
+        .neon-new {
+            color: #ffd700;
+            border-color: #ffd700;
+            text-shadow: 0 0 10px #ffd700, 0 0 20px #ffd700;
+            animation: pulse 2s infinite;
+        }
+        
+        .neon-active {
+            color: #00ff00;
+            border-color: #00ff00;
+            text-shadow: 0 0 10px #00ff00, 0 0 20px #00ff00;
+        }
+        
+        .neon-abandoned-gray {
+            color: #808080;
+            border-color: #808080;
+            text-shadow: 0 0 5px #808080;
+        }
+        
+        .neon-abandoned-yellow {
+            color: #ffff00;
+            border-color: #ffff00;
+            text-shadow: 0 0 10px #ffff00;
+            animation: flicker 1.5s infinite;
+        }
+        
+        .neon-abandoned-red {
+            color: #ff0000;
+            border-color: #ff0000;
+            text-shadow: 0 0 10px #ff0000, 0 0 20px #ff0000;
+            animation: pulse 1s infinite;
+        }
+        
+        .neon-default {
+            color: #ffffff;
+            border-color: #ffffff;
+            text-shadow: 0 0 5px #ffffff;
+        }
+        
+        /* 部屋名ネオンのスタイル */
+        .room-3h-1 { color: #00ff41; text-shadow: 0 0 10px #00ff41, 0 0 20px #00ff41; }
+        .room-3h-2 { color: #ff006e; text-shadow: 0 0 10px #ff006e, 0 0 20px #ff006e; }
+        .room-3h-3 { color: #ffaa00; text-shadow: 0 0 10px #ffaa00, 0 0 20px #ffaa00; }
+        .room-3h-4 { color: #00b4ff; text-shadow: 0 0 10px #00b4ff, 0 0 20px #00b4ff; }
+        
+        .room-12h { opacity: 0.9; filter: brightness(0.9); }
+        .room-24h { opacity: 0.8; filter: brightness(0.7); }
+        .room-48h { opacity: 0.7; filter: brightness(0.5); }
+        .room-72h { opacity: 0.6; filter: brightness(0.4); }
+        .room-off { opacity: 0.5; filter: brightness(0.3); }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.6; }
+        }
+        
+        @keyframes flicker {
+            0%, 100% { opacity: 1; }
+            25% { opacity: 0.4; }
+            50% { opacity: 1; }
+            75% { opacity: 0.6; }
+        }
+        
+        .color-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        
+        .color-table th,
+        .color-table td {
+            border: 1px solid #444;
+            padding: 10px;
+            text-align: left;
+        }
+        
+        .color-table th {
+            background: rgba(255, 107, 53, 0.2);
+            font-weight: bold;
+        }
+        
+        .color-table tr:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+        
+        .color-sample {
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            border-radius: 4px;
+            vertical-align: middle;
+            margin-right: 10px;
+        }
+        
+        .time-line {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        
+        .time-point {
+            text-align: center;
+            flex: 1;
+        }
+        
+        .time-point .time {
+            font-size: 14px;
+            color: #f7931e;
+            font-weight: bold;
+        }
+        
+        .time-point .desc {
+            font-size: 12px;
+            color: #ccc;
+            margin-top: 5px;
+        }
+        
+        .note-section {
+            background: rgba(255, 107, 53, 0.1);
+            border-left: 4px solid #ff6b35;
+            padding: 15px;
+            margin: 20px 0;
+        }
+        
+        .note-section h3 {
+            color: #ff6b35;
+            margin-bottom: 10px;
+        }
+        
+        .button-group {
+            margin: 20px 0;
+            text-align: center;
+        }
+        
+        .btn {
+            background: #ff6b35;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin: 0 5px;
+            cursor: pointer;
+            border-radius: 4px;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+        
+        .btn:hover {
+            background: #f7931e;
+            box-shadow: 0 0 10px #f7931e;
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-container">
+        <h1>HOLE ネオンシステム管理ページ</h1>
+        
+        <div class="preview-section">
+            <h2>1. 縦書きネオンサイン（常時点灯）</h2>
+            <div class="neon-preview">
+                <div class="preview-card">
+                    <div class="vertical-neon-preview neon-new">新規開店</div>
+                    <p>金色 (#ffd700)<br>パルスアニメーション</p>
+                </div>
+                <div class="preview-card">
+                    <div class="vertical-neon-preview neon-active">営業中</div>
+                    <p>明るい緑 (#00ff00)<br>最も明るく点灯</p>
+                </div>
+                <div class="preview-card">
+                    <div class="vertical-neon-preview neon-default">準備中</div>
+                    <p>白 (#ffffff)<br>通常の明るさ</p>
+                </div>
+                <div class="preview-card">
+                    <div class="vertical-neon-preview neon-abandoned-gray">廃業中</div>
+                    <p>グレー (#808080)<br>暗めの表示</p>
+                </div>
+                <div class="preview-card">
+                    <div class="vertical-neon-preview neon-abandoned-yellow">逃走中</div>
+                    <p>黄色 (#ffff00)<br>点滅エフェクト</p>
+                </div>
+                <div class="preview-card">
+                    <div class="vertical-neon-preview neon-abandoned-red">事件</div>
+                    <p>赤 (#ff0000)<br>パルスアニメーション</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="preview-section">
+            <h2>2. 部屋名ネオンサイン（時間経過で変化）</h2>
+            
+            <div class="time-line">
+                <div class="time-point">
+                    <div class="time">0時間</div>
+                    <div class="desc">新規作成</div>
+                </div>
+                <div class="time-point">
+                    <div class="time">3時間</div>
+                    <div class="desc">明るい</div>
+                </div>
+                <div class="time-point">
+                    <div class="time">12時間</div>
+                    <div class="desc">やや明るい</div>
+                </div>
+                <div class="time-point">
+                    <div class="time">24時間</div>
+                    <div class="desc">普通</div>
+                </div>
+                <div class="time-point">
+                    <div class="time">48時間</div>
+                    <div class="desc">暗い</div>
+                </div>
+                <div class="time-point">
+                    <div class="time">72時間</div>
+                    <div class="desc">ほぼ消灯</div>
+                </div>
+            </div>
+            
+            <h3>カラーパターン（0-3時間の例）</h3>
+            <div class="neon-preview">
+                <div class="preview-card">
+                    <div class="room-neon-preview room-3h-1">時間裁判</div>
+                    <p>緑系統 (4n+1)</p>
+                </div>
+                <div class="preview-card">
+                    <div class="room-neon-preview room-3h-2">夏至祭</div>
+                    <p>ピンク系統 (4n+2)</p>
+                </div>
+                <div class="preview-card">
+                    <div class="room-neon-preview room-3h-3">DEPLOMA</div>
+                    <p>オレンジ系統 (4n+3)</p>
+                </div>
+                <div class="preview-card">
+                    <div class="room-neon-preview room-3h-4">潰れる店</div>
+                    <p>水色系統 (4n)</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="preview-section">
+            <h2>3. 照度レベル詳細</h2>
+            <table class="color-table">
+                <thead>
+                    <tr>
+                        <th>時間経過</th>
+                        <th>クラス名</th>
+                        <th>brightness</th>
+                        <th>opacity</th>
+                        <th>色の例</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>新規開店</td>
+                        <td>lighting-new</td>
+                        <td>1.2</td>
+                        <td>1</td>
+                        <td><span class="color-sample" style="background: #ffd700;"></span>#ffd700（金色）</td>
+                    </tr>
+                    <tr>
+                        <td>営業中（在室）</td>
+                        <td>lighting-bright</td>
+                        <td>1.2</td>
+                        <td>1</td>
+                        <td><span class="color-sample" style="background: #ffffff;"></span>#ffffff（白）</td>
+                    </tr>
+                    <tr>
+                        <td>0-3時間</td>
+                        <td>lighting-recent-3h</td>
+                        <td>1.1</td>
+                        <td>1</td>
+                        <td><span class="color-sample" style="background: #00ff41;"></span>カラフル（4色）</td>
+                    </tr>
+                    <tr>
+                        <td>3-12時間</td>
+                        <td>lighting-recent-12h</td>
+                        <td>0.9</td>
+                        <td>0.9</td>
+                        <td><span class="color-sample" style="background: #00cc33;"></span>やや暗いカラフル</td>
+                    </tr>
+                    <tr>
+                        <td>12-24時間</td>
+                        <td>lighting-recent-24h</td>
+                        <td>0.7</td>
+                        <td>0.8</td>
+                        <td><span class="color-sample" style="background: #009922;"></span>暗めのカラフル</td>
+                    </tr>
+                    <tr>
+                        <td>24-48時間</td>
+                        <td>lighting-recent-48h</td>
+                        <td>0.5</td>
+                        <td>0.7</td>
+                        <td><span class="color-sample" style="background: #006611;"></span>かなり暗いカラフル</td>
+                    </tr>
+                    <tr>
+                        <td>48-72時間</td>
+                        <td>lighting-recent-72h</td>
+                        <td>0.4</td>
+                        <td>0.6</td>
+                        <td><span class="color-sample" style="background: #003300;"></span>非常に暗いカラフル</td>
+                    </tr>
+                    <tr>
+                        <td>72時間以上</td>
+                        <td>lighting-off</td>
+                        <td>0.3</td>
+                        <td>0.5</td>
+                        <td><span class="color-sample" style="background: #001100;"></span>ほぼ黒</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="note-section">
+            <h3>設計思想</h3>
+            <ul>
+                <li>縦書きネオンサイン：部屋の状態を常に明確に表示（常時点灯）</li>
+                <li>部屋名ネオンサイン：時間経過による自然な劣化を表現</li>
+                <li>カラフルなネオン：地下世界のサイバーパンク的雰囲気を演出</li>
+                <li>視線誘導：新しい・活発な部屋が自然に目立つ設計</li>
+            </ul>
+        </div>
+        
+        <div class="button-group">
+            <button class="btn" onclick="location.href='hole404.html'">本番サイトを見る</button>
+            <button class="btn" onclick="location.href='HOLE_ネオンシステム設計書.md'">設計書を見る</button>
+        </div>
+        
+        <div class="note-section">
+            <h3>今後の拡張予定</h3>
+            <ul>
+                <li>在室状況タグの実装</li>
+                <li>特定イベント時の特殊エフェクト</li>
+                <li>ユーザー設定による色のカスタマイズ機能</li>
+                <li>リアルタイムプレビュー機能</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>
