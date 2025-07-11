@@ -481,6 +481,7 @@ function renderRooms() {
         const daysSinceCreated = (Date.now() - createdAt) / (1000 * 60 * 60 * 24);
         const hoursSinceCreated = (Date.now() - createdAt) / (1000 * 60 * 60);
         
+        
         let verticalText = '';
         let roomState = '';
         
@@ -498,6 +499,7 @@ function renderRooms() {
                 '<div class="vertical-neon abandoned-yellow">逃走中</div>',
                 '<div class="vertical-neon abandoned-red">事件</div>'
             ];
+            // 完全にランダムに選択
             verticalText = abandonedStates[Math.floor(Math.random() * abandonedStates.length)];
             roomState = 'abandoned';
         } else {
@@ -509,6 +511,7 @@ function renderRooms() {
                 '<div class="vertical-neon inactive-white">酩酊</div>',
                 '<div class="vertical-neon inactive-white">陶酔</div>'
             ];
+            // 完全にランダムに選択
             verticalText = inactiveStates[Math.floor(Math.random() * inactiveStates.length)];
             roomState = 'inactive';
         }
