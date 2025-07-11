@@ -498,7 +498,7 @@ function renderRooms() {
                 '<div class="vertical-neon abandoned-yellow">逃走中</div>',
                 '<div class="vertical-neon abandoned-red">事件</div>'
             ];
-            verticalText = abandonedStates[index % abandonedStates.length];
+            verticalText = abandonedStates[Math.floor(Math.random() * abandonedStates.length)];
             roomState = 'abandoned';
         } else {
             // 1-3日の間誰も入っていない
@@ -509,7 +509,7 @@ function renderRooms() {
                 '<div class="vertical-neon inactive-white">酩酊</div>',
                 '<div class="vertical-neon inactive-white">陶酔</div>'
             ];
-            verticalText = inactiveStates[index % inactiveStates.length];
+            verticalText = inactiveStates[Math.floor(Math.random() * inactiveStates.length)];
             roomState = 'inactive';
         }
         

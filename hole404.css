@@ -1697,41 +1697,4 @@ body:has(.chat-screen.active) .user-counter {
     .message-author { font-size: 0.9em; }
     .message-time { font-size: 0.75em; }
     .message-content { font-size: 0.9em; line-height: 1.3; }
-    .chat-input { padding: 15px; gap: 12px; }
-    .message-input { padding: 10px 15px; border-radius: 18px; font-size: 16px !important; max-height: 80px; }
-    .send-btn { width: 40px; height: 40px; font-size: 1.1em; flex-shrink: 0; }
-    .user-counter { bottom: 15px; right: 15px; padding: 8px 15px; font-size: 12px; border-radius: 15px; }
-    .toast { top: 15px; right: 15px; left: 15px; padding: 12px 15px; font-size: 0.9em; }
-    .manhole-cover { width: 150px; height: 150px; margin-bottom: 30px; }
-    .manhole-cover::before { width: 120px; height: 120px; }
-    .manhole-cover::after { font-size: 18px; letter-spacing: 3px; }
-    .enter-button { padding: 12px 30px; font-size: 16px; }
-}
-
-@media (hover: none) and (pointer: coarse) {
-    .room-card:hover { transform: none; }
-    .room-card:active { 
-        transform: scale(0.98); 
-        transition: transform 0.1s;
-        opacity: 0.9;
-    }
-    .enter-button:hover, .btn:hover, .send-btn:hover { transform: none; }
-    .enter-button:active, .btn:active { transform: scale(0.95); }
-    .action-btn:hover { background: rgba(255, 107, 53, 0.1); }
-    .action-btn:active { background: rgba(255, 107, 53, 0.3); }
-    .send-btn:active { transform: scale(0.9); }
-}
-
-@supports (padding: max(0px)) {
-    .chat-screen { 
-        padding-bottom: env(safe-area-inset-bottom);
-    }
-    .chat-input { 
-        padding-bottom: calc(20px + env(safe-area-inset-bottom)); 
-    }
-    @media (max-width: 768px) {
-        .chat-input { 
-            padding-bottom: calc(15px + env(safe-area-inset-bottom));
-        }
-    }
-}
+    .chat-input { padding: 15
