@@ -608,57 +608,68 @@ body:has(.chat-screen.active) .user-counter {
     padding: 8px 4px;
     border: 2px solid;
     border-radius: 4px;
+    /* 部屋の暗さの影響を受けないように独立した明るさを保つ */
+    filter: none !important;
+    opacity: 1 !important;
 }
 
 .room-card:nth-child(4n+1) .vertical-neon {
-    color: #00ff41;
-    border-color: #00ff41;
+    color: #00ff41 !important;
+    border-color: #00ff41 !important;
     text-shadow: 
         0 0 5px #00ff41,
         0 0 10px #00ff41,
-        0 0 20px #00ff41;
+        0 0 20px #00ff41,
+        0 0 30px #00ff41 !important;
     box-shadow: 
         inset 0 0 10px rgba(0,255,65,0.3),
-        0 0 15px rgba(0,255,65,0.5);
+        0 0 15px rgba(0,255,65,0.5),
+        0 0 25px rgba(0,255,65,0.3) !important;
     animation: verticalBlink 5s infinite;
 }
 
 .room-card:nth-child(4n+2) .vertical-neon {
-    color: #ff006e;
-    border-color: #ff006e;
+    color: #ff006e !important;
+    border-color: #ff006e !important;
     text-shadow: 
         0 0 5px #ff006e,
         0 0 10px #ff006e,
-        0 0 20px #ff006e;
+        0 0 20px #ff006e,
+        0 0 30px #ff006e !important;
     box-shadow: 
         inset 0 0 10px rgba(255,0,110,0.3),
-        0 0 15px rgba(255,0,110,0.5);
+        0 0 15px rgba(255,0,110,0.5),
+        0 0 25px rgba(255,0,110,0.3) !important;
     animation: verticalBlink 4s infinite;
 }
 
 .room-card:nth-child(4n+3) .vertical-neon {
-    color: #ffaa00;
-    border-color: #ffaa00;
+    color: #ffaa00 !important;
+    border-color: #ffaa00 !important;
     text-shadow: 
         0 0 5px #ffaa00,
         0 0 10px #ffaa00,
-        0 0 20px #ffaa00;
+        0 0 20px #ffaa00,
+        0 0 30px #ffaa00 !important;
     box-shadow: 
         inset 0 0 10px rgba(255,170,0,0.3),
-        0 0 15px rgba(255,170,0,0.5);
+        0 0 15px rgba(255,170,0,0.5),
+        0 0 25px rgba(255,170,0,0.3) !important;
     animation: verticalBlink 6s infinite;
 }
 
 .room-card:nth-child(4n) .vertical-neon {
-    color: #00b4ff;
-    border-color: #00b4ff;
+    color: #00b4ff !important;
+    border-color: #00b4ff !important;
     text-shadow: 
         0 0 5px #00b4ff,
         0 0 10px #00b4ff,
-        0 0 20px #00b4ff;
+        0 0 20px #00b4ff,
+        0 0 30px #00b4ff !important;
     box-shadow: 
         inset 0 0 10px rgba(0,180,255,0.3),
-        0 0 15px rgba(0,180,255,0.5);
+        0 0 15px rgba(0,180,255,0.5),
+        0 0 25px rgba(0,180,255,0.3) !important;
     animation: verticalBlink 3.5s infinite;
 }
 
@@ -778,52 +789,52 @@ body:has(.chat-screen.active) .user-counter {
 /* 電球が切れかかっているような点滅エフェクト */
 @keyframes brokenNeon {
     0%, 100% { 
-        opacity: 0.3;
-        filter: brightness(0.5);
+        opacity: 0.4;
+        filter: brightness(0.7);
     }
     10% { 
         opacity: 1;
-        filter: brightness(1);
+        filter: brightness(1.2);
     }
     12% { 
-        opacity: 0.1;
-        filter: brightness(0.2);
+        opacity: 0.2;
+        filter: brightness(0.4);
     }
     14% { 
-        opacity: 0.8;
-        filter: brightness(0.8);
+        opacity: 0.9;
+        filter: brightness(1.1);
     }
     16% { 
-        opacity: 0.2;
-        filter: brightness(0.3);
+        opacity: 0.3;
+        filter: brightness(0.5);
     }
     20%, 60% { 
-        opacity: 0.4;
-        filter: brightness(0.4);
+        opacity: 0.5;
+        filter: brightness(0.8);
     }
     65% { 
-        opacity: 0.1;
-        filter: brightness(0.2);
-    }
-    66% { 
-        opacity: 0.9;
-        filter: brightness(0.9);
-    }
-    67% { 
         opacity: 0.2;
-        filter: brightness(0.3);
-    }
-    70%, 90% { 
-        opacity: 0.3;
         filter: brightness(0.4);
     }
-    92% { 
-        opacity: 0.8;
+    66% { 
+        opacity: 1;
+        filter: brightness(1.3);
+    }
+    67% { 
+        opacity: 0.3;
+        filter: brightness(0.5);
+    }
+    70%, 90% { 
+        opacity: 0.4;
         filter: brightness(0.7);
     }
+    92% { 
+        opacity: 0.9;
+        filter: brightness(1.1);
+    }
     94% { 
-        opacity: 0.1;
-        filter: brightness(0.2);
+        opacity: 0.2;
+        filter: brightness(0.4);
     }
 }
 
@@ -838,20 +849,20 @@ body:has(.chat-screen.active) .user-counter {
 
 @keyframes dimFlicker {
     0%, 100% { 
-        opacity: 0.7;
-        filter: brightness(0.8);
+        opacity: 0.85;
+        filter: brightness(1.0);
     }
     50% { 
-        opacity: 0.5;
-        filter: brightness(0.6);
+        opacity: 0.7;
+        filter: brightness(0.85);
     }
     52% { 
-        opacity: 0.3;
-        filter: brightness(0.4);
+        opacity: 0.5;
+        filter: brightness(0.7);
     }
     54% { 
-        opacity: 0.6;
-        filter: brightness(0.7);
+        opacity: 0.8;
+        filter: brightness(0.95);
     }
 }
 
@@ -1660,22 +1671,4 @@ body:has(.chat-screen.active) .user-counter {
         opacity: 0.9;
     }
     .enter-button:hover, .btn:hover, .send-btn:hover { transform: none; }
-    .enter-button:active, .btn:active { transform: scale(0.95); }
-    .action-btn:hover { background: rgba(255, 107, 53, 0.1); }
-    .action-btn:active { background: rgba(255, 107, 53, 0.3); }
-    .send-btn:active { transform: scale(0.9); }
-}
-
-@supports (padding: max(0px)) {
-    .chat-screen { 
-        padding-bottom: env(safe-area-inset-bottom);
-    }
-    .chat-input { 
-        padding-bottom: calc(20px + env(safe-area-inset-bottom)); 
-    }
-    @media (max-width: 768px) {
-        .chat-input { 
-            padding-bottom: calc(15px + env(safe-area-inset-bottom));
-        }
-    }
-}
+    .enter
