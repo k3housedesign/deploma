@@ -432,18 +432,16 @@ body:has(.chat-screen.active) .user-counter {
     margin-bottom: 15px;
     position: relative;
     display: inline-block;
-    /* デフォルトは暗め */
-    opacity: 0.5;
-    filter: brightness(0.6);
 }
 
 /* 部屋名ネオンサインのデフォルトスタイル - 暗めの設定 */
-.neon-sign {
+.room-card .neon-sign {
     color: rgba(255,255,255,0.4);
     text-shadow: 
         0 0 5px rgba(255,255,255,0.2),
         0 0 10px rgba(255,255,255,0.1);
-    /* アニメーションは削除 - 時間経過で明るさが変化 */
+    opacity: 0.5;
+    filter: brightness(0.6);
 }
 
 /* モバイルではアニメーションを無効化 */
@@ -1707,4 +1705,121 @@ body:has(.chat-screen.active) .user-counter {
     .chat-actions { display: flex; flex-wrap: wrap; gap: 8px; width: 100%; }
     .action-btn { padding: 6px 12px; font-size: 0.8em; flex: 1; min-width: calc(50% - 4px); text-align: center; }
     .chat-messages { padding: 15px; }
-    .messag
+    .message { margin-bottom: 12px; padding: 10px 12px; border-radius: 12px; }
+    .message-header { gap: 8px; margin-bottom: 6px; }
+    .message-avatar { width: 28px; height: 28px; font-size: 1em; }
+    .message-author { font-size: 0.9em; }
+    .message-time { font-size: 0.75em; }
+    .message-content { font-size: 0.9em; line-height: 1.3; }
+    .chat-input { padding: 15px; gap: 12px; }
+    .message-input { padding: 10px 15px; border-radius: 18px; font-size: 16px !important; max-height: 80px; }
+    .send-btn { width: 40px; height: 40px; font-size: 1.1em; flex-shrink: 0; }
+    .user-counter { bottom: 15px; right: 15px; padding: 8px 15px; font-size: 12px; border-radius: 15px; }
+    .toast { top: 15px; right: 15px; left: 15px; padding: 12px 15px; font-size: 0.9em; }
+    .manhole-cover { width: 150px; height: 150px; margin-bottom: 30px; }
+    .manhole-cover::before { width: 120px; height: 120px; }
+    .manhole-cover::after { font-size: 18px; letter-spacing: 3px; }
+    .enter-button { padding: 12px 30px; font-size: 16px; }
+}
+
+@media (hover: none) and (pointer: coarse) {
+    .room-card:hover { transform: none; }
+    .room-card:active { 
+        transform: scale(0.98); 
+        transition: transform 0.1s;
+        opacity: 0.9;
+    }
+    .enter-button:hover, .btn:hover, .send-btn:hover { transform: none; }
+    .enter-button:active, .btn:active { transform: scale(0.95); }
+    .action-btn:hover { background: rgba(255, 107, 53, 0.1); }
+    .action-btn:active { background: rgba(255, 107, 53, 0.3); }
+    .send-btn:active { transform: scale(0.9); }
+}
+
+@supports (padding: max(0px)) {
+    .chat-screen { 
+        padding-bottom: env(safe-area-inset-bottom);
+    }
+    .chat-input { 
+        padding-bottom: calc(20px + env(safe-area-inset-bottom)); 
+    }
+    @media (max-width: 768px) {
+        .chat-input { 
+            padding-bottom: calc(15px + env(safe-area-inset-bottom));
+        }
+    }
+}
+
+/* 最終アクセス時刻に基づく照度クラス */
+.room-card.lighting-recent-3h .neon-sign {
+    filter: brightness(1) !important;
+    opacity: 0.9 !important;
+}
+
+.room-card.lighting-recent-12h .neon-sign {
+    filter: brightness(0.8) !important;
+    opacity: 0.8 !important;
+}
+
+.room-card.lighting-recent-24h .neon-sign {
+    filter: brightness(0.6) !important;
+    opacity: 0.7 !important;
+}
+
+.room-card.lighting-recent-48h .neon-sign {
+    filter: brightness(0.4) !important;
+    opacity: 0.6 !important;
+}
+
+.room-card.lighting-recent-72h .neon-sign {
+    filter: brightness(0.3) !important;
+    opacity: 0.5 !important;
+}
+
+.room-card.lighting-off .neon-sign {
+    filter: brightness(0.2) !important;
+    opacity: 0.3 !important;
+}
+
+/* 説明文と人数表示も同様に調整 */
+.room-card.lighting-recent-3h .room-description,
+.room-card.lighting-recent-3h .room-status {
+    opacity: 0.8;
+}
+
+.room-card.lighting-recent-12h .room-description,
+.room-card.lighting-recent-12h .room-status {
+    opacity: 0.6;
+}
+
+.room-card.lighting-recent-24h .room-description,
+.room-card.lighting-recent-24h .room-status {
+    opacity: 0.5;
+}
+
+.room-card.lighting-recent-48h .room-description,
+.room-card.lighting-recent-48h .room-status {
+    opacity: 0.4;
+}
+
+.room-card.lighting-recent-72h .room-description,
+.room-card.lighting-recent-72h .room-status {
+    opacity: 0.3;
+}
+
+.room-card.lighting-off .room-description,
+.room-card.lighting-off .room-status {
+    opacity: 0.2;
+}
+
+/* 新規開店（lighting-new）の明るいネオン */
+.room-card.lighting-new .neon-sign {
+    filter: brightness(1.2) !important;
+    opacity: 1 !important;
+}
+
+/* 営業中（lighting-bright）の明るいネオン */
+.room-card.lighting-bright .neon-sign {
+    filter: brightness(1.2) !important;
+    opacity: 1 !important;
+}
