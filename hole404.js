@@ -111,6 +111,23 @@ function initializeApp() {
         }
     }
     
+    // オープニングスキップの判定
+    const hasEnteredBefore = localStorage.getItem('holeHasEntered') === 'true';
+    if (hasEnteredBefore) {
+        // 既に入場したことがある場合は、スプラッシュ画面をスキップ
+        UI.splashScreen.style.display = 'none';
+        UI.mainContent.style.display = 'block';
+        UI.mainContent.classList.add('active');
+        UI.mainContent.classList.add('visible');
+        UI.roomSelection.style.display = 'block';
+        loadRooms();
+        
+        // ユーザーがログインしていない場合はプロフィール設定画面を表示
+        if (!appState.currentUser) {
+            showProfileModal();
+        }
+    }
+    
     // スプラッシュ画面が既に非表示の場合（リロード時など）、メインコンテンツを表示
     if (UI.splashScreen.style.display === 'none' || !UI.splashScreen.offsetParent) {
         console.log('Splash screen already hidden, showing main content directly');
@@ -290,6 +307,9 @@ function setupEventListeners() {
 // (以下、前回のJavaScriptコードが続く)
 
 function enterTheHole() {
+    // 入場したことを記録
+    localStorage.setItem('holeHasEntered', 'true');
+    
     // マンホールのアニメーション開始
     const manholeCover = document.getElementById('manholeCover');
     const manholeHole = document.getElementById('manholeHole');
@@ -390,8 +410,9 @@ function updateUserDisplay() {
 function handleLogout() {
     // 確認ダイアログ
     if (confirm('本当に地上へ戻りますか？\n（仮面を外して地下世界から去ります）')) {
-        // localStorageからユーザー情報を削除
+        // localStorageからユーザー情報と入場記録を削除
         localStorage.removeItem('holeUserProfile');
+        localStorage.removeItem('holeHasEntered');
         appState.currentUser = null;
         
         // チャット画面が開いていたら閉じる

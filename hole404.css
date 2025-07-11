@@ -1817,42 +1817,4 @@ body:has(.chat-screen.active) .user-counter {
     filter: brightness(0.9);
 }
 
-.room-card.lighting-recent-24h .room-description,
-.room-card.lighting-recent-24h .room-status,
-.room-card.lighting-recent-24h .chinese-sign {
-    opacity: 0.7;
-    filter: brightness(0.8);
-}
-
-.room-card.lighting-recent-48h .room-description,
-.room-card.lighting-recent-48h .room-status,
-.room-card.lighting-recent-48h .chinese-sign {
-    opacity: 0.6;
-    filter: brightness(0.7);
-}
-
-.room-card.lighting-recent-72h .room-description,
-.room-card.lighting-recent-72h .room-status,
-.room-card.lighting-recent-72h .chinese-sign {
-    opacity: 0.5;
-    filter: brightness(0.6);
-}
-
-.room-card.lighting-off .room-description,
-.room-card.lighting-off .room-status,
-.room-card.lighting-off .chinese-sign {
-    opacity: 0.4;
-    filter: brightness(0.5);
-}
-
-/* 新規開店（lighting-new）の明るいネオン */
-.room-card.lighting-new .neon-sign {
-    filter: brightness(1.2) !important;
-    opacity: 1 !important;
-}
-
-/* 営業中（lighting-bright）の明るいネオン */
-.room-card.lighting-bright .neon-sign {
-    filter: brightness(1.2) !important;
-    opacity: 1 !important;
-}
+.room-card.lighting-recent-24h 
