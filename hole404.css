@@ -388,6 +388,32 @@ body:has(.chat-screen.active) .user-counter {
     background: radial-gradient(ellipse at center, rgba(0,180,255,0.05) 0%, #0a0a0a 70%);
 }
 
+/* アクティブ状態の背景を明るく */
+.room-card.active:nth-child(4n+1) {
+    background: radial-gradient(ellipse at center, rgba(0,255,65,0.2) 0%, #0a0a0a 60%);
+    box-shadow: 
+        inset 0 0 30px rgba(0,255,65,0.3),
+        0 0 40px rgba(0,255,65,0.4);
+}
+.room-card.active:nth-child(4n+2) {
+    background: radial-gradient(ellipse at center, rgba(255,0,110,0.2) 0%, #0a0a0a 60%);
+    box-shadow: 
+        inset 0 0 30px rgba(255,0,110,0.3),
+        0 0 40px rgba(255,0,110,0.4);
+}
+.room-card.active:nth-child(4n+3) {
+    background: radial-gradient(ellipse at center, rgba(255,170,0,0.2) 0%, #0a0a0a 60%);
+    box-shadow: 
+        inset 0 0 30px rgba(255,170,0,0.3),
+        0 0 40px rgba(255,170,0,0.4);
+}
+.room-card.active:nth-child(4n) {
+    background: radial-gradient(ellipse at center, rgba(0,180,255,0.2) 0%, #0a0a0a 60%);
+    box-shadow: 
+        inset 0 0 30px rgba(0,180,255,0.3),
+        0 0 40px rgba(0,180,255,0.4);
+}
+
 /* ネオン枠の光彩効果を削除（枠なしのシンプルなデザイン） */
 
 @media (hover: hover) {
@@ -664,7 +690,19 @@ body:has(.chat-screen.active) .user-counter {
 
 /* 営業中の明るいネオン */
 .vertical-neon.active {
-    /* 常時点灯 */
+    /* 常時点灯 - フル点灯 */
+    filter: brightness(1.2) !important;
+    opacity: 1 !important;
+    color: #00ff00 !important;
+    border-color: #00ff00 !important;
+    text-shadow: 
+        0 0 10px #00ff00,
+        0 0 20px #00ff00,
+        0 0 30px #00ff00,
+        0 0 40px #00ff00 !important;
+    box-shadow: 
+        inset 0 0 20px rgba(0,255,0,0.5),
+        0 0 30px rgba(0,255,0,0.8) !important;
 }
 
 @keyframes activePulse {
@@ -696,6 +734,19 @@ body:has(.chat-screen.active) .user-counter {
 @keyframes newShopPulse {
     0%, 100% { opacity: 1; transform: scale(1); }
     50% { opacity: 0.8; transform: scale(1.05); }
+}
+
+/* アクティブ状態（営業中）のスタイル */
+.room-card.active .neon-sign {
+    filter: brightness(1.2) !important;
+    opacity: 1 !important;
+}
+
+.room-card.active .room-description,
+.room-card.active .room-status,
+.room-card.active .chinese-sign {
+    filter: brightness(1.1) !important;
+    opacity: 1 !important;
 }
 
 /* 非アクティブ状態のスタイル */
