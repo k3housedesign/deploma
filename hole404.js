@@ -41,7 +41,8 @@ const appState = {
         room: null,
         messages: null
     },
-    statusRef: null
+    statusRef: null,
+    isLoadingMessages: false
 };
 
 // アイコンデータ
@@ -202,7 +203,16 @@ function setupEventListeners() {
     if (UI.sendBtn) UI.sendBtn.addEventListener('click', sendMessage);
     if (UI.copyUrlBtn) UI.copyUrlBtn.addEventListener('click', copyRoomUrl);
     if (UI.exportLogBtn) UI.exportLogBtn.addEventListener('click', exportLog);
-    if (UI.leaveRoomBtn) UI.leaveRoomBtn.addEventListener('click', leaveRoom);
+    if (UI.leaveRoomBtn) {
+        UI.leaveRoomBtn.addEventListener('click', () => {
+            // 即座にフィードバックを提供
+            UI.leaveRoomBtn.disabled = true;
+            UI.leaveRoomBtn.textContent = '退室中...';
+            setTimeout(() => {
+                leaveRoom();
+            }, 100);
+        });
+    }
     
     // ログアウトボタン
     if (UI.logoutBtn) {
@@ -224,13 +234,52 @@ function setupEventListeners() {
 
     // ルーム選択 (イベント委任)
     if (UI.roomGrid) {
+        let touchStartY = 0;
+        let touchStartTime = 0;
+        let isScrolling = false;
+        
+        // タッチ開始を記録
+        UI.roomGrid.addEventListener('touchstart', (e) => {
+            touchStartY = e.touches[0].clientY;
+            touchStartTime = Date.now();
+            isScrolling = false;
+        }, { passive: true });
+        
+        // スクロール中かどうかを判定
+        UI.roomGrid.addEventListener('touchmove', (e) => {
+            const touchMoveY = e.touches[0].clientY;
+            const distance = Math.abs(touchMoveY - touchStartY);
+            if (distance > 10) { // 10px以上移動したらスクロールと判定
+                isScrolling = true;
+            }
+        }, { passive: true });
+        
+        // クリックイベント（デスクトップ用）
         UI.roomGrid.addEventListener('click', (e) => {
             const card = e.target.closest('.room-card');
-            if (card && card.dataset.roomId) {
+            if (card && card.dataset.roomId && !card.querySelector('.close-shop-btn')?.contains(e.target)) {
                 const room = appState.rooms.find(r => r.id === card.dataset.roomId);
-                if (room) handleRoomEntry(room);
+                if (room) {
+                    handleRoomEntry(room);
+                }
             }
         });
+        
+        // タッチ終了（モバイル用）
+        UI.roomGrid.addEventListener('touchend', (e) => {
+            const touchDuration = Date.now() - touchStartTime;
+            // スクロール中でなく、短いタップ（300ms以下）の場合のみ反応
+            if (!isScrolling && touchDuration < 300) {
+                const card = e.target.closest('.room-card');
+                if (card && card.dataset.roomId && !card.querySelector('.close-shop-btn')?.contains(e.target)) {
+                    e.preventDefault(); // デフォルトのクリックを防ぐ
+                    const room = appState.rooms.find(r => r.id === card.dataset.roomId);
+                    if (room) {
+                        handleRoomEntry(room);
+                    }
+                }
+            }
+        }, { passive: false });
     }
     
     // ページ離脱時のクリーンアップ
@@ -558,8 +607,32 @@ async function enterRoom(roomId, roomName) {
     // URLパラメータを使わない（GitHub Pagesでの問題を避けるため）
     // history.pushState({}, '', `/hole404.html?room=${roomId}`);
     
+    // Mobile-specific fix: Force display changes
     UI.roomSelection.style.display = 'none';
+    UI.roomSelection.style.visibility = 'hidden';
+    
+    // Ensure chat screen is properly shown
+    UI.chatScreen.style.display = 'flex';
     UI.chatScreen.classList.add('active');
+    
+    // Hide user counter when in chat - with !important to override CSS
+    const userCounter = document.querySelector('.user-counter');
+    if (userCounter) {
+        userCounter.style.setProperty('display', 'none', 'important');
+    }
+    
+    // Force a reflow to ensure CSS changes are applied
+    UI.chatScreen.offsetHeight;
+    
+    // Mobile debug logging
+    if (window.innerWidth <= 768) {
+        console.log('Mobile room entry:', {
+            roomSelectionDisplay: window.getComputedStyle(UI.roomSelection).display,
+            chatScreenDisplay: window.getComputedStyle(UI.chatScreen).display,
+            chatScreenClasses: UI.chatScreen.className,
+            chatScreenVisibility: window.getComputedStyle(UI.chatScreen).visibility
+        });
+    }
     
     UI.currentRoomName.textContent = roomName;
     UI.currentRoomUrl.textContent = window.location.href;
@@ -580,6 +653,11 @@ async function enterRoom(roomId, roomName) {
     }
     
     addSystemMessage(`${appState.currentUser.nickname} が足音を立てて入ってきた…`);
+    
+    // 部屋に入った後、スムーズに最新メッセージまでスクロール
+    setTimeout(() => {
+        smoothScrollToBottom();
+    }, 800);
 }
 
 async function leaveRoom() {
@@ -601,13 +679,31 @@ async function leaveRoom() {
         }
     }
     
+    // ボタンをリセット
+    if (UI.leaveRoomBtn) {
+        UI.leaveRoomBtn.disabled = false;
+        UI.leaveRoomBtn.textContent = '🚪 立ち去る';
+    }
+    
     if (appState.listeners.messages) {
         appState.listeners.messages();
         appState.listeners.messages = null;
     }
     
+    // Mobile-specific fix: Ensure proper transition
     UI.chatScreen.classList.remove('active');
+    UI.chatScreen.style.display = 'none';
     UI.roomSelection.style.display = 'block';
+    UI.roomSelection.style.visibility = 'visible';
+    
+    // Show user counter again when leaving chat
+    const userCounter = document.querySelector('.user-counter');
+    if (userCounter) {
+        userCounter.style.removeProperty('display');
+    }
+    
+    // Force a reflow
+    UI.roomSelection.offsetHeight;
     // URLをクリーンに保つ
     if (window.location.search) {
         history.pushState({}, '', window.location.pathname);
@@ -781,17 +877,19 @@ function renderMessage(message) {
         `;
     }
     
-    const shouldScroll = UI.chatMessages.scrollTop + UI.chatMessages.clientHeight >= UI.chatMessages.scrollHeight - 50;
     UI.chatMessages.appendChild(messageEl);
-    if (shouldScroll) {
-        // 少し遅延を入れてからスクロール（DOMの更新を待つ）
-        setTimeout(() => {
-            UI.chatMessages.scrollTop = UI.chatMessages.scrollHeight;
-            // モバイルでの追加スクロール調整
-            if (window.innerWidth <= 768) {
-                messageEl.scrollIntoView({ behavior: 'smooth', block: 'end' });
-            }
-        }, 50);
+    
+    // 初回ロード中は一切スクロールしない（最後に一括でスクロールする）
+    if (!appState.isLoadingMessages) {
+        const shouldScroll = UI.chatMessages.scrollTop + UI.chatMessages.clientHeight >= UI.chatMessages.scrollHeight - 50;
+        if (shouldScroll) {
+            setTimeout(() => {
+                UI.chatMessages.scrollTop = UI.chatMessages.scrollHeight;
+                if (window.innerWidth <= 768) {
+                    messageEl.scrollIntoView({ behavior: 'smooth', block: 'end' });
+                }
+            }, 50);
+        }
     }
 }
 
@@ -1038,10 +1136,13 @@ async function loadMessages(roomId) {
 
     appState.messages = [];
     UI.chatMessages.innerHTML = '';
+    appState.isLoadingMessages = true;
     
     const messagesQuery = db.collection('rooms').doc(roomId).collection('messages').orderBy('createdAt');
     appState.listeners.messages = messagesQuery.onSnapshot((snapshot) => {
-        snapshot.docChanges().forEach((change) => {
+        const changes = snapshot.docChanges();
+        
+        changes.forEach((change) => {
             if (change.type === 'added') {
                 const data = change.doc.data();
                 const message = {
@@ -1054,10 +1155,55 @@ async function loadMessages(roomId) {
                 }
             }
         });
+        
+        // 初回ロード完了時
+        if (appState.isLoadingMessages) {
+            appState.isLoadingMessages = false;
+            // 初回は即座に最下部へ（スムーズでなく確実性を優先）
+            setTimeout(() => {
+                UI.chatMessages.scrollTop = UI.chatMessages.scrollHeight;
+            }, 100);
+        }
     }, (error) => {
         console.error('メッセージの購読エラー:', error);
+        appState.isLoadingMessages = false;
         addDemoMessages();
     });
+}
+
+function scrollToLatestMessage() {
+    // 複数の方法で確実に最下部にスクロール
+    UI.chatMessages.scrollTop = UI.chatMessages.scrollHeight;
+    
+    // DOM更新後に再度スクロール
+    requestAnimationFrame(() => {
+        UI.chatMessages.scrollTop = UI.chatMessages.scrollHeight;
+        
+        // 最後のメッセージ要素を直接表示
+        const lastMessage = UI.chatMessages.lastElementChild;
+        if (lastMessage) {
+            lastMessage.scrollIntoView({ behavior: 'auto', block: 'end' });
+        }
+        
+        // 最終確認のスクロール
+        setTimeout(() => {
+            UI.chatMessages.scrollTop = UI.chatMessages.scrollHeight;
+        }, 100);
+    });
+}
+
+function smoothScrollToBottom() {
+    // スムーズなスクロール処理
+    const targetScrollTop = UI.chatMessages.scrollHeight;
+    
+    // 最後のメッセージ要素を使った確実なスクロール
+    const lastMessage = UI.chatMessages.lastElementChild;
+    if (lastMessage) {
+        lastMessage.scrollIntoView({ behavior: 'smooth', block: 'end' });
+    } else {
+        // フォールバック: 直接スクロール
+        UI.chatMessages.scrollTop = targetScrollTop;
+    }
 }
 
 function monitorFirebaseConnection() {
@@ -1092,6 +1238,24 @@ function adjustMobileUI() {
         UI.messageInput.addEventListener('focus', () => {
             setTimeout(() => { UI.chatMessages.scrollTop = UI.chatMessages.scrollHeight; }, 300);
         });
+        
+        // Add touch event handling for better mobile support
+        UI.roomGrid.addEventListener('touchstart', (e) => {
+            const card = e.target.closest('.room-card');
+            if (card) {
+                card.classList.add('touching');
+            }
+        });
+        
+        UI.roomGrid.addEventListener('touchend', (e) => {
+            const card = e.target.closest('.room-card');
+            if (card) {
+                card.classList.remove('touching');
+            }
+        });
+        
+        // Don't lock body scroll globally as it can cause issues
+        // Instead, we'll handle this per screen
     }
     // テキストエリアの自動高さ調整
     UI.messageInput.addEventListener('input', () => {
