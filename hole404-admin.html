@@ -402,6 +402,8 @@
         
         <button class="apply-button" onclick="applyChanges()">変更を適用</button>
         <button class="apply-button" style="background: #666;" onclick="resetChanges()">リセット</button>
+        <button class="apply-button" style="background: #4CAF50;" onclick="copyToClipboard()">コピー</button>
+        <button class="apply-button" style="background: #2196F3;" onclick="saveToFile()">CSSファイル保存</button>
     </div>
     
     <div class="admin-container">
@@ -705,6 +707,10 @@
             applyAnimation(currentElement, animation);
         }
         
+        // 生成されたCSSコードを保存
+        let generatedCSS = '';
+        let allGeneratedCSS = [];
+        
         // 変更を適用
         function applyChanges() {
             if (!currentElement) return;
@@ -732,12 +738,112 @@
                 cssCode += `    animation: ${animation} ${getAnimationDuration(animation)} infinite;\n`;
             }
             
-            cssCode += `}`;
+            cssCode += `}\n`;
             
-            // コードを表示（実際の実装では、これをクリップボードにコピーしたり、エクスポートする機能を追加）
+            // コードを保存
+            generatedCSS = cssCode;
+            
+            // 既存の同じクラスのコードを置き換え
+            const existingIndex = allGeneratedCSS.findIndex(code => code.includes(`.${className} {`));
+            if (existingIndex !== -1) {
+                allGeneratedCSS[existingIndex] = cssCode;
+            } else {
+                allGeneratedCSS.push(cssCode);
+            }
+            
+            // コードを表示
             console.log('Generated CSS:', cssCode);
-            alert('CSSコードが生成されました！\nコンソールで確認してください。\n\n' + cssCode);
+            showNotification('CSSコードが生成されました！');
+            
+            // プレビューを更新
+            updateLivePreview();
         }
+        
+        // クリップボードにコピー
+        function copyToClipboard() {
+            if (!generatedCSS) {
+                alert('まだCSSコードが生成されていません。\nネオンサインを選択して「変更を適用」をクリックしてください。');
+                return;
+            }
+            
+            navigator.clipboard.writeText(generatedCSS).then(() => {
+                showNotification('CSSコードをクリップボードにコピーしました！');
+            }).catch(err => {
+                console.error('コピーに失敗しました:', err);
+                alert('コピーに失敗しました。コンソールでコードを確認してください。');
+            });
+        }
+        
+        // CSSファイルとして保存
+        function saveToFile() {
+            if (allGeneratedCSS.length === 0) {
+                alert('まだCSSコードが生成されていません。');
+                return;
+            }
+            
+            const cssContent = `/* HOLE ネオンシステム カスタムCSS */\n/* 生成日時: ${new Date().toLocaleString('ja-JP')} */\n\n${allGeneratedCSS.join('\n')}`;
+            
+            const blob = new Blob([cssContent], { type: 'text/css' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'hole-neon-custom.css';
+            a.click();
+            URL.revokeObjectURL(url);
+            
+            showNotification('CSSファイルをダウンロードしました！');
+        }
+        
+        // 通知を表示
+        function showNotification(message) {
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                left: 50%;
+                transform: translateX(-50%);
+                background: #4CAF50;
+                color: white;
+                padding: 15px 30px;
+                border-radius: 4px;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+                z-index: 1000;
+                animation: slideDown 0.3s ease-out;
+            `;
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.animation = 'slideUp 0.3s ease-out';
+                setTimeout(() => notification.remove(), 300);
+            }, 3000);
+        }
+        
+        // ライブプレビューを更新
+        function updateLivePreview() {
+            // 生成されたCSSを一時的にページに適用
+            let styleElement = document.getElementById('customStyles');
+            if (!styleElement) {
+                styleElement = document.createElement('style');
+                styleElement.id = 'customStyles';
+                document.head.appendChild(styleElement);
+            }
+            styleElement.textContent = allGeneratedCSS.join('\n');
+        }
+        
+        // アニメーションを追加
+        const notificationStyle = document.createElement('style');
+        notificationStyle.textContent = `
+            @keyframes slideDown {
+                from { transform: translate(-50%, -100%); opacity: 0; }
+                to { transform: translate(-50%, 0); opacity: 1; }
+            }
+            @keyframes slideUp {
+                from { transform: translate(-50%, 0); opacity: 1; }
+                to { transform: translate(-50%, -100%); opacity: 0; }
+            }
+        `;
+        document.head.appendChild(notificationStyle);
         
         // リセット
         function resetChanges() {
