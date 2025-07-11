@@ -737,6 +737,7 @@ body:has(.chat-screen.active) .user-counter {
     opacity: 0.85;
 }
 
+
 .room-card.inactive:hover .neon-sign,
 .room-card.inactive:hover .room-description,
 .room-card.inactive:hover .room-status,
@@ -764,6 +765,45 @@ body:has(.chat-screen.active) .user-counter {
 .room-card.abandoned:hover .chinese-sign {
     filter: brightness(0.5) grayscale(0.5);
     opacity: 0.7;
+}
+
+/* ボーダーとボックスシャドウの時間変化 */
+.room-card.inactive:nth-child(4n+1) {
+    border-color: rgba(0,255,65,0.3);
+    box-shadow: 
+        inset 0 0 10px rgba(0,255,65,0.1),
+        0 0 10px rgba(0,255,65,0.2);
+}
+
+.room-card.inactive:nth-child(4n+2) {
+    border-color: rgba(255,0,110,0.3);
+    box-shadow: 
+        inset 0 0 10px rgba(255,0,110,0.1),
+        0 0 10px rgba(255,0,110,0.2);
+}
+
+.room-card.inactive:nth-child(4n+3) {
+    border-color: rgba(255,170,0,0.3);
+    box-shadow: 
+        inset 0 0 10px rgba(255,170,0,0.1),
+        0 0 10px rgba(255,170,0,0.2);
+}
+
+.room-card.inactive:nth-child(4n) {
+    border-color: rgba(0,180,255,0.3);
+    box-shadow: 
+        inset 0 0 10px rgba(0,180,255,0.1),
+        0 0 10px rgba(0,180,255,0.2);
+}
+
+.room-card.abandoned:nth-child(4n+1),
+.room-card.abandoned:nth-child(4n+2),
+.room-card.abandoned:nth-child(4n+3),
+.room-card.abandoned:nth-child(4n) {
+    border-color: rgba(100,100,100,0.2);
+    box-shadow: 
+        inset 0 0 5px rgba(0,0,0,0.5),
+        0 0 5px rgba(0,0,0,0.3);
 }
 
 /* 時間ベースの明るさ状態 */
