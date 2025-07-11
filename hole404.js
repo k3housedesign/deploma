@@ -487,10 +487,6 @@ function renderRooms() {
         if (activeUsers > 0) {
             verticalText = '<div class="vertical-neon active">営業中</div>';
             roomState = 'active';
-        } else if (hoursSinceCreated < 24) {
-            // 新規作成から24時間以内
-            verticalText = '<div class="vertical-neon new">開店</div>';
-            roomState = 'new';
         } else if (daysSinceCreated > 3) {
             // 3日以上誰も入っていない
             const abandonedStates = [
