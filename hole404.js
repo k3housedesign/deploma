@@ -481,9 +481,14 @@ function renderRooms() {
         const daysSinceCreated = (Date.now() - createdAt) / (1000 * 60 * 60 * 24);
         const hoursSinceCreated = (Date.now() - createdAt) / (1000 * 60 * 60);
         
+        // 最終アクセス時刻からの経過時間を計算
+        const lastAccessTime = room.lastAccessTime?.toMillis ? room.lastAccessTime.toMillis() : createdAt;
+        const hoursSinceLastAccess = (Date.now() - lastAccessTime) / (1000 * 60 * 60);
+        const daysSinceLastAccess = hoursSinceLastAccess / 24;
         
         let verticalText = '';
         let roomState = '';
+        let lightingClass = '';
         
         if (activeUsers > 0) {
             verticalText = '<div class="vertical-neon active">営業中</div>';
@@ -492,8 +497,8 @@ function renderRooms() {
             // 新規作成から24時間以内で誰も入ったことがない
             verticalText = '<div class="vertical-neon new">新規開店</div>';
             roomState = 'new';
-        } else if (daysSinceCreated > 3) {
-            // 3日以上誰も入っていない
+        } else if (daysSinceLastAccess > 3) {
+            // 3日以上アクセスがない
             const abandonedStates = [
                 '<div class="vertical-neon abandoned-gray">廃業中</div>',
                 '<div class="vertical-neon abandoned-yellow">逃走中</div>',
@@ -514,6 +519,23 @@ function renderRooms() {
             // 完全にランダムに選択
             verticalText = inactiveStates[Math.floor(Math.random() * inactiveStates.length)];
             roomState = 'inactive';
+        }
+        
+        // 最終アクセス時刻に基づく照度の細かい制御
+        if (activeUsers === 0) {
+            if (hoursSinceLastAccess < 3) {
+                lightingClass = 'lighting-recent-3h';  // 明るい
+            } else if (hoursSinceLastAccess < 12) {
+                lightingClass = 'lighting-recent-12h'; // やや明るい
+            } else if (hoursSinceLastAccess < 24) {
+                lightingClass = 'lighting-recent-24h'; // 普通
+            } else if (hoursSinceLastAccess < 48) {
+                lightingClass = 'lighting-recent-48h'; // やや暗い
+            } else if (hoursSinceLastAccess < 72) {
+                lightingClass = 'lighting-recent-72h'; // 暗い
+            } else {
+                lightingClass = 'lighting-off';        // 消灯
+            }
         }
         
         // 中国語のランダム看板
@@ -547,7 +569,7 @@ function renderRooms() {
         const defaultDescription = room.description || descriptions[Math.floor(Math.random() * descriptions.length)];
         const chineseSign = chineseSigns[Math.floor(Math.random() * chineseSigns.length)];
         
-        roomCard.className = `room-card ${roomState}`;
+        roomCard.className = `room-card ${roomState} ${lightingClass}`;
         // 自分が作ったルームには「店を閉める」ボタンを表示
         const isOwner = appState.currentUser && room.createdBy === appState.currentUser.id;
         console.log(`Room: ${room.roomName}, CreatedBy: ${room.createdBy}, CurrentUser: ${appState.currentUser?.id}, IsOwner: ${isOwner}`);
@@ -643,6 +665,16 @@ async function enterRoom(roomId, roomName) {
     if (appState.firebaseReady) {
         await setUserOnlineStatus(roomId);
         await loadMessages(roomId);
+        
+        // 最終アクセス時刻とhasBeenEnteredを更新
+        try {
+            await db.collection('rooms').doc(roomId).update({
+                lastAccessTime: firebase.firestore.FieldValue.serverTimestamp(),
+                hasBeenEntered: true
+            });
+        } catch (error) {
+            console.error('Failed to update room access time:', error);
+        }
         
         // ルームのアクティブユーザー数を即座に更新
         const room = appState.rooms.find(r => r.id === roomId);
@@ -1283,38 +1315,3 @@ function checkRoomFromUrl() {
     if (roomId) {
         // URLパラメータをクリア
         const newUrl = window.location.pathname;
-        window.history.replaceState({}, '', newUrl);
-        
-        const storedUser = localStorage.getItem('holeUserProfile');
-        if (storedUser) {
-            appState.currentUser = JSON.parse(storedUser);
-            // enterTheHoleが呼ばれていない場合があるので、直接ルームに入る
-            if (UI.splashScreen.style.display !== 'none') {
-                 UI.splashScreen.style.display = 'none';
-                 UI.mainContent.classList.add('active');
-                 UI.mainContent.classList.add('visible');
-                 loadRooms();
-            }
-            // 自動的にルームに入らないようにする
-            // ユーザーが明示的にルームをクリックした時のみ入る
-            console.log('Room URL detected but not auto-entering:', roomId);
-        } else {
-            showProfileModal();
-        }
-    }
-}
-
-function loadDemoRooms() {
-    appState.rooms = [
-        { id: 'demo1', roomName: '猥雑な麻雀クラブ', description: '煙草の煙が立ち込める奥の間（デモ）', activeUsers: 3 },
-        { id: 'demo2', roomName: '錆びついたジャズバー', description: '古いピアノの音色が響く（デモ）', activeUsers: 7 }
-    ];
-    renderRooms();
-    appState.roomsLoaded = true;
-}
-
-function addDemoMessages() {
-    addSystemMessage('サーバーとの接続が切断されました。これはデモメッセージです。');
-    setTimeout(() => addMessage({ id: generateId('msg'), text: '今夜は冷えるな…', authorName: '名無しの客', authorIcon: '🎭', timestamp: Date.now(), type: 'user' }), 1000);
-    setTimeout(() => addMessage({ id: generateId('msg'), text: 'この場所も随分と寂れたものだ', authorName: 'バーテンダー', authorIcon: '🍸', timestamp: Date.now(), type: 'bot' }), 3000);
-}
