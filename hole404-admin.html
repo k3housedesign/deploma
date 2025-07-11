@@ -20,6 +20,124 @@
             line-height: 1.6;
         }
         
+        /* 編集パネルのスタイル */
+        .edit-panel {
+            position: fixed;
+            right: 20px;
+            top: 20px;
+            width: 300px;
+            background: rgba(30, 30, 30, 0.95);
+            border: 1px solid #444;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.8);
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        
+        .edit-panel h3 {
+            color: #ff6b35;
+            margin-bottom: 15px;
+            text-shadow: 0 0 5px #ff6b35;
+        }
+        
+        .edit-group {
+            margin-bottom: 20px;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 4px;
+        }
+        
+        .edit-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 14px;
+            color: #f7931e;
+        }
+        
+        .color-input-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        
+        input[type="color"] {
+            width: 50px;
+            height: 30px;
+            border: 1px solid #666;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        input[type="text"] {
+            flex: 1;
+            padding: 5px 10px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid #666;
+            color: #fff;
+            border-radius: 4px;
+        }
+        
+        input[type="range"] {
+            width: 100%;
+            margin: 10px 0;
+        }
+        
+        .range-value {
+            display: inline-block;
+            width: 50px;
+            text-align: right;
+            color: #f7931e;
+        }
+        
+        select {
+            width: 100%;
+            padding: 5px 10px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid #666;
+            color: #fff;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+        
+        select option {
+            background: #1a1a1a;
+        }
+        
+        .apply-button {
+            width: 100%;
+            padding: 10px;
+            background: #ff6b35;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 10px;
+            transition: all 0.3s;
+        }
+        
+        .apply-button:hover {
+            background: #f7931e;
+            box-shadow: 0 0 10px #f7931e;
+        }
+        
+        .editable {
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .editable:hover {
+            transform: scale(1.05);
+            filter: brightness(1.2);
+        }
+        
+        .selected {
+            outline: 2px solid #ff6b35;
+            outline-offset: 5px;
+        }
+        
         .admin-container {
             max-width: 1200px;
             margin: 0 auto;
@@ -237,6 +355,55 @@
     </style>
 </head>
 <body>
+    <!-- 編集パネル -->
+    <div class="edit-panel" id="editPanel" style="display: none;">
+        <h3>ネオン編集パネル</h3>
+        
+        <div class="edit-group">
+            <label>編集対象: <span id="editTarget">-</span></label>
+        </div>
+        
+        <div class="edit-group">
+            <label>カラー設定</label>
+            <div class="color-input-group">
+                <input type="color" id="colorPicker" value="#ffffff">
+                <input type="text" id="colorText" value="#ffffff" placeholder="#ffffff">
+            </div>
+        </div>
+        
+        <div class="edit-group">
+            <label>明るさ (Brightness)</label>
+            <input type="range" id="brightnessSlider" min="0" max="200" value="100">
+            <span class="range-value" id="brightnessValue">100%</span>
+        </div>
+        
+        <div class="edit-group">
+            <label>不透明度 (Opacity)</label>
+            <input type="range" id="opacitySlider" min="0" max="100" value="100">
+            <span class="range-value" id="opacityValue">100%</span>
+        </div>
+        
+        <div class="edit-group">
+            <label>グロー効果の強さ</label>
+            <input type="range" id="glowSlider" min="0" max="100" value="50">
+            <span class="range-value" id="glowValue">50px</span>
+        </div>
+        
+        <div class="edit-group">
+            <label>アニメーション</label>
+            <select id="animationSelect">
+                <option value="none">なし</option>
+                <option value="pulse">パルス</option>
+                <option value="flicker">点滅</option>
+                <option value="glow">グロー変化</option>
+                <option value="rainbow">レインボー</option>
+            </select>
+        </div>
+        
+        <button class="apply-button" onclick="applyChanges()">変更を適用</button>
+        <button class="apply-button" style="background: #666;" onclick="resetChanges()">リセット</button>
+    </div>
+    
     <div class="admin-container">
         <h1>HOLE ネオンシステム管理ページ</h1>
         
@@ -244,27 +411,27 @@
             <h2>1. 縦書きネオンサイン（常時点灯）</h2>
             <div class="neon-preview">
                 <div class="preview-card">
-                    <div class="vertical-neon-preview neon-new">新規開店</div>
+                    <div class="vertical-neon-preview neon-new editable" data-type="vertical" data-class="neon-new">新規開店</div>
                     <p>金色 (#ffd700)<br>パルスアニメーション</p>
                 </div>
                 <div class="preview-card">
-                    <div class="vertical-neon-preview neon-active">営業中</div>
+                    <div class="vertical-neon-preview neon-active editable" data-type="vertical" data-class="neon-active">営業中</div>
                     <p>明るい緑 (#00ff00)<br>最も明るく点灯</p>
                 </div>
                 <div class="preview-card">
-                    <div class="vertical-neon-preview neon-default">準備中</div>
+                    <div class="vertical-neon-preview neon-default editable" data-type="vertical" data-class="neon-default">準備中</div>
                     <p>白 (#ffffff)<br>通常の明るさ</p>
                 </div>
                 <div class="preview-card">
-                    <div class="vertical-neon-preview neon-abandoned-gray">廃業中</div>
+                    <div class="vertical-neon-preview neon-abandoned-gray editable" data-type="vertical" data-class="neon-abandoned-gray">廃業中</div>
                     <p>グレー (#808080)<br>暗めの表示</p>
                 </div>
                 <div class="preview-card">
-                    <div class="vertical-neon-preview neon-abandoned-yellow">逃走中</div>
+                    <div class="vertical-neon-preview neon-abandoned-yellow editable" data-type="vertical" data-class="neon-abandoned-yellow">逃走中</div>
                     <p>黄色 (#ffff00)<br>点滅エフェクト</p>
                 </div>
                 <div class="preview-card">
-                    <div class="vertical-neon-preview neon-abandoned-red">事件</div>
+                    <div class="vertical-neon-preview neon-abandoned-red editable" data-type="vertical" data-class="neon-abandoned-red">事件</div>
                     <p>赤 (#ff0000)<br>パルスアニメーション</p>
                 </div>
             </div>
@@ -303,19 +470,19 @@
             <h3>カラーパターン（0-3時間の例）</h3>
             <div class="neon-preview">
                 <div class="preview-card">
-                    <div class="room-neon-preview room-3h-1">時間裁判</div>
+                    <div class="room-neon-preview room-3h-1 editable" data-type="room" data-class="room-3h-1">時間裁判</div>
                     <p>緑系統 (4n+1)</p>
                 </div>
                 <div class="preview-card">
-                    <div class="room-neon-preview room-3h-2">夏至祭</div>
+                    <div class="room-neon-preview room-3h-2 editable" data-type="room" data-class="room-3h-2">夏至祭</div>
                     <p>ピンク系統 (4n+2)</p>
                 </div>
                 <div class="preview-card">
-                    <div class="room-neon-preview room-3h-3">DEPLOMA</div>
+                    <div class="room-neon-preview room-3h-3 editable" data-type="room" data-class="room-3h-3">DEPLOMA</div>
                     <p>オレンジ系統 (4n+3)</p>
                 </div>
                 <div class="preview-card">
-                    <div class="room-neon-preview room-3h-4">潰れる店</div>
+                    <div class="room-neon-preview room-3h-4 editable" data-type="room" data-class="room-3h-4">潰れる店</div>
                     <p>水色系統 (4n)</p>
                 </div>
             </div>
@@ -419,5 +586,256 @@
             </ul>
         </div>
     </div>
+    
+    <script>
+        // 現在選択されている要素
+        let currentElement = null;
+        let originalStyles = {};
+        
+        // 編集可能な要素にクリックイベントを追加
+        document.querySelectorAll('.editable').forEach(element => {
+            element.addEventListener('click', function() {
+                selectElement(this);
+            });
+        });
+        
+        // 要素を選択
+        function selectElement(element) {
+            // 以前の選択を解除
+            if (currentElement) {
+                currentElement.classList.remove('selected');
+            }
+            
+            // 新しい要素を選択
+            currentElement = element;
+            currentElement.classList.add('selected');
+            
+            // 編集パネルを表示
+            document.getElementById('editPanel').style.display = 'block';
+            document.getElementById('editTarget').textContent = element.textContent;
+            
+            // 現在のスタイルを取得
+            const computedStyle = window.getComputedStyle(element);
+            const color = rgbToHex(computedStyle.color);
+            const opacity = computedStyle.opacity;
+            const brightness = extractBrightness(computedStyle.filter);
+            
+            // オリジナルスタイルを保存
+            originalStyles = {
+                color: color,
+                opacity: opacity,
+                brightness: brightness,
+                textShadow: computedStyle.textShadow
+            };
+            
+            // UI要素に現在の値を設定
+            document.getElementById('colorPicker').value = color;
+            document.getElementById('colorText').value = color;
+            document.getElementById('opacitySlider').value = opacity * 100;
+            document.getElementById('opacityValue').textContent = Math.round(opacity * 100) + '%';
+            document.getElementById('brightnessSlider').value = brightness;
+            document.getElementById('brightnessValue').textContent = brightness + '%';
+            
+            // グロー効果の強さを推定
+            const glowSize = extractGlowSize(computedStyle.textShadow);
+            document.getElementById('glowSlider').value = glowSize;
+            document.getElementById('glowValue').textContent = glowSize + 'px';
+            
+            // アニメーションを検出
+            const animation = detectAnimation(element);
+            document.getElementById('animationSelect').value = animation;
+        }
+        
+        // カラーピッカーとテキスト入力の同期
+        document.getElementById('colorPicker').addEventListener('input', function() {
+            document.getElementById('colorText').value = this.value;
+            previewChanges();
+        });
+        
+        document.getElementById('colorText').addEventListener('input', function() {
+            if (this.value.match(/^#[0-9A-F]{6}$/i)) {
+                document.getElementById('colorPicker').value = this.value;
+                previewChanges();
+            }
+        });
+        
+        // スライダーの値を表示
+        document.getElementById('brightnessSlider').addEventListener('input', function() {
+            document.getElementById('brightnessValue').textContent = this.value + '%';
+            previewChanges();
+        });
+        
+        document.getElementById('opacitySlider').addEventListener('input', function() {
+            document.getElementById('opacityValue').textContent = this.value + '%';
+            previewChanges();
+        });
+        
+        document.getElementById('glowSlider').addEventListener('input', function() {
+            document.getElementById('glowValue').textContent = this.value + 'px';
+            previewChanges();
+        });
+        
+        document.getElementById('animationSelect').addEventListener('change', previewChanges);
+        
+        // リアルタイムプレビュー
+        function previewChanges() {
+            if (!currentElement) return;
+            
+            const color = document.getElementById('colorPicker').value;
+            const brightness = document.getElementById('brightnessSlider').value;
+            const opacity = document.getElementById('opacitySlider').value / 100;
+            const glowSize = document.getElementById('glowSlider').value;
+            const animation = document.getElementById('animationSelect').value;
+            
+            // スタイルを適用
+            currentElement.style.color = color;
+            currentElement.style.opacity = opacity;
+            currentElement.style.filter = `brightness(${brightness}%)`;
+            
+            // グロー効果を生成
+            const glowEffect = generateGlowEffect(color, glowSize);
+            currentElement.style.textShadow = glowEffect;
+            
+            // ボーダーカラーも更新（縦書きネオンの場合）
+            if (currentElement.classList.contains('vertical-neon-preview')) {
+                currentElement.style.borderColor = color;
+            }
+            
+            // アニメーションを適用
+            applyAnimation(currentElement, animation);
+        }
+        
+        // 変更を適用
+        function applyChanges() {
+            if (!currentElement) return;
+            
+            const className = currentElement.dataset.class;
+            const type = currentElement.dataset.type;
+            const color = document.getElementById('colorPicker').value;
+            const brightness = document.getElementById('brightnessSlider').value;
+            const opacity = document.getElementById('opacitySlider').value / 100;
+            const glowSize = document.getElementById('glowSlider').value;
+            const animation = document.getElementById('animationSelect').value;
+            
+            // CSSコードを生成
+            let cssCode = `.${className} {\n`;
+            cssCode += `    color: ${color} !important;\n`;
+            cssCode += `    opacity: ${opacity};\n`;
+            cssCode += `    filter: brightness(${brightness}%);\n`;
+            cssCode += `    text-shadow: ${generateGlowEffect(color, glowSize)};\n`;
+            
+            if (type === 'vertical' && currentElement.classList.contains('vertical-neon-preview')) {
+                cssCode += `    border-color: ${color} !important;\n`;
+            }
+            
+            if (animation !== 'none') {
+                cssCode += `    animation: ${animation} ${getAnimationDuration(animation)} infinite;\n`;
+            }
+            
+            cssCode += `}`;
+            
+            // コードを表示（実際の実装では、これをクリップボードにコピーしたり、エクスポートする機能を追加）
+            console.log('Generated CSS:', cssCode);
+            alert('CSSコードが生成されました！\nコンソールで確認してください。\n\n' + cssCode);
+        }
+        
+        // リセット
+        function resetChanges() {
+            if (!currentElement || !originalStyles) return;
+            
+            currentElement.style.color = originalStyles.color;
+            currentElement.style.opacity = originalStyles.opacity;
+            currentElement.style.filter = `brightness(${originalStyles.brightness}%)`;
+            currentElement.style.textShadow = originalStyles.textShadow;
+            currentElement.style.animation = '';
+            
+            // UIをリセット
+            document.getElementById('colorPicker').value = originalStyles.color;
+            document.getElementById('colorText').value = originalStyles.color;
+            document.getElementById('opacitySlider').value = originalStyles.opacity * 100;
+            document.getElementById('brightnessSlider').value = originalStyles.brightness;
+            document.getElementById('animationSelect').value = 'none';
+        }
+        
+        // ユーティリティ関数
+        function rgbToHex(rgb) {
+            if (rgb.startsWith('#')) return rgb;
+            const match = rgb.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/);
+            if (!match) return '#ffffff';
+            return '#' + [1, 2, 3].map(i => {
+                const hex = parseInt(match[i]).toString(16);
+                return hex.length === 1 ? '0' + hex : hex;
+            }).join('');
+        }
+        
+        function extractBrightness(filter) {
+            const match = filter.match(/brightness\((\d+)%?\)/);
+            return match ? parseInt(match[1]) : 100;
+        }
+        
+        function extractGlowSize(textShadow) {
+            const shadows = textShadow.split(',');
+            let maxSize = 0;
+            shadows.forEach(shadow => {
+                const match = shadow.match(/\d+px/g);
+                if (match) {
+                    const size = parseInt(match[match.length - 1]);
+                    if (size > maxSize) maxSize = size;
+                }
+            });
+            return maxSize || 20;
+        }
+        
+        function generateGlowEffect(color, size) {
+            const halfSize = Math.round(size / 2);
+            const quarterSize = Math.round(size / 4);
+            return `0 0 ${quarterSize}px ${color}, 0 0 ${halfSize}px ${color}, 0 0 ${size}px ${color}`;
+        }
+        
+        function detectAnimation(element) {
+            const animation = window.getComputedStyle(element).animationName;
+            if (animation === 'pulse') return 'pulse';
+            if (animation === 'flicker') return 'flicker';
+            return 'none';
+        }
+        
+        function applyAnimation(element, animationType) {
+            element.style.animation = '';
+            if (animationType === 'none') return;
+            
+            const duration = getAnimationDuration(animationType);
+            element.style.animation = `${animationType} ${duration} infinite`;
+        }
+        
+        function getAnimationDuration(animationType) {
+            switch(animationType) {
+                case 'pulse': return '2s';
+                case 'flicker': return '1.5s';
+                case 'glow': return '3s';
+                case 'rainbow': return '5s';
+                default: return '2s';
+            }
+        }
+        
+        // 新しいアニメーションを定義
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes glow {
+                0%, 100% { filter: brightness(100%); }
+                50% { filter: brightness(150%); }
+            }
+            
+            @keyframes rainbow {
+                0% { color: #ff0000; }
+                16.66% { color: #ff8800; }
+                33.33% { color: #ffff00; }
+                50% { color: #00ff00; }
+                66.66% { color: #0088ff; }
+                83.33% { color: #8800ff; }
+                100% { color: #ff0000; }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
 </body>
 </html>
