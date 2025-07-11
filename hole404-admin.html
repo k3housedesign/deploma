@@ -404,6 +404,12 @@
         <button class="apply-button" style="background: #666;" onclick="resetChanges()">リセット</button>
         <button class="apply-button" style="background: #4CAF50;" onclick="copyToClipboard()">コピー</button>
         <button class="apply-button" style="background: #2196F3;" onclick="saveToFile()">CSSファイル保存</button>
+        
+        <div class="edit-group" style="margin-top: 20px; border-top: 2px solid #444; padding-top: 20px;">
+            <label style="color: #ff6b35;">本番環境への反映（要認証）</label>
+            <input type="password" id="githubToken" placeholder="GitHubトークン" style="width: 100%; margin-bottom: 10px;">
+            <button class="apply-button" style="background: #ff6b35;" onclick="deployToProduction()">本番環境に反映</button>
+        </div>
     </div>
     
     <div class="admin-container">
@@ -829,6 +835,129 @@
                 document.head.appendChild(styleElement);
             }
             styleElement.textContent = allGeneratedCSS.join('\n');
+        }
+        
+        // 本番環境にデプロイ
+        async function deployToProduction() {
+            const token = document.getElementById('githubToken').value;
+            if (!token) {
+                alert('GitHubトークンを入力してください。\n\nトークンの作成方法:\n1. GitHubの Settings > Developer settings > Personal access tokens\n2. "Generate new token" をクリック\n3. "repo" スコープを選択\n4. トークンを生成してコピー');
+                return;
+            }
+            
+            if (allGeneratedCSS.length === 0) {
+                alert('まだ変更がありません。ネオンサインを編集して「変更を適用」をクリックしてください。');
+                return;
+            }
+            
+            const confirmMsg = `以下の変更を本番環境に反映します:\n\n${allGeneratedCSS.map(css => css.split('\n')[0]).join('\n')}\n\n続行しますか？`;
+            if (!confirm(confirmMsg)) return;
+            
+            showNotification('デプロイを開始します...');
+            
+            try {
+                // 1. 現在のhole404.cssを取得
+                const owner = 'k3housedesign';
+                const repo = 'deploma';
+                const path = 'hole404.css';
+                
+                const fileResponse = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/${path}`, {
+                    headers: {
+                        'Authorization': `token ${token}`,
+                        'Accept': 'application/vnd.github.v3+json'
+                    }
+                });
+                
+                if (!fileResponse.ok) {
+                    throw new Error(`ファイルの取得に失敗: ${fileResponse.status}`);
+                }
+                
+                const fileData = await fileResponse.json();
+                const currentContent = atob(fileData.content);
+                
+                // 2. CSSを更新
+                let updatedContent = currentContent;
+                
+                // 各生成されたCSSについて、既存のルールを置き換え
+                allGeneratedCSS.forEach(newRule => {
+                    const className = newRule.match(/\.([^\s{]+)/)[1];
+                    const regex = new RegExp(`\\.${className}\\s*{[^}]+}`, 'g');
+                    
+                    if (updatedContent.match(regex)) {
+                        // 既存のルールを置き換え
+                        updatedContent = updatedContent.replace(regex, newRule.trim());
+                    } else {
+                        // 新しいルールを追加（適切な場所を探す）
+                        const insertPosition = findInsertPosition(updatedContent, className);
+                        updatedContent = insertContent(updatedContent, newRule, insertPosition);
+                    }
+                });
+                
+                // 3. GitHubに更新をプッシュ
+                const updateResponse = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/${path}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Authorization': `token ${token}`,
+                        'Accept': 'application/vnd.github.v3+json',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        message: `ネオンシステムのスタイルを更新\n\n更新内容:\n${allGeneratedCSS.map(css => '- ' + css.split('\n')[0]).join('\n')}\n\n🤖 Generated with HOLE Admin Panel`,
+                        content: btoa(unescape(encodeURIComponent(updatedContent))),
+                        sha: fileData.sha,
+                        branch: 'main'
+                    })
+                });
+                
+                if (!updateResponse.ok) {
+                    const error = await updateResponse.json();
+                    throw new Error(`更新に失敗: ${error.message}`);
+                }
+                
+                showNotification('本番環境への反映が完了しました！');
+                
+                // 成功したらトークンをクリア（セキュリティのため）
+                document.getElementById('githubToken').value = '';
+                
+                // 5秒後に本番サイトを開く
+                setTimeout(() => {
+                    if (confirm('本番サイトを確認しますか？')) {
+                        window.open('https://k3housedesign.github.io/deploma/hole404.html', '_blank');
+                    }
+                }, 2000);
+                
+            } catch (error) {
+                console.error('デプロイエラー:', error);
+                alert(`デプロイに失敗しました:\n${error.message}\n\nトークンの権限を確認してください。`);
+            }
+        }
+        
+        // 適切な挿入位置を見つける
+        function findInsertPosition(content, className) {
+            // 同じタイプのクラスの近くに挿入
+            if (className.includes('vertical-neon') || className.includes('neon-')) {
+                const verticalNeonMatch = content.lastIndexOf('/* 縦書きネオン');
+                if (verticalNeonMatch !== -1) {
+                    const nextSection = content.indexOf('/*', verticalNeonMatch + 10);
+                    return nextSection !== -1 ? nextSection : content.length;
+                }
+            }
+            
+            if (className.includes('room-')) {
+                const roomNeonMatch = content.lastIndexOf('/* 部屋名ネオン');
+                if (roomNeonMatch !== -1) {
+                    const nextSection = content.indexOf('/*', roomNeonMatch + 10);
+                    return nextSection !== -1 ? nextSection : content.length;
+                }
+            }
+            
+            // デフォルトはファイルの最後
+            return content.length;
+        }
+        
+        // コンテンツを挿入
+        function insertContent(content, newRule, position) {
+            return content.slice(0, position) + '\n\n' + newRule + '\n' + content.slice(position);
         }
         
         // アニメーションを追加
