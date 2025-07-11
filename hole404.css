@@ -432,13 +432,7 @@ body:has(.chat-screen.active) .user-counter {
     margin-bottom: 15px;
     position: relative;
     display: inline-block;
-    /* 部屋の暗さの影響を受けないように独立した明るさを保つ */
-    filter: none !important;
-    opacity: 1 !important;
-    z-index: 50;
-    transform: translateZ(0);
-    will-change: transform;
-    isolation: isolate;
+    /* 部屋のフィルターの影響を受ける（時間経過で暗くなる） */
 }
 
 /* 各カードのネオンテキスト色 */
@@ -735,19 +729,20 @@ body:has(.chat-screen.active) .user-counter {
     position: relative;
 }
 
-.room-card.inactive::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.3);
-    pointer-events: none;
+.room-card.inactive .neon-sign,
+.room-card.inactive .room-description,
+.room-card.inactive .room-status,
+.room-card.inactive .chinese-sign {
+    filter: brightness(0.7);
+    opacity: 0.85;
 }
 
-.room-card.inactive:hover::before {
-    background: rgba(0, 0, 0, 0.1);
+.room-card.inactive:hover .neon-sign,
+.room-card.inactive:hover .room-description,
+.room-card.inactive:hover .room-status,
+.room-card.inactive:hover .chinese-sign {
+    filter: brightness(0.9);
+    opacity: 1;
 }
 
 /* 廃業・逃走・事件の極暗状態 */
@@ -755,19 +750,20 @@ body:has(.chat-screen.active) .user-counter {
     position: relative;
 }
 
-.room-card.abandoned::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.7);
-    pointer-events: none;
+.room-card.abandoned .neon-sign,
+.room-card.abandoned .room-description,
+.room-card.abandoned .room-status,
+.room-card.abandoned .chinese-sign {
+    filter: brightness(0.3) grayscale(0.8);
+    opacity: 0.4;
 }
 
-.room-card.abandoned:hover::before {
-    background: rgba(0, 0, 0, 0.5);
+.room-card.abandoned:hover .neon-sign,
+.room-card.abandoned:hover .room-description,
+.room-card.abandoned:hover .room-status,
+.room-card.abandoned:hover .chinese-sign {
+    filter: brightness(0.5) grayscale(0.5);
+    opacity: 0.7;
 }
 
 /* 時間ベースの明るさ状態 */
