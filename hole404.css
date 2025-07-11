@@ -696,10 +696,87 @@ input, textarea, .message-content {
 }
 
 .vertical-neon.abandoned {
-    color: #666 !important;
-    border-color: #444 !important;
-    text-shadow: 0 0 5px rgba(255,255,255,0.1) !important;
-    animation: abandonedFlicker 15s infinite;
+    animation: brokenNeon 3s infinite !important;
+}
+
+/* 電球が切れかかっているような点滅エフェクト */
+@keyframes brokenNeon {
+    0%, 100% { 
+        opacity: 0.3;
+        filter: brightness(0.5);
+    }
+    10% { 
+        opacity: 1;
+        filter: brightness(1);
+    }
+    12% { 
+        opacity: 0.1;
+        filter: brightness(0.2);
+    }
+    14% { 
+        opacity: 0.8;
+        filter: brightness(0.8);
+    }
+    16% { 
+        opacity: 0.2;
+        filter: brightness(0.3);
+    }
+    20%, 60% { 
+        opacity: 0.4;
+        filter: brightness(0.4);
+    }
+    65% { 
+        opacity: 0.1;
+        filter: brightness(0.2);
+    }
+    66% { 
+        opacity: 0.9;
+        filter: brightness(0.9);
+    }
+    67% { 
+        opacity: 0.2;
+        filter: brightness(0.3);
+    }
+    70%, 90% { 
+        opacity: 0.3;
+        filter: brightness(0.4);
+    }
+    92% { 
+        opacity: 0.8;
+        filter: brightness(0.7);
+    }
+    94% { 
+        opacity: 0.1;
+        filter: brightness(0.2);
+    }
+}
+
+/* 1-3日放置部屋の薄暗い点滅 */
+.vertical-neon.closed,
+.vertical-neon.vacant,
+.vertical-neon.quiet,
+.vertical-neon.drunk,
+.vertical-neon.ecstasy {
+    animation: dimFlicker 8s infinite !important;
+}
+
+@keyframes dimFlicker {
+    0%, 100% { 
+        opacity: 0.7;
+        filter: brightness(0.8);
+    }
+    50% { 
+        opacity: 0.5;
+        filter: brightness(0.6);
+    }
+    52% { 
+        opacity: 0.3;
+        filter: brightness(0.4);
+    }
+    54% { 
+        opacity: 0.6;
+        filter: brightness(0.7);
+    }
 }
 
 @keyframes abandonedFlicker {
