@@ -487,23 +487,27 @@ function renderRooms() {
         if (activeUsers > 0) {
             verticalText = '<div class="vertical-neon active">営業中</div>';
             roomState = 'active';
+        } else if (hoursSinceCreated < 24 && !room.hasBeenEntered) {
+            // 新規作成から24時間以内で誰も入ったことがない
+            verticalText = '<div class="vertical-neon new">新規開店</div>';
+            roomState = 'new';
         } else if (daysSinceCreated > 3) {
             // 3日以上誰も入っていない
             const abandonedStates = [
-                '<div class="vertical-neon abandoned">廃業中</div>',
-                '<div class="vertical-neon abandoned">逃走中</div>',
-                '<div class="vertical-neon abandoned">事件</div>'
+                '<div class="vertical-neon abandoned-gray">廃業中</div>',
+                '<div class="vertical-neon abandoned-yellow">逃走中</div>',
+                '<div class="vertical-neon abandoned-red">事件</div>'
             ];
             verticalText = abandonedStates[index % abandonedStates.length];
             roomState = 'abandoned';
         } else {
             // 1-3日の間誰も入っていない
             const inactiveStates = [
-                '<div class="vertical-neon closed">準備中</div>',
-                '<div class="vertical-neon vacant">空室</div>',
-                '<div class="vertical-neon quiet">静寂</div>',
-                '<div class="vertical-neon drunk">酩酊</div>',
-                '<div class="vertical-neon ecstasy">陶酔</div>'
+                '<div class="vertical-neon inactive-white">準備中</div>',
+                '<div class="vertical-neon inactive-white">空室</div>',
+                '<div class="vertical-neon inactive-white">静寂</div>',
+                '<div class="vertical-neon inactive-white">酩酊</div>',
+                '<div class="vertical-neon inactive-white">陶酔</div>'
             ];
             verticalText = inactiveStates[index % inactiveStates.length];
             roomState = 'inactive';
