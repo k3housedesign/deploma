@@ -625,7 +625,6 @@ body:has(.chat-screen.active) .user-counter {
         inset 0 0 10px rgba(0,255,65,0.3),
         0 0 15px rgba(0,255,65,0.5),
         0 0 25px rgba(0,255,65,0.3) !important;
-    animation: verticalBlink 5s infinite;
 }
 
 .room-card:nth-child(4n+2) .vertical-neon {
@@ -640,7 +639,6 @@ body:has(.chat-screen.active) .user-counter {
         inset 0 0 10px rgba(255,0,110,0.3),
         0 0 15px rgba(255,0,110,0.5),
         0 0 25px rgba(255,0,110,0.3) !important;
-    animation: verticalBlink 4s infinite;
 }
 
 .room-card:nth-child(4n+3) .vertical-neon {
@@ -655,7 +653,6 @@ body:has(.chat-screen.active) .user-counter {
         inset 0 0 10px rgba(255,170,0,0.3),
         0 0 15px rgba(255,170,0,0.5),
         0 0 25px rgba(255,170,0,0.3) !important;
-    animation: verticalBlink 6s infinite;
 }
 
 .room-card:nth-child(4n) .vertical-neon {
@@ -670,7 +667,6 @@ body:has(.chat-screen.active) .user-counter {
         inset 0 0 10px rgba(0,180,255,0.3),
         0 0 15px rgba(0,180,255,0.5),
         0 0 25px rgba(0,180,255,0.3) !important;
-    animation: verticalBlink 3.5s infinite;
 }
 
 @keyframes verticalBlink {
@@ -684,7 +680,7 @@ body:has(.chat-screen.active) .user-counter {
 
 /* 営業中の明るいネオン */
 .vertical-neon.active {
-    animation: activePulse 2s infinite;
+    /* 常時点灯 */
 }
 
 @keyframes activePulse {
@@ -710,7 +706,7 @@ body:has(.chat-screen.active) .user-counter {
         0 0 10px #ffd700,
         0 0 20px #ffd700,
         0 0 30px #ffd700 !important;
-    animation: newShopPulse 1.5s infinite;
+    /* 常時点灯 */
 }
 
 @keyframes newShopPulse {
@@ -783,7 +779,13 @@ body:has(.chat-screen.active) .user-counter {
 }
 
 .vertical-neon.abandoned {
-    animation: brokenNeon 3s infinite !important;
+    /* 常時点灯 - 暗めの色で表示 */
+    color: #666 !important;
+    border-color: #666 !important;
+    text-shadow: 
+        0 0 5px #666,
+        0 0 10px #666 !important;
+    opacity: 0.8 !important;
 }
 
 /* 電球が切れかかっているような点滅エフェクト */
@@ -838,13 +840,14 @@ body:has(.chat-screen.active) .user-counter {
     }
 }
 
-/* 1-3日放置部屋の薄暗い点滅 */
+/* 1-3日放置部屋 - 常時点灯 */
 .vertical-neon.closed,
 .vertical-neon.vacant,
 .vertical-neon.quiet,
 .vertical-neon.drunk,
 .vertical-neon.ecstasy {
-    animation: dimFlicker 8s infinite !important;
+    /* 常時点灯 - 状態に応じた色で表示 */
+    opacity: 0.9 !important;
 }
 
 @keyframes dimFlicker {
@@ -1671,4 +1674,4 @@ body:has(.chat-screen.active) .user-counter {
         opacity: 0.9;
     }
     .enter-button:hover, .btn:hover, .send-btn:hover { transform: none; }
-    .enter
+    .enter-button:acti
