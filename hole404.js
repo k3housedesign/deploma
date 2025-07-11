@@ -493,6 +493,7 @@ function renderRooms() {
         if (activeUsers > 0) {
             verticalText = '<div class="vertical-neon active">営業中</div>';
             roomState = 'active';
+            lightingClass = 'lighting-bright';  // 営業中は最も明るく
         } else if (hoursSinceCreated < 24 && !room.hasBeenEntered) {
             // 新規作成から24時間以内で誰も入ったことがない
             verticalText = '<div class="vertical-neon new">新規開店</div>';
@@ -523,7 +524,8 @@ function renderRooms() {
         }
         
         // 最終アクセス時刻に基づく照度の細かい制御
-        if (activeUsers === 0) {
+        // 新規開店以外の部屋に適用
+        if (activeUsers === 0 && roomState !== 'new') {
             if (hoursSinceLastAccess < 3) {
                 lightingClass = 'lighting-recent-3h';  // 明るい
             } else if (hoursSinceLastAccess < 12) {
@@ -1314,4 +1316,40 @@ function checkRoomFromUrl() {
     const urlParams = new URLSearchParams(window.location.search);
     const roomId = urlParams.get('room');
     if (roomId) {
-        // URLパ
+        // URLパラメータをクリア
+        const newUrl = window.location.pathname;
+        window.history.replaceState({}, '', newUrl);
+        
+        const storedUser = localStorage.getItem('holeUserProfile');
+        if (storedUser) {
+            appState.currentUser = JSON.parse(storedUser);
+            // enterTheHoleが呼ばれていない場合があるので、直接ルームに入る
+            if (UI.splashScreen.style.display !== 'none') {
+                 UI.splashScreen.style.display = 'none';
+                 UI.mainContent.classList.add('active');
+                 UI.mainContent.classList.add('visible');
+                 loadRooms();
+            }
+            // 自動的にルームに入らないようにする
+            // ユーザーが明示的にルームをクリックした時のみ入る
+            console.log('Room URL detected but not auto-entering:', roomId);
+        } else {
+            showProfileModal();
+        }
+    }
+}
+
+function loadDemoRooms() {
+    appState.rooms = [
+        { id: 'demo1', roomName: '猥雑な麻雀クラブ', description: '煙草の煙が立ち込める奥の間（デモ）', activeUsers: 3 },
+        { id: 'demo2', roomName: '錆びついたジャズバー', description: '古いピアノの音色が響く（デモ）', activeUsers: 7 }
+    ];
+    renderRooms();
+    appState.roomsLoaded = true;
+}
+
+function addDemoMessages() {
+    addSystemMessage('サーバーとの接続が切断されました。これはデモメッセージです。');
+    setTimeout(() => addMessage({ id: generateId('msg'), text: '今夜は冷えるな…', authorName: '名無しの客', authorIcon: '🎭', timestamp: Date.now(), type: 'user' }), 1000);
+    setTimeout(() => addMessage({ id: generateId('msg'), text: 'この場所も随分と寂れたものだ', authorName: 'バーテンダー', authorIcon: '🍸', timestamp: Date.now(), type: 'bot' }), 3000);
+}
