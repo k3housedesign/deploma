@@ -497,6 +497,7 @@ function renderRooms() {
             // 新規作成から24時間以内で誰も入ったことがない
             verticalText = '<div class="vertical-neon new">新規開店</div>';
             roomState = 'new';
+            lightingClass = 'lighting-new';  // 新規開店は明るく
         } else if (daysSinceLastAccess > 3) {
             // 3日以上アクセスがない
             const abandonedStates = [
@@ -1313,5 +1314,4 @@ function checkRoomFromUrl() {
     const urlParams = new URLSearchParams(window.location.search);
     const roomId = urlParams.get('room');
     if (roomId) {
-        // URLパラメータをクリア
-        const newUrl = window.location.pathname;
+        // URLパ
