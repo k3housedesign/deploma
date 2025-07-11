@@ -1,7 +1,7 @@
 /* hole2.css */
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;700&display=swap');
 
-/* --- ご指定のコードスニペットから反映 --- */
+/* --- ãæå®ã®ã³ã¼ãã¹ããããããåæ  --- */
 * {
     margin: 0;
     padding: 0;
@@ -28,25 +28,25 @@ body {
     color: #ffffff;
     overflow-x: hidden;
     overflow-y: auto;
-    /* モバイル用のスクロール改善 */
+    /* ã¢ãã¤ã«ç¨ã®ã¹ã¯ã­ã¼ã«æ¹å */
     -webkit-overflow-scrolling: touch;
     overscroll-behavior: contain;
 }
 
-/* モバイル用のフォーカス改善 */
+/* ã¢ãã¤ã«ç¨ã®ãã©ã¼ã«ã¹æ¹å */
 .message-input:focus {
     transform: none;
     -webkit-transform: none;
 }
 
-/* iOS Safari用の入力フィールド修正 */
+/* iOS Safariç¨ã®å¥åãã£ã¼ã«ãä¿®æ­£ */
 input, textarea {
     -webkit-appearance: none;
     -webkit-border-radius: 0;
     border-radius: inherit;
 }
 
-/* モバイルでのタップハイライト削除 */
+/* ã¢ãã¤ã«ã§ã®ã¿ãããã¤ã©ã¤ãåé¤ */
 * {
     -webkit-tap-highlight-color: transparent;
     -webkit-touch-callout: none;
@@ -54,12 +54,12 @@ input, textarea {
     user-select: none;
 }
 
-/* 選択可能にするべき要素 */
+/* é¸æå¯è½ã«ããã¹ãè¦ç´  */
 input, textarea, .message-content {
     -webkit-user-select: text;
     user-select: text;
 }
-/* --- ここまで --- */
+/* --- ããã¾ã§ --- */
 
 
 :root {
@@ -82,7 +82,7 @@ input, textarea, .message-content {
     box-sizing: border-box;
 }
 
-/* スプラッシュスクリーン */
+/* ã¹ãã©ãã·ã¥ã¹ã¯ãªã¼ã³ */
 .splash-screen {
     position: fixed;
     top: 0;
@@ -103,7 +103,7 @@ input, textarea, .message-content {
     pointer-events: none;
 }
 
-/* (以下、前回のCSSコードが続く) */
+/* (ä»¥ä¸ãååã®CSSã³ã¼ããç¶ã) */
 .manhole-cover {
     width: 200px;
     height: 200px;
@@ -249,7 +249,7 @@ input, textarea, .message-content {
     box-shadow: 0 8px 25px rgba(255, 107, 53, 0.5);
 }
 
-/* ユーザーカウンター */
+/* ã¦ã¼ã¶ã¼ã«ã¦ã³ã¿ã¼ */
 .user-counter {
     position: fixed;
     bottom: 20px;
@@ -264,12 +264,12 @@ input, textarea, .message-content {
     backdrop-filter: blur(10px);
 }
 
-/* チャット画面表示時はユーザーカウンターを非表示 */
+/* ãã£ããç»é¢è¡¨ç¤ºæã¯ã¦ã¼ã¶ã¼ã«ã¦ã³ã¿ã¼ãéè¡¨ç¤º */
 body:has(.chat-screen.active) .user-counter {
     display: none;
 }
 
-/* :has()をサポートしないブラウザ用のフォールバック */
+/* :has()ããµãã¼ãããªããã©ã¦ã¶ç¨ã®ãã©ã¼ã«ããã¯ */
 @media (max-width: 768px) {
     .user-counter {
         bottom: 15px;
@@ -277,11 +277,11 @@ body:has(.chat-screen.active) .user-counter {
         padding: 8px 15px;
         font-size: 12px;
         border-radius: 15px;
-        z-index: 50; /* チャット画面より下に */
+        z-index: 50; /* ãã£ããç»é¢ããä¸ã« */
     }
 }
 
-/* メインコンテンツ */
+/* ã¡ã¤ã³ã³ã³ãã³ã */
 .main-content {
     min-height: 100vh;
     display: none;
@@ -295,7 +295,7 @@ body:has(.chat-screen.active) .user-counter {
     opacity: 1;
 }
 
-/* ルーム選択画面 */
+/* ã«ã¼ã é¸æç»é¢ */
 .room-selection {
     min-height: 100vh;
     background: var(--background-dark);
@@ -370,7 +370,7 @@ body:has(.chat-screen.active) .user-counter {
     transform: translateZ(0);
 }
 
-/* 各ルームカードに異なるネオンカラー */
+/* åã«ã¼ã ã«ã¼ãã«ç°ãªãããªã³ã«ã©ã¼ */
 .room-card:nth-child(4n+1) {
     border-color: transparent;
     background: radial-gradient(ellipse at center, rgba(0,255,65,0.05) 0%, #0a0a0a 70%);
@@ -388,7 +388,7 @@ body:has(.chat-screen.active) .user-counter {
     background: radial-gradient(ellipse at center, rgba(0,180,255,0.05) 0%, #0a0a0a 70%);
 }
 
-/* アクティブ状態の背景を明るく */
+/* ã¢ã¯ãã£ãç¶æã®èæ¯ãæãã */
 .room-card.active:nth-child(4n+1) {
     background: radial-gradient(ellipse at center, rgba(0,255,65,0.2) 0%, #0a0a0a 60%);
     box-shadow: 
@@ -414,7 +414,7 @@ body:has(.chat-screen.active) .user-counter {
         0 0 40px rgba(0,180,255,0.4);
 }
 
-/* ネオン枠の光彩効果を削除（枠なしのシンプルなデザイン） */
+/* ããªã³æ ã®åå½©å¹æãåé¤ï¼æ ãªãã®ã·ã³ãã«ãªãã¶ã¤ã³ï¼ */
 
 @media (hover: hover) {
     .room-card:hover {
@@ -423,7 +423,7 @@ body:has(.chat-screen.active) .user-counter {
     }
 }
 
-/* ネオンサインのテキスト - 基本設定 */
+/* ããªã³ãµã¤ã³ã®ãã­ã¹ã - åºæ¬è¨­å® */
 .room-card .neon-sign {
     font-size: 2.2em;
     font-weight: 900;
@@ -434,7 +434,7 @@ body:has(.chat-screen.active) .user-counter {
     display: inline-block;
 }
 
-/* 部屋名ネオンサインのデフォルトスタイル - 暗めの設定 */
+/* é¨å±åããªã³ãµã¤ã³ã®ããã©ã«ãã¹ã¿ã¤ã« - æãã®è¨­å® */
 .room-card .neon-sign {
     color: rgba(255,255,255,0.4);
     text-shadow: 
@@ -444,14 +444,14 @@ body:has(.chat-screen.active) .user-counter {
     filter: brightness(0.6);
 }
 
-/* モバイルではアニメーションを無効化 */
+/* ã¢ãã¤ã«ã§ã¯ã¢ãã¡ã¼ã·ã§ã³ãç¡å¹å */
 @media (prefers-reduced-motion: reduce), (hover: none) and (pointer: coarse) {
     .neon-sign, .vertical-neon {
         animation: none !important;
     }
 }
 
-/* 電球切れかかりの点滅アニメーション */
+/* é»çåããããã®ç¹æ»ã¢ãã¡ã¼ã·ã§ã³ */
 @keyframes neonFlicker1 {
     0%, 100% { opacity: 1; }
     4% { opacity: 0.9; }
@@ -571,7 +571,7 @@ body:has(.chat-screen.active) .user-counter {
     50% { opacity: 0.8; transform: scale(0.95); }
 }
 
-/* 縦書きネオンサイン */
+/* ç¸¦æ¸ãããªã³ãµã¤ã³ */
 .vertical-neon {
     position: absolute;
     right: 20px;
@@ -584,11 +584,11 @@ body:has(.chat-screen.active) .user-counter {
     padding: 8px 4px;
     border: 2px solid;
     border-radius: 4px;
-    /* 部屋の暗さの影響を受けないように独立した明るさを保つ */
+    /* é¨å±ã®æãã®å½±é¿ãåããªãããã«ç¬ç«ããæãããä¿ã¤ */
     filter: none !important;
     opacity: 1 !important;
     z-index: 100;
-    /* 親要素のフィルターを無効化 */
+    /* è¦ªè¦ç´ ã®ãã£ã«ã¿ã¼ãç¡å¹å */
     transform: translateZ(0);
     will-change: transform;
     isolation: isolate;
@@ -605,9 +605,9 @@ body:has(.chat-screen.active) .user-counter {
     79% { opacity: 1; }
 }
 
-/* 営業中の明るいネオン */
+/* å¶æ¥­ä¸­ã®æããããªã³ */
 .vertical-neon.active {
-    /* 常時点灯 - フル点灯 */
+    /* å¸¸æç¹ç¯ - ãã«ç¹ç¯ */
     filter: brightness(1.2) !important;
     opacity: 1 !important;
     color: #00ff00 !important;
@@ -633,7 +633,7 @@ body:has(.chat-screen.active) .user-counter {
     }
 }
 
-/* 新規開店の状態 - 明るく点灯させて目立たせる */
+/* æ°è¦éåºã®ç¶æ - æããç¹ç¯ããã¦ç®ç«ããã */
 .room-card.new .neon-sign {
     filter: brightness(1.1) !important;
     opacity: 1 !important;
@@ -666,7 +666,7 @@ body:has(.chat-screen.active) .user-counter {
         0 0 20px #ffd700,
         0 0 30px #ffd700,
         0 0 40px #ffd700 !important;
-    /* 新規開店の演出 */
+    /* æ°è¦éåºã®æ¼åº */
     animation: newShopPulse 1.5s infinite;
 }
 
@@ -688,7 +688,7 @@ body:has(.chat-screen.active) .user-counter {
     50% { opacity: 0.8; transform: scale(1.05); }
 }
 
-/* アクティブ状態（営業中）のスタイル - 部屋名も明るく表示 */
+/* ã¢ã¯ãã£ãç¶æï¼å¶æ¥­ä¸­ï¼ã®ã¹ã¿ã¤ã« - é¨å±åãæããè¡¨ç¤º */
 .room-card.active .neon-sign {
     filter: brightness(1.2) !important;
     opacity: 1 !important;
@@ -701,7 +701,7 @@ body:has(.chat-screen.active) .user-counter {
     opacity: 1 !important;
 }
 
-/* 非アクティブ状態のスタイル */
+/* éã¢ã¯ãã£ãç¶æã®ã¹ã¿ã¤ã« */
 .room-card.inactive {
     position: relative;
 }
@@ -723,7 +723,7 @@ body:has(.chat-screen.active) .user-counter {
     opacity: 1;
 }
 
-/* 廃業・逃走・事件の極暗状態 */
+/* å»æ¥­ã»éèµ°ã»äºä»¶ã®æ¥µæç¶æ */
 .room-card.abandoned {
     position: relative;
 }
@@ -744,7 +744,7 @@ body:has(.chat-screen.active) .user-counter {
     opacity: 0.7;
 }
 
-/* ボーダーとボックスシャドウの時間変化 */
+/* ãã¼ãã¼ã¨ããã¯ã¹ã·ã£ãã¦ã®æéå¤å */
 .room-card.inactive:nth-child(4n+1) {
     border-color: rgba(0,255,65,0.3);
     box-shadow: 
@@ -783,7 +783,7 @@ body:has(.chat-screen.active) .user-counter {
         0 0 5px rgba(0,0,0,0.3);
 }
 
-/* 時間ベースの明るさ状態 */
+/* æéãã¼ã¹ã®æããç¶æ */
 .room-card.recent-3h {
     filter: brightness(0.8) saturate(1.1);
     opacity: 0.9;
@@ -825,7 +825,7 @@ body:has(.chat-screen.active) .user-counter {
     opacity: 0.7;
 }
 
-/* 廃業中（グレー） */
+/* å»æ¥­ä¸­ï¼ã°ã¬ã¼ï¼ */
 .vertical-neon.abandoned-gray {
     color: #808080 !important;
     border-color: #808080 !important;
@@ -836,7 +836,7 @@ body:has(.chat-screen.active) .user-counter {
     opacity: 0.8 !important;
 }
 
-/* 逃走中（黄色） */
+/* éèµ°ä¸­ï¼é»è²ï¼ */
 .vertical-neon.abandoned-yellow {
     color: #ffff00 !important;
     border-color: #ffff00 !important;
@@ -854,7 +854,7 @@ body:has(.chat-screen.active) .user-counter {
     50% { opacity: 0.6; }
 }
 
-/* 事件（赤） */
+/* äºä»¶ï¼èµ¤ï¼ */
 .vertical-neon.abandoned-red {
     color: #ff0000 !important;
     border-color: #ff0000 !important;
@@ -879,7 +879,7 @@ body:has(.chat-screen.active) .user-counter {
     }
 }
 
-/* 電球が切れかかっているような点滅エフェクト */
+/* é»çãåãããã£ã¦ãããããªç¹æ»ã¨ãã§ã¯ã */
 @keyframes brokenNeon {
     0%, 100% { 
         opacity: 0.4;
@@ -931,7 +931,7 @@ body:has(.chat-screen.active) .user-counter {
     }
 }
 
-/* 1-3日放置部屋 - 白色 */
+/* 1-3æ¥æ¾ç½®é¨å± - ç½è² */
 .vertical-neon.inactive-white {
     color: #ffffff !important;
     border-color: #ffffff !important;
@@ -971,9 +971,9 @@ body:has(.chat-screen.active) .user-counter {
     82% { opacity: 0.3; }
 }
 
-/* 古い個別スタイルは削除（inactive-whiteに統一） */
+/* å¤ãåå¥ã¹ã¿ã¤ã«ã¯åé¤ï¼inactive-whiteã«çµ±ä¸ï¼ */
 
-/* 時間ベースの明るさ状態 */
+/* æéãã¼ã¹ã®æããç¶æ */
 .vertical-neon.recent-3h {
     color: #ffff00 !important;
     border-color: #ffff00 !important;
@@ -1117,7 +1117,7 @@ body:has(.chat-screen.active) .user-counter {
     }
 }
 
-/* 中国語看板のスタイル */
+/* ä¸­å½èªçæ¿ã®ã¹ã¿ã¤ã« */
 .chinese-sign {
     position: absolute;
     left: 20px;
@@ -1154,7 +1154,7 @@ body:has(.chat-screen.active) .user-counter {
     text-shadow: none;
 }
 
-/* 店を閉めるボタン */
+/* åºãéãããã¿ã³ */
 .close-shop-btn {
     position: absolute;
     top: 10px;
@@ -1177,7 +1177,7 @@ body:has(.chat-screen.active) .user-counter {
     opacity: 1;
 }
 
-/* モバイルデバイスでは常に表示 */
+/* ã¢ãã¤ã«ããã¤ã¹ã§ã¯å¸¸ã«è¡¨ç¤º */
 @media (hover: none) and (pointer: coarse) {
     .close-shop-btn {
         opacity: 0.8;
@@ -1192,7 +1192,7 @@ body:has(.chat-screen.active) .user-counter {
     box-shadow: 0 0 10px rgba(255, 0, 0, 0.3);
 }
 
-/* 店を閉めるモーダル */
+/* åºãéããã¢ã¼ãã« */
 .close-shop-modal {
     max-width: 600px;
     text-align: center;
@@ -1248,7 +1248,7 @@ body:has(.chat-screen.active) .user-counter {
     box-shadow: 0 5px 15px rgba(231, 76, 60, 0.4);
 }
 
-/* モーダル */
+/* ã¢ã¼ãã« */
 .modal-overlay {
     position: fixed;
     top: 0;
@@ -1361,7 +1361,7 @@ body:has(.chat-screen.active) .user-counter {
     color: white;
 }
 
-/* ユーザープロファイルセクション */
+/* ã¦ã¼ã¶ã¼ãã­ãã¡ã¤ã«ã»ã¯ã·ã§ã³ */
 .user-profile-section {
     position: absolute;
     top: 20px;
@@ -1416,7 +1416,7 @@ body:has(.chat-screen.active) .user-counter {
     font-size: 1.2em;
 }
 
-/* チャット画面 */
+/* ãã£ããç»é¢ */
 .chat-screen {
     display: none;
     position: fixed;
@@ -1629,7 +1629,7 @@ body:has(.chat-screen.active) .user-counter {
     transform: none;
 }
 
-/* トースト通知 */
+/* ãã¼ã¹ãéç¥ */
 .toast {
     position: fixed;
     top: 20px;
@@ -1647,7 +1647,7 @@ body:has(.chat-screen.active) .user-counter {
 .toast.warning { background: rgba(247, 147, 30, 0.9); }
 .toast.error { background: var(--error-color); }
 
-/* レスポンシブデザイン */
+/* ã¬ã¹ãã³ã·ããã¶ã¤ã³ */
 @media (max-width: 768px) {
     html { font-size: 16px !important; }
     body { 
@@ -1750,8 +1750,8 @@ body:has(.chat-screen.active) .user-counter {
     }
 }
 
-/* 最終アクセス時刻に基づく照度クラス - カラフルなネオン */
-/* 3時間以内 - 明るく輝くネオン */
+/* æçµã¢ã¯ã»ã¹æå»ã«åºã¥ãç§åº¦ã¯ã©ã¹ - ã«ã©ãã«ãªããªã³ */
+/* 3æéä»¥å - æããè¼ãããªã³ */
 .room-card.lighting-recent-3h:nth-child(4n+1) .neon-sign {
     filter: brightness(1.1) !important;
     opacity: 1 !important;
@@ -1792,7 +1792,7 @@ body:has(.chat-screen.active) .user-counter {
         0 0 40px #00b4ff;
 }
 
-/* 12時間以内 - やや暗めのネオン */
+/* 12æéä»¥å - ããæãã®ããªã³ */
 .room-card.lighting-recent-12h:nth-child(4n+1) .neon-sign {
     filter: brightness(0.9) !important;
     opacity: 0.9 !important;
@@ -1829,7 +1829,7 @@ body:has(.chat-screen.active) .user-counter {
         0 0 16px #0099cc;
 }
 
-/* 24時間以内 - 薄暗いネオン */
+/* 24æéä»¥å - èæãããªã³ */
 .room-card.lighting-recent-24h:nth-child(4n+1) .neon-sign {
     filter: brightness(0.7) !important;
     opacity: 0.8 !important;
@@ -1866,7 +1866,7 @@ body:has(.chat-screen.active) .user-counter {
         0 0 12px #007799;
 }
 
-/* 48時間以内 - かなり暗いネオン */
+/* 48æéä»¥å - ããªãæãããªã³ */
 .room-card.lighting-recent-48h:nth-child(4n+1) .neon-sign {
     filter: brightness(0.5) !important;
     opacity: 0.7 !important;
@@ -1899,7 +1899,7 @@ body:has(.chat-screen.active) .user-counter {
         0 0 4px #005566;
 }
 
-/* 72時間以内 - 非常に暗いネオン */
+/* 72æéä»¥å - éå¸¸ã«æãããªã³ */
 .room-card.lighting-recent-72h:nth-child(4n+1) .neon-sign {
     filter: brightness(0.4) !important;
     opacity: 0.6 !important;
@@ -1932,7 +1932,7 @@ body:has(.chat-screen.active) .user-counter {
         0 0 3px #003344;
 }
 
-/* 72時間以上 - ほぼ消灯だがかすかに色が残る */
+/* 72æéä»¥ä¸ - ã»ã¼æ¶ç¯ã ããããã«è²ãæ®ã */
 .room-card.lighting-off:nth-child(4n+1) .neon-sign {
     filter: brightness(0.3) !important;
     opacity: 0.5 !important;
@@ -1961,7 +1961,7 @@ body:has(.chat-screen.active) .user-counter {
     text-shadow: none;
 }
 
-/* 説明文と人数表示、中国語看板も同様に調整 */
+/* èª¬ææã¨äººæ°è¡¨ç¤ºãä¸­å½èªçæ¿ãåæ§ã«èª¿æ´ */
 .room-card.lighting-recent-3h .room-description,
 .room-card.lighting-recent-3h .room-status,
 .room-card.lighting-recent-3h .chinese-sign {
@@ -2004,13 +2004,13 @@ body:has(.chat-screen.active) .user-counter {
     filter: brightness(0.5);
 }
 
-/* 新規開店（lighting-new）の明るいネオン */
+/* æ°è¦éåºï¼lighting-newï¼ã®æããããªã³ */
 .room-card.lighting-new .neon-sign {
     filter: brightness(1.2) !important;
     opacity: 1 !important;
 }
 
-/* 営業中（lighting-bright）の明るいネオン - 最も鮮やか */
+/* å¶æ¥­ä¸­ï¼lighting-brightï¼ã®æããããªã³ - æãé®®ãã */
 .room-card.lighting-bright:nth-child(4n+1) .neon-sign {
     filter: brightness(1.2) !important;
     opacity: 1 !important;
@@ -2051,7 +2051,7 @@ body:has(.chat-screen.active) .user-counter {
         0 0 60px #00b4ff;
 }
 
-/* 中国語看板のカラフルネオン（0-3時間） */
+/* ä¸­å½èªçæ¿ã®ã«ã©ãã«ããªã³ï¼0-3æéï¼ */
 .room-card.lighting-recent-3h:nth-child(4n+1) .chinese-sign {
     color: #00ff41 !important;
     text-shadow: 0 0 5px #00ff41;
@@ -2072,10 +2072,10 @@ body:has(.chat-screen.active) .user-counter {
     text-shadow: 0 0 5px #00b4ff;
 }
 
-/* 時間経過による照度コントロール - カラフルネオン */
-/* 0-3時間（明るい - カラフルネオン） */
+/* æéçµéã«ããç§åº¦ã³ã³ãã­ã¼ã« - ã«ã©ãã«ããªã³ */
+/* 0-3æéï¼æãã - ã«ã©ãã«ããªã³ï¼ */
 .room-card.lighting-recent-3h:nth-child(4n+1) .neon-sign {
-    color: #00ff41 !important; /* 明るい緑 */
+    color: #00ff41 !important; /* æããç· */
     opacity: 1;
     filter: brightness(1.1);
     text-shadow: 
@@ -2085,7 +2085,7 @@ body:has(.chat-screen.active) .user-counter {
 }
 
 .room-card.lighting-recent-3h:nth-child(4n+2) .neon-sign {
-    color: #ff006e !important; /* ピンク */
+    color: #ff006e !important; /* ãã³ã¯ */
     opacity: 1;
     filter: brightness(1.1);
     text-shadow: 
@@ -2095,7 +2095,7 @@ body:has(.chat-screen.active) .user-counter {
 }
 
 .room-card.lighting-recent-3h:nth-child(4n+3) .neon-sign {
-    color: #ffaa00 !important; /* オレンジ */
+    color: #ffaa00 !important; /* ãªã¬ã³ã¸ */
     opacity: 1;
     filter: brightness(1.1);
     text-shadow: 
@@ -2105,7 +2105,7 @@ body:has(.chat-screen.active) .user-counter {
 }
 
 .room-card.lighting-recent-3h:nth-child(4n) .neon-sign {
-    color: #00b4ff !important; /* 水色 */
+    color: #00b4ff !important; /* æ°´è² */
     opacity: 1;
     filter: brightness(1.1);
     text-shadow: 
@@ -2114,7 +2114,7 @@ body:has(.chat-screen.active) .user-counter {
         0 0 30px #00b4ff;
 }
 
-/* 3-12時間（やや明るい - カラフルネオン） */
+/* 3-12æéï¼ããæãã - ã«ã©ãã«ããªã³ï¼ */
 .room-card.lighting-recent-12h:nth-child(4n+1) .neon-sign {
     color: #00ff41 !important;
     opacity: 0.9;
@@ -2151,7 +2151,7 @@ body:has(.chat-screen.active) .user-counter {
         0 0 16px #00b4ff;
 }
 
-/* 12-24時間（普通 - カラフルネオン） */
+/* 12-24æéï¼æ®é - ã«ã©ãã«ããªã³ï¼ */
 .room-card.lighting-recent-24h:nth-child(4n+1) .neon-sign {
     color: #00cc33 !important;
     opacity: 0.8;
@@ -2188,7 +2188,7 @@ body:has(.chat-screen.active) .user-counter {
         0 0 10px #0099cc;
 }
 
-/* 24-48時間（やや暗い - カラフルネオン） */
+/* 24-48æéï¼ããæã - ã«ã©ãã«ããªã³ï¼ */
 .room-card.lighting-recent-48h:nth-child(4n+1) .neon-sign {
     color: #009922 !important;
     opacity: 0.7;
@@ -2221,7 +2221,7 @@ body:has(.chat-screen.active) .user-counter {
         0 0 4px #0077aa;
 }
 
-/* 48-72時間（暗い - カラフルネオン） */
+/* 48-72æéï¼æã - ã«ã©ãã«ããªã³ï¼ */
 .room-card.lighting-recent-72h:nth-child(4n+1) .neon-sign {
     color: #006611 !important;
     opacity: 0.6;
@@ -2254,7 +2254,7 @@ body:has(.chat-screen.active) .user-counter {
         0 0 3px #005588;
 }
 
-/* 72時間以上（ほぼ消灯 - カラフルネオン） */
+/* 72æéä»¥ä¸ï¼ã»ã¼æ¶ç¯ - ã«ã©ãã«ããªã³ï¼ */
 .room-card.lighting-off:nth-child(4n+1) .neon-sign {
     color: #003300 !important;
     opacity: 0.5;
@@ -2282,3 +2282,13 @@ body:has(.chat-screen.active) .user-counter {
     filter: brightness(0.3);
     text-shadow: none;
 }
+
+.neon-default {
+    color: #5e30eb !important;
+    opacity: 0.85;
+    filter: brightness(100%);
+    text-shadow: 0 0 24px #5e30eb, 0 0 47px #5e30eb, 0 0 94px #5e30eb;
+    border-color: #5e30eb !important;
+    animation: flicker 1.5s infinite;
+}
+
