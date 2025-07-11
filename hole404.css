@@ -1750,55 +1750,214 @@ body:has(.chat-screen.active) .user-counter {
     }
 }
 
-/* 最終アクセス時刻に基づく照度クラス */
-.room-card.lighting-recent-3h .neon-sign {
+/* 最終アクセス時刻に基づく照度クラス - カラフルなネオン */
+/* 3時間以内 - 明るく輝くネオン */
+.room-card.lighting-recent-3h:nth-child(4n+1) .neon-sign {
     filter: brightness(1.1) !important;
     opacity: 1 !important;
-    color: #ffffff;
+    color: #00ff41;
     text-shadow: 
-        0 0 10px rgba(255,255,255,0.8),
-        0 0 20px rgba(255,255,255,0.6),
-        0 0 30px rgba(255,255,255,0.4);
+        0 0 10px #00ff41,
+        0 0 20px #00ff41,
+        0 0 40px #00ff41;
 }
 
-.room-card.lighting-recent-12h .neon-sign {
+.room-card.lighting-recent-3h:nth-child(4n+2) .neon-sign {
+    filter: brightness(1.1) !important;
+    opacity: 1 !important;
+    color: #ff006e;
+    text-shadow: 
+        0 0 10px #ff006e,
+        0 0 20px #ff006e,
+        0 0 40px #ff006e;
+}
+
+.room-card.lighting-recent-3h:nth-child(4n+3) .neon-sign {
+    filter: brightness(1.1) !important;
+    opacity: 1 !important;
+    color: #ffaa00;
+    text-shadow: 
+        0 0 10px #ffaa00,
+        0 0 20px #ffaa00,
+        0 0 40px #ffaa00;
+}
+
+.room-card.lighting-recent-3h:nth-child(4n) .neon-sign {
+    filter: brightness(1.1) !important;
+    opacity: 1 !important;
+    color: #00b4ff;
+    text-shadow: 
+        0 0 10px #00b4ff,
+        0 0 20px #00b4ff,
+        0 0 40px #00b4ff;
+}
+
+/* 12時間以内 - やや暗めのネオン */
+.room-card.lighting-recent-12h:nth-child(4n+1) .neon-sign {
     filter: brightness(0.9) !important;
     opacity: 0.9 !important;
-    color: #e0e0e0;
+    color: #00cc33;
     text-shadow: 
-        0 0 8px rgba(255,255,255,0.6),
-        0 0 16px rgba(255,255,255,0.4);
+        0 0 8px #00cc33,
+        0 0 16px #00cc33;
 }
 
-.room-card.lighting-recent-24h .neon-sign {
+.room-card.lighting-recent-12h:nth-child(4n+2) .neon-sign {
+    filter: brightness(0.9) !important;
+    opacity: 0.9 !important;
+    color: #cc0055;
+    text-shadow: 
+        0 0 8px #cc0055,
+        0 0 16px #cc0055;
+}
+
+.room-card.lighting-recent-12h:nth-child(4n+3) .neon-sign {
+    filter: brightness(0.9) !important;
+    opacity: 0.9 !important;
+    color: #cc8800;
+    text-shadow: 
+        0 0 8px #cc8800,
+        0 0 16px #cc8800;
+}
+
+.room-card.lighting-recent-12h:nth-child(4n) .neon-sign {
+    filter: brightness(0.9) !important;
+    opacity: 0.9 !important;
+    color: #0099cc;
+    text-shadow: 
+        0 0 8px #0099cc,
+        0 0 16px #0099cc;
+}
+
+/* 24時間以内 - 薄暗いネオン */
+.room-card.lighting-recent-24h:nth-child(4n+1) .neon-sign {
     filter: brightness(0.7) !important;
     opacity: 0.8 !important;
-    color: #c0c0c0;
+    color: #009922;
     text-shadow: 
-        0 0 6px rgba(255,255,255,0.4),
-        0 0 12px rgba(255,255,255,0.2);
+        0 0 6px #009922,
+        0 0 12px #009922;
 }
 
-.room-card.lighting-recent-48h .neon-sign {
+.room-card.lighting-recent-24h:nth-child(4n+2) .neon-sign {
+    filter: brightness(0.7) !important;
+    opacity: 0.8 !important;
+    color: #990044;
+    text-shadow: 
+        0 0 6px #990044,
+        0 0 12px #990044;
+}
+
+.room-card.lighting-recent-24h:nth-child(4n+3) .neon-sign {
+    filter: brightness(0.7) !important;
+    opacity: 0.8 !important;
+    color: #996600;
+    text-shadow: 
+        0 0 6px #996600,
+        0 0 12px #996600;
+}
+
+.room-card.lighting-recent-24h:nth-child(4n) .neon-sign {
+    filter: brightness(0.7) !important;
+    opacity: 0.8 !important;
+    color: #007799;
+    text-shadow: 
+        0 0 6px #007799,
+        0 0 12px #007799;
+}
+
+/* 48時間以内 - かなり暗いネオン */
+.room-card.lighting-recent-48h:nth-child(4n+1) .neon-sign {
     filter: brightness(0.5) !important;
     opacity: 0.7 !important;
-    color: #a0a0a0;
+    color: #006611;
     text-shadow: 
-        0 0 4px rgba(255,255,255,0.3);
+        0 0 4px #006611;
 }
 
-.room-card.lighting-recent-72h .neon-sign {
+.room-card.lighting-recent-48h:nth-child(4n+2) .neon-sign {
+    filter: brightness(0.5) !important;
+    opacity: 0.7 !important;
+    color: #660033;
+    text-shadow: 
+        0 0 4px #660033;
+}
+
+.room-card.lighting-recent-48h:nth-child(4n+3) .neon-sign {
+    filter: brightness(0.5) !important;
+    opacity: 0.7 !important;
+    color: #664400;
+    text-shadow: 
+        0 0 4px #664400;
+}
+
+.room-card.lighting-recent-48h:nth-child(4n) .neon-sign {
+    filter: brightness(0.5) !important;
+    opacity: 0.7 !important;
+    color: #005566;
+    text-shadow: 
+        0 0 4px #005566;
+}
+
+/* 72時間以内 - 非常に暗いネオン */
+.room-card.lighting-recent-72h:nth-child(4n+1) .neon-sign {
     filter: brightness(0.4) !important;
     opacity: 0.6 !important;
-    color: #808080;
+    color: #004400;
     text-shadow: 
-        0 0 3px rgba(255,255,255,0.2);
+        0 0 3px #004400;
 }
 
-.room-card.lighting-off .neon-sign {
+.room-card.lighting-recent-72h:nth-child(4n+2) .neon-sign {
+    filter: brightness(0.4) !important;
+    opacity: 0.6 !important;
+    color: #440022;
+    text-shadow: 
+        0 0 3px #440022;
+}
+
+.room-card.lighting-recent-72h:nth-child(4n+3) .neon-sign {
+    filter: brightness(0.4) !important;
+    opacity: 0.6 !important;
+    color: #442200;
+    text-shadow: 
+        0 0 3px #442200;
+}
+
+.room-card.lighting-recent-72h:nth-child(4n) .neon-sign {
+    filter: brightness(0.4) !important;
+    opacity: 0.6 !important;
+    color: #003344;
+    text-shadow: 
+        0 0 3px #003344;
+}
+
+/* 72時間以上 - ほぼ消灯だがかすかに色が残る */
+.room-card.lighting-off:nth-child(4n+1) .neon-sign {
     filter: brightness(0.3) !important;
     opacity: 0.5 !important;
-    color: #606060;
+    color: #003300;
+    text-shadow: none;
+}
+
+.room-card.lighting-off:nth-child(4n+2) .neon-sign {
+    filter: brightness(0.3) !important;
+    opacity: 0.5 !important;
+    color: #330011;
+    text-shadow: none;
+}
+
+.room-card.lighting-off:nth-child(4n+3) .neon-sign {
+    filter: brightness(0.3) !important;
+    opacity: 0.5 !important;
+    color: #331100;
+    text-shadow: none;
+}
+
+.room-card.lighting-off:nth-child(4n) .neon-sign {
+    filter: brightness(0.3) !important;
+    opacity: 0.5 !important;
+    color: #002233;
     text-shadow: none;
 }
 
@@ -1817,4 +1976,309 @@ body:has(.chat-screen.active) .user-counter {
     filter: brightness(0.9);
 }
 
-.room-card.lighting-recent-24h 
+.room-card.lighting-recent-24h .room-description,
+.room-card.lighting-recent-24h .room-status,
+.room-card.lighting-recent-24h .chinese-sign {
+    opacity: 0.7;
+    filter: brightness(0.8);
+}
+
+.room-card.lighting-recent-48h .room-description,
+.room-card.lighting-recent-48h .room-status,
+.room-card.lighting-recent-48h .chinese-sign {
+    opacity: 0.6;
+    filter: brightness(0.7);
+}
+
+.room-card.lighting-recent-72h .room-description,
+.room-card.lighting-recent-72h .room-status,
+.room-card.lighting-recent-72h .chinese-sign {
+    opacity: 0.5;
+    filter: brightness(0.6);
+}
+
+.room-card.lighting-off .room-description,
+.room-card.lighting-off .room-status,
+.room-card.lighting-off .chinese-sign {
+    opacity: 0.4;
+    filter: brightness(0.5);
+}
+
+/* 新規開店（lighting-new）の明るいネオン */
+.room-card.lighting-new .neon-sign {
+    filter: brightness(1.2) !important;
+    opacity: 1 !important;
+}
+
+/* 営業中（lighting-bright）の明るいネオン - 最も鮮やか */
+.room-card.lighting-bright:nth-child(4n+1) .neon-sign {
+    filter: brightness(1.2) !important;
+    opacity: 1 !important;
+    color: #00ff41;
+    text-shadow: 
+        0 0 15px #00ff41,
+        0 0 30px #00ff41,
+        0 0 60px #00ff41;
+}
+
+.room-card.lighting-bright:nth-child(4n+2) .neon-sign {
+    filter: brightness(1.2) !important;
+    opacity: 1 !important;
+    color: #ff006e;
+    text-shadow: 
+        0 0 15px #ff006e,
+        0 0 30px #ff006e,
+        0 0 60px #ff006e;
+}
+
+.room-card.lighting-bright:nth-child(4n+3) .neon-sign {
+    filter: brightness(1.2) !important;
+    opacity: 1 !important;
+    color: #ffaa00;
+    text-shadow: 
+        0 0 15px #ffaa00,
+        0 0 30px #ffaa00,
+        0 0 60px #ffaa00;
+}
+
+.room-card.lighting-bright:nth-child(4n) .neon-sign {
+    filter: brightness(1.2) !important;
+    opacity: 1 !important;
+    color: #00b4ff;
+    text-shadow: 
+        0 0 15px #00b4ff,
+        0 0 30px #00b4ff,
+        0 0 60px #00b4ff;
+}
+
+/* 中国語看板のカラフルネオン（0-3時間） */
+.room-card.lighting-recent-3h:nth-child(4n+1) .chinese-sign {
+    color: #00ff41 !important;
+    text-shadow: 0 0 5px #00ff41;
+}
+
+.room-card.lighting-recent-3h:nth-child(4n+2) .chinese-sign {
+    color: #ff006e !important;
+    text-shadow: 0 0 5px #ff006e;
+}
+
+.room-card.lighting-recent-3h:nth-child(4n+3) .chinese-sign {
+    color: #ffaa00 !important;
+    text-shadow: 0 0 5px #ffaa00;
+}
+
+.room-card.lighting-recent-3h:nth-child(4n) .chinese-sign {
+    color: #00b4ff !important;
+    text-shadow: 0 0 5px #00b4ff;
+}
+
+/* 時間経過による照度コントロール - カラフルネオン */
+/* 0-3時間（明るい - カラフルネオン） */
+.room-card.lighting-recent-3h:nth-child(4n+1) .neon-sign {
+    color: #00ff41 !important; /* 明るい緑 */
+    opacity: 1;
+    filter: brightness(1.1);
+    text-shadow: 
+        0 0 10px #00ff41,
+        0 0 20px #00ff41,
+        0 0 30px #00ff41;
+}
+
+.room-card.lighting-recent-3h:nth-child(4n+2) .neon-sign {
+    color: #ff006e !important; /* ピンク */
+    opacity: 1;
+    filter: brightness(1.1);
+    text-shadow: 
+        0 0 10px #ff006e,
+        0 0 20px #ff006e,
+        0 0 30px #ff006e;
+}
+
+.room-card.lighting-recent-3h:nth-child(4n+3) .neon-sign {
+    color: #ffaa00 !important; /* オレンジ */
+    opacity: 1;
+    filter: brightness(1.1);
+    text-shadow: 
+        0 0 10px #ffaa00,
+        0 0 20px #ffaa00,
+        0 0 30px #ffaa00;
+}
+
+.room-card.lighting-recent-3h:nth-child(4n) .neon-sign {
+    color: #00b4ff !important; /* 水色 */
+    opacity: 1;
+    filter: brightness(1.1);
+    text-shadow: 
+        0 0 10px #00b4ff,
+        0 0 20px #00b4ff,
+        0 0 30px #00b4ff;
+}
+
+/* 3-12時間（やや明るい - カラフルネオン） */
+.room-card.lighting-recent-12h:nth-child(4n+1) .neon-sign {
+    color: #00ff41 !important;
+    opacity: 0.9;
+    filter: brightness(0.9);
+    text-shadow: 
+        0 0 8px #00ff41,
+        0 0 16px #00ff41;
+}
+
+.room-card.lighting-recent-12h:nth-child(4n+2) .neon-sign {
+    color: #ff006e !important;
+    opacity: 0.9;
+    filter: brightness(0.9);
+    text-shadow: 
+        0 0 8px #ff006e,
+        0 0 16px #ff006e;
+}
+
+.room-card.lighting-recent-12h:nth-child(4n+3) .neon-sign {
+    color: #ffaa00 !important;
+    opacity: 0.9;
+    filter: brightness(0.9);
+    text-shadow: 
+        0 0 8px #ffaa00,
+        0 0 16px #ffaa00;
+}
+
+.room-card.lighting-recent-12h:nth-child(4n) .neon-sign {
+    color: #00b4ff !important;
+    opacity: 0.9;
+    filter: brightness(0.9);
+    text-shadow: 
+        0 0 8px #00b4ff,
+        0 0 16px #00b4ff;
+}
+
+/* 12-24時間（普通 - カラフルネオン） */
+.room-card.lighting-recent-24h:nth-child(4n+1) .neon-sign {
+    color: #00cc33 !important;
+    opacity: 0.8;
+    filter: brightness(0.7);
+    text-shadow: 
+        0 0 5px #00cc33,
+        0 0 10px #00cc33;
+}
+
+.room-card.lighting-recent-24h:nth-child(4n+2) .neon-sign {
+    color: #ff0055 !important;
+    opacity: 0.8;
+    filter: brightness(0.7);
+    text-shadow: 
+        0 0 5px #ff0055,
+        0 0 10px #ff0055;
+}
+
+.room-card.lighting-recent-24h:nth-child(4n+3) .neon-sign {
+    color: #ff8800 !important;
+    opacity: 0.8;
+    filter: brightness(0.7);
+    text-shadow: 
+        0 0 5px #ff8800,
+        0 0 10px #ff8800;
+}
+
+.room-card.lighting-recent-24h:nth-child(4n) .neon-sign {
+    color: #0099cc !important;
+    opacity: 0.8;
+    filter: brightness(0.7);
+    text-shadow: 
+        0 0 5px #0099cc,
+        0 0 10px #0099cc;
+}
+
+/* 24-48時間（やや暗い - カラフルネオン） */
+.room-card.lighting-recent-48h:nth-child(4n+1) .neon-sign {
+    color: #009922 !important;
+    opacity: 0.7;
+    filter: brightness(0.5);
+    text-shadow: 
+        0 0 4px #009922;
+}
+
+.room-card.lighting-recent-48h:nth-child(4n+2) .neon-sign {
+    color: #cc0044 !important;
+    opacity: 0.7;
+    filter: brightness(0.5);
+    text-shadow: 
+        0 0 4px #cc0044;
+}
+
+.room-card.lighting-recent-48h:nth-child(4n+3) .neon-sign {
+    color: #cc6600 !important;
+    opacity: 0.7;
+    filter: brightness(0.5);
+    text-shadow: 
+        0 0 4px #cc6600;
+}
+
+.room-card.lighting-recent-48h:nth-child(4n) .neon-sign {
+    color: #0077aa !important;
+    opacity: 0.7;
+    filter: brightness(0.5);
+    text-shadow: 
+        0 0 4px #0077aa;
+}
+
+/* 48-72時間（暗い - カラフルネオン） */
+.room-card.lighting-recent-72h:nth-child(4n+1) .neon-sign {
+    color: #006611 !important;
+    opacity: 0.6;
+    filter: brightness(0.4);
+    text-shadow: 
+        0 0 3px #006611;
+}
+
+.room-card.lighting-recent-72h:nth-child(4n+2) .neon-sign {
+    color: #990033 !important;
+    opacity: 0.6;
+    filter: brightness(0.4);
+    text-shadow: 
+        0 0 3px #990033;
+}
+
+.room-card.lighting-recent-72h:nth-child(4n+3) .neon-sign {
+    color: #994400 !important;
+    opacity: 0.6;
+    filter: brightness(0.4);
+    text-shadow: 
+        0 0 3px #994400;
+}
+
+.room-card.lighting-recent-72h:nth-child(4n) .neon-sign {
+    color: #005588 !important;
+    opacity: 0.6;
+    filter: brightness(0.4);
+    text-shadow: 
+        0 0 3px #005588;
+}
+
+/* 72時間以上（ほぼ消灯 - カラフルネオン） */
+.room-card.lighting-off:nth-child(4n+1) .neon-sign {
+    color: #003300 !important;
+    opacity: 0.5;
+    filter: brightness(0.3);
+    text-shadow: none;
+}
+
+.room-card.lighting-off:nth-child(4n+2) .neon-sign {
+    color: #660022 !important;
+    opacity: 0.5;
+    filter: brightness(0.3);
+    text-shadow: none;
+}
+
+.room-card.lighting-off:nth-child(4n+3) .neon-sign {
+    color: #663300 !important;
+    opacity: 0.5;
+    filter: brightness(0.3);
+    text-shadow: none;
+}
+
+.room-card.lighting-off:nth-child(4n) .neon-sign {
+    color: #003355 !important;
+    opacity: 0.5;
+    filter: brightness(0.3);
+    text-shadow: none;
+}
