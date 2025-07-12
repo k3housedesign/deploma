@@ -333,6 +333,13 @@ function enterTheHole() {
     // 穴が全画面になる前にコンテンツを準備
     setTimeout(() => {
         UI.mainContent.classList.add('active');
+        
+        // ルーム選択画面を確実に表示
+        UI.roomSelection.style.display = 'block';
+        UI.roomSelection.style.visibility = 'visible';
+        UI.chatScreen.classList.remove('active');
+        UI.chatScreen.style.display = 'none';
+        
         loadRooms();
         updateUserDisplay();
         
@@ -886,6 +893,19 @@ function handleProfileSubmit(e) {
     localStorage.setItem('holeUserProfile', JSON.stringify(appState.currentUser));
     closeProfileModal();
     updateUserDisplay();
+    
+    // プロファイル設定後、確実にルームを表示
+    if (!appState.roomsLoaded) {
+        console.log('Loading rooms after profile setup...');
+        loadRooms();
+    }
+    
+    // メインコンテンツとルーム選択画面を確実に表示
+    UI.mainContent.classList.add('visible');
+    UI.roomSelection.style.display = 'block';
+    UI.roomSelection.style.visibility = 'visible';
+    UI.chatScreen.classList.remove('active');
+    UI.chatScreen.style.display = 'none';
 
     const pendingRoomJson = localStorage.getItem('pendingRoom');
     if (pendingRoomJson) {
