@@ -459,33 +459,90 @@ function handleLogout() {
 }
 
 async function loadRooms() {
-    console.log('Loading rooms...');
-    // ルーム読み込み完了フラグを設定
+    console.log('Loading rooms with improved connection handling...');
     appState.roomsLoaded = false;
     
+    // Firebase接続待機（最大5秒）
+    let connectionAttempts = 0;
+    const maxAttempts = 10;
+    
+    while (!appState.firebaseReady && connectionAttempts < maxAttempts) {
+        console.log(`Waiting for Firebase connection... (${connectionAttempts + 1}/${maxAttempts})`);
+        await new Promise(resolve => setTimeout(resolve, 500));
+        connectionAttempts++;
+    }
+    
     if (!appState.firebaseReady) {
-        console.log('Firebase not ready, loading demo rooms');
+        console.log('Firebase connection timeout, loading demo rooms');
         loadDemoRooms();
         appState.roomsLoaded = true;
         return;
     }
     
     // 既存のリスナーを解除
-    if (appState.listeners.room) appState.listeners.room();
+    if (appState.listeners.room) {
+        appState.listeners.room();
+        appState.listeners.room = null;
+    }
 
+    try {
+        // まず一度だけデータを取得してみる
+        const snapshot = await db.collection('rooms').orderBy('createdAt', 'desc').get();
+        
+        if (!snapshot.empty) {
+            console.log(`Found ${snapshot.size} rooms in database`);
+            appState.rooms = snapshot.docs.map(doc => ({
+                id: doc.id,
+                ...doc.data(),
+                activeUsers: 0
+            }));
+            renderRooms();
+            updateActiveUserCounts();
+            appState.roomsLoaded = true;
+            
+            // 成功したらリアルタイムリスナーを設定
+            setupRoomListener();
+        } else {
+            console.log('No rooms found in database');
+            // 空の場合でもリスナーを設定
+            setupRoomListener();
+        }
+    } catch (error) {
+        console.error('Error loading rooms:', error);
+        console.error('Error details:', error.code, error.message);
+        
+        // エラーの種類に応じた処理
+        if (error.code === 'permission-denied') {
+            showToast('データベースへのアクセス権限がありません', 'error');
+        } else if (error.code === 'unavailable') {
+            showToast('ネットワーク接続を確認してください', 'error');
+        }
+        
+        loadDemoRooms();
+        appState.roomsLoaded = true;
+    }
+}
+
+// リアルタイムリスナーの設定を分離
+function setupRoomListener() {
     const roomsQuery = db.collection('rooms').orderBy('createdAt', 'desc');
+    
     appState.listeners.room = roomsQuery.onSnapshot((snapshot) => {
+        console.log('Room data updated:', snapshot.size, 'rooms');
         appState.rooms = snapshot.docs.map(doc => ({
             id: doc.id,
             ...doc.data(),
-            activeUsers: 0 // 後で更新
+            activeUsers: 0
         }));
         renderRooms();
         updateActiveUserCounts();
         appState.roomsLoaded = true;
     }, (error) => {
-        console.error('ルームの購読エラー:', error);
-        loadDemoRooms();
+        console.error('Room subscription error:', error);
+        // リスナーのエラーは通知のみ（データは既に取得済みなので）
+        if (appState.rooms.length === 0) {
+            loadDemoRooms();
+        }
     });
 }
 
