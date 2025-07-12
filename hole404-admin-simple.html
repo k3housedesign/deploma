@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HOLE管理者ページ - ネオンシステム設定（簡単版）</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;700&display=swap">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Noto Sans JP', sans-serif;
+            background: #0a0a0a;
+            color: #ffffff;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        h1 {
+            color: #ff6b35;
+            text-align: center;
+            margin-bottom: 30px;
+            text-shadow: 0 0 20px #ff6b35;
+        }
+        
+        .notice {
+            background: #1a1a1a;
+            border: 1px solid #ff6b35;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        .notice h2 {
+            color: #00ff41;
+            margin-bottom: 10px;
+        }
+        
+        /* プレビューエリア */
+        .preview-area {
+            background: #1a1a1a;
+            border: 1px solid #333;
+            border-radius: 8px;
+            padding: 30px;
+            margin-bottom: 30px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            justify-content: center;
+        }
+        
+        /* ネオンスタイルのインポート */
+        .vertical-neon {
+            writing-mode: vertical-rl;
+            font-size: 14px;
+            padding: 8px 4px;
+            border: 1px solid;
+            border-radius: 2px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .vertical-neon:hover {
+            transform: scale(1.05);
+        }
+        
+        .vertical-neon.inactive-white {
+            color: #ffffff;
+            border-color: #ffffff;
+            text-shadow: 0 0 5px #ffffff, 0 0 10px #ffffff;
+        }
+        
+        .room-card-preview {
+            background: rgba(40, 40, 40, 0.8);
+            border: 1px solid #666;
+            border-radius: 8px;
+            padding: 20px;
+            width: 200px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .room-card-preview:hover {
+            border-color: #ff6b35;
+            transform: translateY(-2px);
+        }
+        
+        .room-card-preview.selected {
+            border-color: #00ff41;
+            box-shadow: 0 0 20px rgba(0, 255, 65, 0.5);
+        }
+        
+        /* 編集パネル */
+        .edit-panel {
+            background: #1a1a1a;
+            border: 1px solid #444;
+            border-radius: 8px;
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+        
+        .edit-panel h3 {
+            color: #ff6b35;
+            margin-bottom: 20px;
+        }
+        
+        .control-group {
+            margin-bottom: 20px;
+        }
+        
+        .control-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #f7931e;
+        }
+        
+        .color-input-group {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        input[type="color"] {
+            width: 60px;
+            height: 40px;
+            border: 2px solid #666;
+            border-radius: 4px;
+            cursor: pointer;
+            background: #222;
+        }
+        
+        input[type="range"] {
+            flex: 1;
+            height: 8px;
+            background: #333;
+            outline: none;
+            border-radius: 4px;
+        }
+        
+        .range-value {
+            min-width: 60px;
+            text-align: center;
+            color: #00ff41;
+            font-weight: bold;
+        }
+        
+        /* ボタン */
+        .button-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+        }
+        
+        .btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-transform: uppercase;
+        }
+        
+        .btn-apply {
+            background: #ff6b35;
+            color: #000;
+            flex: 1;
+        }
+        
+        .btn-apply:hover {
+            background: #ff8555;
+            transform: scale(1.02);
+        }
+        
+        .btn-reset {
+            background: #666;
+            color: #fff;
+        }
+        
+        .btn-reset:hover {
+            background: #888;
+        }
+        
+        .btn-clear {
+            background: #d32f2f;
+            color: #fff;
+        }
+        
+        .btn-clear:hover {
+            background: #f44336;
+        }
+        
+        /* 通知 */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #4CAF50;
+            color: white;
+            padding: 15px 30px;
+            border-radius: 4px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+            opacity: 0;
+            transform: translateY(-20px);
+            transition: all 0.3s;
+            z-index: 1000;
+        }
+        
+        .notification.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        /* 状態別のプリセット */
+        .preset-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .preset-btn {
+            padding: 8px 16px;
+            border: 1px solid #666;
+            background: transparent;
+            color: #fff;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 14px;
+        }
+        
+        .preset-btn:hover {
+            border-color: #ff6b35;
+            color: #ff6b35;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🌃 HOLE ネオンシステム管理画面（簡単版）</h1>
+        
+        <div class="notice">
+            <h2>✨ トークン不要！即座に反映！</h2>
+            <p>変更は自動的にlocalStorageに保存され、5秒以内に本番サイトに反映されます。</p>
+            <p>GitHubトークンは不要になりました！</p>
+        </div>
+        
+        <!-- プレビューエリア -->
+        <div class="preview-area">
+            <div class="room-card-preview" data-class="vertical-neon inactive-white" onclick="selectElement(this)">
+                <div class="vertical-neon inactive-white">準備中</div>
+                <p style="margin-top: 15px; font-size: 12px; color: #999;">クリックして編集</p>
+            </div>
+            
+            <div class="room-card-preview" data-class="vertical-neon active" onclick="selectElement(this)">
+                <div class="vertical-neon active" style="color: #00ff41; border-color: #00ff41; text-shadow: 0 0 10px #00ff41;">営業中</div>
+                <p style="margin-top: 15px; font-size: 12px; color: #999;">クリックして編集</p>
+            </div>
+            
+            <div class="room-card-preview" data-class="vertical-neon new" onclick="selectElement(this)">
+                <div class="vertical-neon new" style="color: #ffaa00; border-color: #ffaa00; text-shadow: 0 0 10px #ffaa00;">新規開店</div>
+                <p style="margin-top: 15px; font-size: 12px; color: #999;">クリックして編集</p>
+            </div>
+            
+            <div class="room-card-preview" data-class="vertical-neon abandoned-gray" onclick="selectElement(this)">
+                <div class="vertical-neon abandoned-gray" style="color: #666; border-color: #666; text-shadow: 0 0 5px #666;">廃業中</div>
+                <p style="margin-top: 15px; font-size: 12px; color: #999;">クリックして編集</p>
+            </div>
+        </div>
+        
+        <!-- 編集パネル -->
+        <div class="edit-panel" id="editPanel" style="display: none;">
+            <h3>ネオンサインを編集中: <span id="currentEditingClass">-</span></h3>
+            
+            <div class="control-group">
+                <label>色</label>
+                <div class="color-input-group">
+                    <input type="color" id="colorPicker" value="#ffffff">
+                    <input type="text" id="colorText" value="#ffffff" style="background: #222; color: #fff; border: 1px solid #666; padding: 8px; border-radius: 4px;">
+                </div>
+            </div>
+            
+            <div class="control-group">
+                <label>明るさ: <span class="range-value" id="brightnessValue">100%</span></label>
+                <div class="color-input-group">
+                    <input type="range" id="brightnessSlider" min="0" max="200" value="100">
+                </div>
+            </div>
+            
+            <div class="control-group">
+                <label>透明度: <span class="range-value" id="opacityValue">100%</span></label>
+                <div class="color-input-group">
+                    <input type="range" id="opacitySlider" min="0" max="100" value="100">
+                </div>
+            </div>
+            
+            <div class="control-group">
+                <label>光の強さ: <span class="range-value" id="glowValue">10px</span></label>
+                <div class="color-input-group">
+                    <input type="range" id="glowSlider" min="0" max="50" value="10">
+                </div>
+            </div>
+            
+            <div class="preset-buttons">
+                <button class="preset-btn" onclick="applyPreset('#00ff41', 110, 100, 15)">鮮やかな緑</button>
+                <button class="preset-btn" onclick="applyPreset('#ff006e', 100, 100, 12)">ピンク</button>
+                <button class="preset-btn" onclick="applyPreset('#ffaa00', 120, 100, 18)">オレンジ</button>
+                <button class="preset-btn" onclick="applyPreset('#00b4ff', 100, 100, 15)">水色</button>
+                <button class="preset-btn" onclick="applyPreset('#ffffff', 80, 90, 8)">薄暗い白</button>
+                <button class="preset-btn" onclick="applyPreset('#666666', 60, 70, 5)">非常に暗い</button>
+            </div>
+            
+            <div class="button-group">
+                <button class="btn btn-apply" onclick="applyChanges()">💾 変更を保存して適用</button>
+                <button class="btn btn-reset" onclick="resetCurrent()">元に戻す</button>
+                <button class="btn btn-clear" onclick="clearAllStyles()">全て削除</button>
+            </div>
+        </div>
+        
+        <!-- 現在の保存済みスタイル -->
+        <div class="edit-panel">
+            <h3>💾 保存済みのカスタムスタイル</h3>
+            <pre id="savedStyles" style="background: #222; padding: 15px; border-radius: 4px; overflow-x: auto; color: #00ff41;">まだ保存されていません</pre>
+        </div>
+    </div>
+    
+    <!-- 通知 -->
+    <div class="notification" id="notification"></div>
+    
+    <script>
+        let currentElement = null;
+        let allStyles = {};
+        
+        // 初期化
+        window.onload = function() {
+            loadSavedStyles();
+            updateSavedStylesDisplay();
+        };
+        
+        // 要素を選択
+        function selectElement(element) {
+            // 以前の選択を解除
+            document.querySelectorAll('.room-card-preview').forEach(el => {
+                el.classList.remove('selected');
+            });
+            
+            // 新しい要素を選択
+            element.classList.add('selected');
+            currentElement = element.querySelector('.vertical-neon');
+            
+            // 編集パネルを表示
+            document.getElementById('editPanel').style.display = 'block';
+            document.getElementById('currentEditingClass').textContent = element.dataset.class;
+            
+            // 現在のスタイルを読み込む
+            const computedStyle = window.getComputedStyle(currentElement);
+            const color = rgbToHex(computedStyle.color);
+            
+            document.getElementById('colorPicker').value = color;
+            document.getElementById('colorText').value = color;
+            
+            // リアルタイムプレビュー
+            updatePreview();
+        }
+        
+        // プリセットを適用
+        function applyPreset(color, brightness, opacity, glow) {
+            document.getElementById('colorPicker').value = color;
+            document.getElementById('colorText').value = color;
+            document.getElementById('brightnessSlider').value = brightness;
+            document.getElementById('opacitySlider').value = opacity;
+            document.getElementById('glowSlider').value = glow;
+            
+            updateSliderValues();
+            updatePreview();
+        }
+        
+        // スライダーの値を更新
+        function updateSliderValues() {
+            document.getElementById('brightnessValue').textContent = document.getElementById('brightnessSlider').value + '%';
+            document.getElementById('opacityValue').textContent = document.getElementById('opacitySlider').value + '%';
+            document.getElementById('glowValue').textContent = document.getElementById('glowSlider').value + 'px';
+        }
+        
+        // プレビューを更新
+        function updatePreview() {
+            if (!currentElement) return;
+            
+            const color = document.getElementById('colorPicker').value;
+            const brightness = document.getElementById('brightnessSlider').value;
+            const opacity = document.getElementById('opacitySlider').value / 100;
+            const glow = document.getElementById('glowSlider').value;
+            
+            currentElement.style.color = color;
+            currentElement.style.borderColor = color;
+            currentElement.style.opacity = opacity;
+            currentElement.style.filter = `brightness(${brightness}%)`;
+            currentElement.style.textShadow = `0 0 ${glow}px ${color}, 0 0 ${glow * 2}px ${color}`;
+        }
+        
+        // 変更を保存
+        function applyChanges() {
+            if (!currentElement) {
+                showNotification('先にネオンサインを選択してください', 'error');
+                return;
+            }
+            
+            const className = currentElement.parentElement.parentElement.dataset.class;
+            const color = document.getElementById('colorPicker').value;
+            const brightness = document.getElementById('brightnessSlider').value;
+            const opacity = document.getElementById('opacitySlider').value / 100;
+            const glow = document.getElementById('glowSlider').value;
+            
+            // CSSを生成
+            const css = `.${className} {
+    color: ${color} !important;
+    border-color: ${color} !important;
+    opacity: ${opacity} !important;
+    filter: brightness(${brightness}%) !important;
+    text-shadow: 0 0 ${glow}px ${color}, 0 0 ${glow * 2}px ${color} !important;
+}`;
+            
+            // スタイルを保存
+            allStyles[className] = css;
+            
+            // localStorageに保存
+            const allCss = Object.values(allStyles).join('\n\n');
+            localStorage.setItem('holeCustomNeonStyles', allCss);
+            
+            // 表示を更新
+            updateSavedStylesDisplay();
+            showNotification('保存しました！5秒以内に本番サイトに反映されます');
+        }
+        
+        // 保存済みスタイルを読み込み
+        function loadSavedStyles() {
+            const saved = localStorage.getItem('holeCustomNeonStyles');
+            if (saved) {
+                // 保存されたCSSからクラスごとに分割
+                const rules = saved.match(/\.[^{]+\{[^}]+\}/g) || [];
+                rules.forEach(rule => {
+                    const className = rule.match(/\.([^{\s]+)/)[1];
+                    allStyles[className] = rule;
+                });
+            }
+        }
+        
+        // 保存済みスタイルの表示を更新
+        function updateSavedStylesDisplay() {
+            const display = document.getElementById('savedStyles');
+            const saved = localStorage.getItem('holeCustomNeonStyles');
+            display.textContent = saved || 'まだ保存されていません';
+        }
+        
+        // 現在の選択をリセット
+        function resetCurrent() {
+            if (!currentElement) return;
+            
+            const className = currentElement.parentElement.parentElement.dataset.class;
+            delete allStyles[className];
+            
+            const allCss = Object.values(allStyles).join('\n\n');
+            localStorage.setItem('holeCustomNeonStyles', allCss);
+            
+            updateSavedStylesDisplay();
+            showNotification('リセットしました');
+            
+            // デフォルトスタイルに戻す
+            currentElement.removeAttribute('style');
+        }
+        
+        // 全てのカスタムスタイルを削除
+        function clearAllStyles() {
+            if (!confirm('全てのカスタムスタイルを削除しますか？')) return;
+            
+            localStorage.removeItem('holeCustomNeonStyles');
+            allStyles = {};
+            updateSavedStylesDisplay();
+            showNotification('全て削除しました');
+            
+            // 全ての要素のスタイルをリセット
+            document.querySelectorAll('.vertical-neon').forEach(el => {
+                el.removeAttribute('style');
+            });
+        }
+        
+        // 通知を表示
+        function showNotification(message, type = 'success') {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.style.background = type === 'error' ? '#f44336' : '#4CAF50';
+            notification.classList.add('show');
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+        
+        // RGBを16進数に変換
+        function rgbToHex(rgb) {
+            const result = rgb.match(/\d+/g);
+            if (!result) return '#ffffff';
+            
+            const r = parseInt(result[0]);
+            const g = parseInt(result[1]);
+            const b = parseInt(result[2]);
+            
+            return "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
+        }
+        
+        // イベントリスナー
+        document.getElementById('colorPicker').addEventListener('input', (e) => {
+            document.getElementById('colorText').value = e.target.value;
+            updatePreview();
+        });
+        
+        document.getElementById('colorText').addEventListener('input', (e) => {
+            document.getElementById('colorPicker').value = e.target.value;
+            updatePreview();
+        });
+        
+        document.getElementById('brightnessSlider').addEventListener('input', () => {
+            updateSliderValues();
+            updatePreview();
+        });
+        
+        document.getElementById('opacitySlider').addEventListener('input', () => {
+            updateSliderValues();
+            updatePreview();
+        });
+        
+        document.getElementById('glowSlider').addEventListener('input', () => {
+            updateSliderValues();
+            updatePreview();
+        });
+    </script>
+</body>
+</html>
