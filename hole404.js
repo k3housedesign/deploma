@@ -1451,3 +1451,29 @@ function addDemoMessages() {
     setTimeout(() => addMessage({ id: generateId('msg'), text: '今夜は冷えるな…', authorName: '名無しの客', authorIcon: '🎭', timestamp: Date.now(), type: 'user' }), 1000);
     setTimeout(() => addMessage({ id: generateId('msg'), text: 'この場所も随分と寂れたものだ', authorName: 'バーテンダー', authorIcon: '🍸', timestamp: Date.now(), type: 'bot' }), 3000);
 }
+
+// 管理者画面で設定したカスタムCSSを適用
+function loadCustomNeonStyles() {
+    const customStyles = localStorage.getItem('holeCustomNeonStyles');
+    if (customStyles) {
+        // 既存のカスタムスタイルタグがあれば削除
+        const existingStyle = document.getElementById('custom-neon-styles');
+        if (existingStyle) {
+            existingStyle.remove();
+        }
+        
+        // 新しいスタイルタグを作成して追加
+        const styleTag = document.createElement('style');
+        styleTag.id = 'custom-neon-styles';
+        styleTag.textContent = customStyles;
+        document.head.appendChild(styleTag);
+        
+        console.log('カスタムネオンスタイルを適用しました');
+    }
+}
+
+// ページ読み込み時にカスタムスタイルを適用
+loadCustomNeonStyles();
+
+// 5秒ごとにカスタムスタイルを再チェック（管理者画面での変更を反映）
+setInterval(loadCustomNeonStyles, 5000);
