@@ -933,12 +933,12 @@ body:has(.chat-screen.active) .user-counter {
 
 /* 1-3ÃÂ¦ÃÂÃÂ¥ÃÂ¦ÃÂÃÂ¾ÃÂ§ÃÂ½ÃÂ®ÃÂ©ÃÂÃÂ¨ÃÂ¥ÃÂ±ÃÂ - ÃÂ§ÃÂÃÂ½ÃÂ¨ÃÂÃÂ² */
 .vertical-neon.inactive-white {
-    color: #ffffff !important;
-    border-color: #ffffff !important;
+    color: #87CEEB !important;
+    border-color: #87CEEB !important;
     text-shadow: 
-        0 0 5px #ffffff,
-        0 0 10px #ffffff,
-        0 0 15px #ffffff !important;
+        0 0 5px #87CEEB,
+        0 0 10px #87CEEB,
+        0 0 15px #87CEEB !important;
     filter: none !important;
     opacity: 0.9 !important;
 }
