@@ -473,12 +473,12 @@ body:has(.chat-screen.active) .user-counter {
 
 /* ÃÂ©ÃÂÃÂ¨ÃÂ¥ÃÂ±ÃÂÃÂ¥ÃÂÃÂÃÂ£ÃÂÃÂÃÂ£ÃÂÃÂªÃÂ£ÃÂÃÂ³ÃÂ£ÃÂÃÂµÃÂ£ÃÂÃÂ¤ÃÂ£ÃÂÃÂ³ÃÂ£ÃÂÃÂ®ÃÂ£ÃÂÃÂÃÂ£ÃÂÃÂÃÂ£ÃÂÃÂ©ÃÂ£ÃÂÃÂ«ÃÂ£ÃÂÃÂÃÂ£ÃÂÃÂ¹ÃÂ£ÃÂÃÂ¿ÃÂ£ÃÂÃÂ¤ÃÂ£ÃÂÃÂ« - ÃÂ¦ÃÂÃÂÃÂ£ÃÂÃÂÃÂ£ÃÂÃÂ®ÃÂ¨ÃÂ¨ÃÂ­ÃÂ¥ÃÂ®ÃÂ */
 .room-card .neon-sign {
-    color: rgba(255,255,255,0.4);
+    color: rgba(255,255,255,0.3);
     text-shadow: 
-        0 0 5px rgba(255,255,255,0.2),
-        0 0 10px rgba(255,255,255,0.1);
-    opacity: 0.5;
-    filter: brightness(0.6);
+        0 0 3px rgba(255,255,255,0.15),
+        0 0 6px rgba(255,255,255,0.08);
+    opacity: 0.4;
+    filter: brightness(0.5);
 }
 
 /* ÃÂ£ÃÂÃÂ¢ÃÂ£ÃÂÃÂÃÂ£ÃÂÃÂ¤ÃÂ£ÃÂÃÂ«ÃÂ£ÃÂÃÂ§ÃÂ£ÃÂÃÂ¯ÃÂ£ÃÂÃÂ¢ÃÂ£ÃÂÃÂÃÂ£ÃÂÃÂ¡ÃÂ£ÃÂÃÂ¼ÃÂ£ÃÂÃÂ·ÃÂ£ÃÂÃÂ§ÃÂ£ÃÂÃÂ³ÃÂ£ÃÂÃÂÃÂ§ÃÂÃÂ¡ÃÂ¥ÃÂÃÂ¹ÃÂ¥ÃÂÃÂ */
@@ -671,15 +671,14 @@ body:has(.chat-screen.active) .user-counter {
 
 /* ÃÂ¦ÃÂÃÂ°ÃÂ¨ÃÂ¦ÃÂÃÂ©ÃÂÃÂÃÂ¥ÃÂºÃÂÃÂ£ÃÂÃÂ®ÃÂ§ÃÂÃÂ¶ÃÂ¦ÃÂÃÂ - ÃÂ¦ÃÂÃÂÃÂ£ÃÂÃÂÃÂ£ÃÂÃÂÃÂ§ÃÂÃÂ¹ÃÂ§ÃÂÃÂ¯ÃÂ£ÃÂÃÂÃÂ£ÃÂÃÂÃÂ£ÃÂÃÂ¦ÃÂ§ÃÂÃÂ®ÃÂ§ÃÂ«ÃÂÃÂ£ÃÂÃÂÃÂ£ÃÂÃÂÃÂ£ÃÂÃÂ */
 .room-card.new .neon-sign {
-    filter: brightness(1.1) !important;
-    opacity: 1 !important;
-    color: #ffd700;
+    filter: brightness(0.9) !important;
+    opacity: 0.85 !important;
+    color: rgba(200,170,0,0.9);
     text-shadow: 
-        0 0 10px #ffd700,
-        0 0 20px #ffd700,
-        0 0 40px #ffd700,
-        0 0 60px #ffd700;
-    animation: newShopBlink 2s infinite;
+        0 0 7px rgba(200,170,0,0.6),
+        0 0 14px rgba(200,170,0,0.3),
+        0 0 25px rgba(200,170,0,0.15);
+    animation: newShopBlink 3s infinite;
 }
 
 .room-card.new .room-description,
@@ -726,15 +725,15 @@ body:has(.chat-screen.active) .user-counter {
 
 /* ÃÂ£ÃÂÃÂ¢ÃÂ£ÃÂÃÂ¯ÃÂ£ÃÂÃÂÃÂ£ÃÂÃÂ£ÃÂ£ÃÂÃÂÃÂ§ÃÂÃÂ¶ÃÂ¦ÃÂÃÂÃÂ¯ÃÂ¼ÃÂÃÂ¥ÃÂÃÂ¶ÃÂ¦ÃÂ¥ÃÂ­ÃÂ¤ÃÂ¸ÃÂ­ÃÂ¯ÃÂ¼ÃÂÃÂ£ÃÂÃÂ®ÃÂ£ÃÂÃÂ¹ÃÂ£ÃÂÃÂ¿ÃÂ£ÃÂÃÂ¤ÃÂ£ÃÂÃÂ« - ÃÂ©ÃÂÃÂ¨ÃÂ¥ÃÂ±ÃÂÃÂ¥ÃÂÃÂÃÂ£ÃÂÃÂÃÂ¦ÃÂÃÂÃÂ£ÃÂÃÂÃÂ£ÃÂÃÂÃÂ¨ÃÂ¡ÃÂ¨ÃÂ§ÃÂ¤ÃÂº */
 .room-card.active .neon-sign {
-    filter: brightness(1.2) !important;
-    opacity: 1 !important;
+    filter: brightness(0.95) !important;
+    opacity: 0.9 !important;
 }
 
 .room-card.active .room-description,
 .room-card.active .room-status,
 .room-card.active .chinese-sign {
-    filter: brightness(1.1) !important;
-    opacity: 1 !important;
+    filter: brightness(0.95) !important;
+    opacity: 0.85 !important;
 }
 
 /* ÃÂ©ÃÂÃÂÃÂ£ÃÂÃÂ¢ÃÂ£ÃÂÃÂ¯ÃÂ£ÃÂÃÂÃÂ£ÃÂÃÂ£ÃÂ£ÃÂÃÂÃÂ§ÃÂÃÂ¶ÃÂ¦ÃÂÃÂÃÂ£ÃÂÃÂ®ÃÂ£ÃÂÃÂ¹ÃÂ£ÃÂÃÂ¿ÃÂ£ÃÂÃÂ¤ÃÂ£ÃÂÃÂ« */
@@ -1788,117 +1787,117 @@ body:has(.chat-screen.active) .user-counter {
 /* ÃÂ¦ÃÂÃÂÃÂ§ÃÂµÃÂÃÂ£ÃÂÃÂ¢ÃÂ£ÃÂÃÂ¯ÃÂ£ÃÂÃÂ»ÃÂ£ÃÂÃÂ¹ÃÂ¦ÃÂÃÂÃÂ¥ÃÂÃÂ»ÃÂ£ÃÂÃÂ«ÃÂ¥ÃÂÃÂºÃÂ£ÃÂÃÂ¥ÃÂ£ÃÂÃÂÃÂ§ÃÂÃÂ§ÃÂ¥ÃÂºÃÂ¦ÃÂ£ÃÂÃÂ¯ÃÂ£ÃÂÃÂ©ÃÂ£ÃÂÃÂ¹ - ÃÂ£ÃÂÃÂ«ÃÂ£ÃÂÃÂ©ÃÂ£ÃÂÃÂÃÂ£ÃÂÃÂ«ÃÂ£ÃÂÃÂªÃÂ£ÃÂÃÂÃÂ£ÃÂÃÂªÃÂ£ÃÂÃÂ³ */
 /* 3ÃÂ¦ÃÂÃÂÃÂ©ÃÂÃÂÃÂ¤ÃÂ»ÃÂ¥ÃÂ¥ÃÂÃÂ - ÃÂ¦ÃÂÃÂÃÂ£ÃÂÃÂÃÂ£ÃÂÃÂÃÂ¨ÃÂ¼ÃÂÃÂ£ÃÂÃÂÃÂ£ÃÂÃÂÃÂ£ÃÂÃÂªÃÂ£ÃÂÃÂ³ */
 .room-card.lighting-recent-3h:nth-child(4n+1) .neon-sign {
-    filter: brightness(1.1) !important;
-    opacity: 1 !important;
-    color: #00ff41;
+    filter: brightness(0.85) !important;
+    opacity: 0.85 !important;
+    color: rgba(0,200,50,0.9);
     text-shadow: 
-        0 0 10px #00ff41,
-        0 0 20px #00ff41,
-        0 0 40px #00ff41;
+        0 0 6px rgba(0,200,50,0.6),
+        0 0 12px rgba(0,200,50,0.3),
+        0 0 20px rgba(0,200,50,0.15);
 }
 
 .room-card.lighting-recent-3h:nth-child(4n+2) .neon-sign {
-    filter: brightness(1.1) !important;
-    opacity: 1 !important;
-    color: #ff006e;
+    filter: brightness(0.85) !important;
+    opacity: 0.85 !important;
+    color: rgba(200,0,80,0.9);
     text-shadow: 
-        0 0 10px #ff006e,
-        0 0 20px #ff006e,
-        0 0 40px #ff006e;
+        0 0 6px rgba(200,0,80,0.6),
+        0 0 12px rgba(200,0,80,0.3),
+        0 0 20px rgba(200,0,80,0.15);
 }
 
 .room-card.lighting-recent-3h:nth-child(4n+3) .neon-sign {
-    filter: brightness(1.1) !important;
-    opacity: 1 !important;
-    color: #ffaa00;
+    filter: brightness(0.85) !important;
+    opacity: 0.85 !important;
+    color: rgba(200,130,0,0.9);
     text-shadow: 
-        0 0 10px #ffaa00,
-        0 0 20px #ffaa00,
-        0 0 40px #ffaa00;
+        0 0 6px rgba(200,130,0,0.6),
+        0 0 12px rgba(200,130,0,0.3),
+        0 0 20px rgba(200,130,0,0.15);
 }
 
 .room-card.lighting-recent-3h:nth-child(4n) .neon-sign {
-    filter: brightness(1.1) !important;
-    opacity: 1 !important;
-    color: #00b4ff;
+    filter: brightness(0.85) !important;
+    opacity: 0.85 !important;
+    color: rgba(0,140,200,0.9);
     text-shadow: 
-        0 0 10px #00b4ff,
-        0 0 20px #00b4ff,
-        0 0 40px #00b4ff;
+        0 0 6px rgba(0,140,200,0.6),
+        0 0 12px rgba(0,140,200,0.3),
+        0 0 20px rgba(0,140,200,0.15);
 }
 
 /* 12ÃÂ¦ÃÂÃÂÃÂ©ÃÂÃÂÃÂ¤ÃÂ»ÃÂ¥ÃÂ¥ÃÂÃÂ - ÃÂ£ÃÂÃÂÃÂ£ÃÂÃÂÃÂ¦ÃÂÃÂÃÂ£ÃÂÃÂÃÂ£ÃÂÃÂ®ÃÂ£ÃÂÃÂÃÂ£ÃÂÃÂªÃÂ£ÃÂÃÂ³ */
 .room-card.lighting-recent-12h:nth-child(4n+1) .neon-sign {
-    filter: brightness(0.9) !important;
-    opacity: 0.9 !important;
-    color: #00cc33;
+    filter: brightness(0.75) !important;
+    opacity: 0.75 !important;
+    color: rgba(0,180,40,0.85);
     text-shadow: 
-        0 0 8px #00cc33,
-        0 0 16px #00cc33;
+        0 0 5px rgba(0,180,40,0.5),
+        0 0 10px rgba(0,180,40,0.25);
 }
 
 .room-card.lighting-recent-12h:nth-child(4n+2) .neon-sign {
-    filter: brightness(0.9) !important;
-    opacity: 0.9 !important;
-    color: #cc0055;
+    filter: brightness(0.75) !important;
+    opacity: 0.75 !important;
+    color: rgba(180,0,70,0.85);
     text-shadow: 
-        0 0 8px #cc0055,
-        0 0 16px #cc0055;
+        0 0 5px rgba(180,0,70,0.5),
+        0 0 10px rgba(180,0,70,0.25);
 }
 
 .room-card.lighting-recent-12h:nth-child(4n+3) .neon-sign {
-    filter: brightness(0.9) !important;
-    opacity: 0.9 !important;
-    color: #cc8800;
+    filter: brightness(0.75) !important;
+    opacity: 0.75 !important;
+    color: rgba(180,120,0,0.85);
     text-shadow: 
-        0 0 8px #cc8800,
-        0 0 16px #cc8800;
+        0 0 5px rgba(180,120,0,0.5),
+        0 0 10px rgba(180,120,0,0.25);
 }
 
 .room-card.lighting-recent-12h:nth-child(4n) .neon-sign {
-    filter: brightness(0.9) !important;
-    opacity: 0.9 !important;
-    color: #0099cc;
+    filter: brightness(0.75) !important;
+    opacity: 0.75 !important;
+    color: rgba(0,130,180,0.85);
     text-shadow: 
-        0 0 8px #0099cc,
-        0 0 16px #0099cc;
+        0 0 5px rgba(0,130,180,0.5),
+        0 0 10px rgba(0,130,180,0.25);
 }
 
 /* 24ÃÂ¦ÃÂÃÂÃÂ©ÃÂÃÂÃÂ¤ÃÂ»ÃÂ¥ÃÂ¥ÃÂÃÂ - ÃÂ¨ÃÂÃÂÃÂ¦ÃÂÃÂÃÂ£ÃÂÃÂÃÂ£ÃÂÃÂÃÂ£ÃÂÃÂªÃÂ£ÃÂÃÂ³ */
 .room-card.lighting-recent-24h:nth-child(4n+1) .neon-sign {
-    filter: brightness(0.7) !important;
-    opacity: 0.8 !important;
-    color: #009922;
+    filter: brightness(0.6) !important;
+    opacity: 0.65 !important;
+    color: rgba(0,150,30,0.8);
     text-shadow: 
-        0 0 6px #009922,
-        0 0 12px #009922;
+        0 0 4px rgba(0,150,30,0.4),
+        0 0 8px rgba(0,150,30,0.2);
 }
 
 .room-card.lighting-recent-24h:nth-child(4n+2) .neon-sign {
-    filter: brightness(0.7) !important;
-    opacity: 0.8 !important;
-    color: #990044;
+    filter: brightness(0.6) !important;
+    opacity: 0.65 !important;
+    color: rgba(150,0,60,0.8);
     text-shadow: 
-        0 0 6px #990044,
-        0 0 12px #990044;
+        0 0 4px rgba(150,0,60,0.4),
+        0 0 8px rgba(150,0,60,0.2);
 }
 
 .room-card.lighting-recent-24h:nth-child(4n+3) .neon-sign {
-    filter: brightness(0.7) !important;
-    opacity: 0.8 !important;
-    color: #996600;
+    filter: brightness(0.6) !important;
+    opacity: 0.65 !important;
+    color: rgba(150,100,0,0.8);
     text-shadow: 
-        0 0 6px #996600,
-        0 0 12px #996600;
+        0 0 4px rgba(150,100,0,0.4),
+        0 0 8px rgba(150,100,0,0.2);
 }
 
 .room-card.lighting-recent-24h:nth-child(4n) .neon-sign {
-    filter: brightness(0.7) !important;
-    opacity: 0.8 !important;
-    color: #007799;
+    filter: brightness(0.6) !important;
+    opacity: 0.65 !important;
+    color: rgba(0,110,150,0.8);
     text-shadow: 
-        0 0 6px #007799,
-        0 0 12px #007799;
+        0 0 4px rgba(0,110,150,0.4),
+        0 0 8px rgba(0,110,150,0.2);
 }
 
 /* 48ÃÂ¦ÃÂÃÂÃÂ©ÃÂÃÂÃÂ¤ÃÂ»ÃÂ¥ÃÂ¥ÃÂÃÂ - ÃÂ£ÃÂÃÂÃÂ£ÃÂÃÂªÃÂ£ÃÂÃÂÃÂ¦ÃÂÃÂÃÂ£ÃÂÃÂÃÂ£ÃÂÃÂÃÂ£ÃÂÃÂªÃÂ£ÃÂÃÂ³ */
@@ -2047,43 +2046,43 @@ body:has(.chat-screen.active) .user-counter {
 
 /* ÃÂ¥ÃÂÃÂ¶ÃÂ¦ÃÂ¥ÃÂ­ÃÂ¤ÃÂ¸ÃÂ­ÃÂ¯ÃÂ¼ÃÂlighting-brightÃÂ¯ÃÂ¼ÃÂÃÂ£ÃÂÃÂ®ÃÂ¦ÃÂÃÂÃÂ£ÃÂÃÂÃÂ£ÃÂÃÂÃÂ£ÃÂÃÂÃÂ£ÃÂÃÂªÃÂ£ÃÂÃÂ³ - ÃÂ¦ÃÂÃÂÃÂ£ÃÂÃÂÃÂ©ÃÂ®ÃÂ®ÃÂ£ÃÂÃÂÃÂ£ÃÂÃÂ */
 .room-card.lighting-bright:nth-child(4n+1) .neon-sign {
-    filter: brightness(1.05) !important;
-    opacity: 0.9 !important;
-    color: rgba(0,200,50,0.8);
+    filter: brightness(0.9) !important;
+    opacity: 0.8 !important;
+    color: rgba(0,200,50,0.85);
     text-shadow: 
-        0 0 10px rgba(0,200,50,0.6),
-        0 0 20px rgba(0,200,50,0.3),
-        0 0 30px rgba(0,200,50,0.2);
+        0 0 7px rgba(0,200,50,0.5),
+        0 0 14px rgba(0,200,50,0.25),
+        0 0 20px rgba(0,200,50,0.1);
 }
 
 .room-card.lighting-bright:nth-child(4n+2) .neon-sign {
-    filter: brightness(1.05) !important;
-    opacity: 0.9 !important;
-    color: rgba(200,0,80,0.8);
+    filter: brightness(0.9) !important;
+    opacity: 0.8 !important;
+    color: rgba(200,0,80,0.85);
     text-shadow: 
-        0 0 10px rgba(200,0,80,0.6),
-        0 0 20px rgba(200,0,80,0.3),
-        0 0 30px rgba(200,0,80,0.2);
+        0 0 7px rgba(200,0,80,0.5),
+        0 0 14px rgba(200,0,80,0.25),
+        0 0 20px rgba(200,0,80,0.1);
 }
 
 .room-card.lighting-bright:nth-child(4n+3) .neon-sign {
-    filter: brightness(1.05) !important;
-    opacity: 0.9 !important;
-    color: rgba(200,130,0,0.8);
+    filter: brightness(0.9) !important;
+    opacity: 0.8 !important;
+    color: rgba(200,130,0,0.85);
     text-shadow: 
-        0 0 10px rgba(200,130,0,0.6),
-        0 0 20px rgba(200,130,0,0.3),
-        0 0 30px rgba(200,130,0,0.2);
+        0 0 7px rgba(200,130,0,0.5),
+        0 0 14px rgba(200,130,0,0.25),
+        0 0 20px rgba(200,130,0,0.1);
 }
 
 .room-card.lighting-bright:nth-child(4n) .neon-sign {
-    filter: brightness(1.05) !important;
-    opacity: 0.9 !important;
-    color: rgba(0,140,200,0.8);
+    filter: brightness(0.9) !important;
+    opacity: 0.8 !important;
+    color: rgba(0,140,200,0.85);
     text-shadow: 
-        0 0 10px rgba(0,140,200,0.6),
-        0 0 20px rgba(0,140,200,0.3),
-        0 0 30px rgba(0,140,200,0.2);
+        0 0 7px rgba(0,140,200,0.5),
+        0 0 14px rgba(0,140,200,0.25),
+        0 0 20px rgba(0,140,200,0.1);
 }
 
 /* ÃÂ¤ÃÂ¸ÃÂ­ÃÂ¥ÃÂÃÂ½ÃÂ¨ÃÂªÃÂÃÂ§ÃÂÃÂÃÂ¦ÃÂÃÂ¿ÃÂ£ÃÂÃÂ®ÃÂ£ÃÂÃÂ«ÃÂ£ÃÂÃÂ©ÃÂ£ÃÂÃÂÃÂ£ÃÂÃÂ«ÃÂ£ÃÂÃÂÃÂ£ÃÂÃÂªÃÂ£ÃÂÃÂ³ÃÂ¯ÃÂ¼ÃÂ0-3ÃÂ¦ÃÂÃÂÃÂ©ÃÂÃÂÃÂ¯ÃÂ¼ÃÂ */
