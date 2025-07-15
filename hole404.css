@@ -357,11 +357,11 @@ body:has(.chat-screen.active) .user-counter {
 }
 .room-card {
     background: #0a0a0a;
-    border: 2px solid rgba(255,255,255,0.2);
+    border: 4px solid rgba(255,255,255,0.2);
     border-radius: 8px;
     padding: 30px;
     cursor: pointer;
-    transition: transform 0.2s ease, border-color 0.3s ease;
+    transition: all 0.3s ease;
     position: relative;
     overflow: hidden;
     box-shadow: inset 0 0 30px rgba(0,0,0,0.8);
@@ -372,66 +372,86 @@ body:has(.chat-screen.active) .user-counter {
 
 /* ÃÂ¥ÃÂÃÂÃÂ£ÃÂÃÂ«ÃÂ£ÃÂÃÂ¼ÃÂ£ÃÂÃÂ ÃÂ£ÃÂÃÂ«ÃÂ£ÃÂÃÂ¼ÃÂ£ÃÂÃÂÃÂ£ÃÂÃÂ«ÃÂ§ÃÂÃÂ°ÃÂ£ÃÂÃÂªÃÂ£ÃÂÃÂÃÂ£ÃÂÃÂÃÂ£ÃÂÃÂªÃÂ£ÃÂÃÂ³ÃÂ£ÃÂÃÂ«ÃÂ£ÃÂÃÂ©ÃÂ£ÃÂÃÂ¼ */
 .room-card:nth-child(4n+1) {
-    border-color: rgba(0,255,65,0.3);
+    border-color: #00ff41;
     background: radial-gradient(ellipse at center, rgba(0,255,65,0.05) 0%, #0a0a0a 70%);
     box-shadow: 
         inset 0 0 30px rgba(0,0,0,0.8),
-        0 0 10px rgba(0,255,65,0.2);
+        0 0 20px rgba(0,255,65,0.4),
+        0 0 40px rgba(0,255,65,0.2),
+        0 0 60px rgba(0,255,65,0.1);
+    animation: neonGlow1 3s ease-in-out infinite alternate;
 }
 .room-card:nth-child(4n+2) {
-    border-color: rgba(255,0,110,0.3);
+    border-color: #ff006e;
     background: radial-gradient(ellipse at center, rgba(255,0,110,0.05) 0%, #0a0a0a 70%);
     box-shadow: 
         inset 0 0 30px rgba(0,0,0,0.8),
-        0 0 10px rgba(255,0,110,0.2);
+        0 0 20px rgba(255,0,110,0.4),
+        0 0 40px rgba(255,0,110,0.2),
+        0 0 60px rgba(255,0,110,0.1);
+    animation: neonGlow2 4s ease-in-out infinite alternate;
 }
 .room-card:nth-child(4n+3) {
-    border-color: rgba(255,170,0,0.3);
+    border-color: #ffaa00;
     background: radial-gradient(ellipse at center, rgba(255,170,0,0.05) 0%, #0a0a0a 70%);
     box-shadow: 
         inset 0 0 30px rgba(0,0,0,0.8),
-        0 0 10px rgba(255,170,0,0.2);
+        0 0 20px rgba(255,170,0,0.4),
+        0 0 40px rgba(255,170,0,0.2),
+        0 0 60px rgba(255,170,0,0.1);
+    animation: neonGlow3 3.5s ease-in-out infinite alternate;
 }
 .room-card:nth-child(4n) {
-    border-color: rgba(0,180,255,0.3);
+    border-color: #00b4ff;
     background: radial-gradient(ellipse at center, rgba(0,180,255,0.05) 0%, #0a0a0a 70%);
     box-shadow: 
         inset 0 0 30px rgba(0,0,0,0.8),
-        0 0 10px rgba(0,180,255,0.2);
+        0 0 20px rgba(0,180,255,0.4),
+        0 0 40px rgba(0,180,255,0.2),
+        0 0 60px rgba(0,180,255,0.1);
+    animation: neonGlow4 4.5s ease-in-out infinite alternate;
 }
 
 /* ÃÂ£ÃÂÃÂ¢ÃÂ£ÃÂÃÂ¯ÃÂ£ÃÂÃÂÃÂ£ÃÂÃÂ£ÃÂ£ÃÂÃÂÃÂ§ÃÂÃÂ¶ÃÂ¦ÃÂÃÂÃÂ£ÃÂÃÂ®ÃÂ¨ÃÂÃÂÃÂ¦ÃÂÃÂ¯ÃÂ£ÃÂÃÂÃÂ¦ÃÂÃÂÃÂ£ÃÂÃÂÃÂ£ÃÂÃÂ */
 .room-card.active:nth-child(4n+1) {
-    border-color: rgba(0,255,65,0.8);
+    border-color: #00ff41;
+    border-width: 5px;
     background: radial-gradient(ellipse at center, rgba(0,255,65,0.2) 0%, #0a0a0a 60%);
     box-shadow: 
         inset 0 0 30px rgba(0,255,65,0.3),
-        0 0 40px rgba(0,255,65,0.4),
-        0 0 20px rgba(0,255,65,0.6);
+        0 0 40px rgba(0,255,65,0.6),
+        0 0 80px rgba(0,255,65,0.4),
+        0 0 120px rgba(0,255,65,0.2);
 }
 .room-card.active:nth-child(4n+2) {
-    border-color: rgba(255,0,110,0.8);
+    border-color: #ff006e;
+    border-width: 5px;
     background: radial-gradient(ellipse at center, rgba(255,0,110,0.2) 0%, #0a0a0a 60%);
     box-shadow: 
         inset 0 0 30px rgba(255,0,110,0.3),
-        0 0 40px rgba(255,0,110,0.4),
-        0 0 20px rgba(255,0,110,0.6);
+        0 0 40px rgba(255,0,110,0.6),
+        0 0 80px rgba(255,0,110,0.4),
+        0 0 120px rgba(255,0,110,0.2);
 }
 .room-card.active:nth-child(4n+3) {
-    border-color: rgba(255,170,0,0.8);
+    border-color: #ffaa00;
+    border-width: 5px;
     background: radial-gradient(ellipse at center, rgba(255,170,0,0.2) 0%, #0a0a0a 60%);
     box-shadow: 
         inset 0 0 30px rgba(255,170,0,0.3),
-        0 0 40px rgba(255,170,0,0.4),
-        0 0 20px rgba(255,170,0,0.6);
+        0 0 40px rgba(255,170,0,0.6),
+        0 0 80px rgba(255,170,0,0.4),
+        0 0 120px rgba(255,170,0,0.2);
 }
 .room-card.active:nth-child(4n) {
-    border-color: rgba(0,180,255,0.8);
+    border-color: #00b4ff;
+    border-width: 5px;
     background: radial-gradient(ellipse at center, rgba(0,180,255,0.2) 0%, #0a0a0a 60%);
     box-shadow: 
         inset 0 0 30px rgba(0,180,255,0.3),
-        0 0 40px rgba(0,180,255,0.4),
-        0 0 20px rgba(0,180,255,0.6);
+        0 0 40px rgba(0,180,255,0.6),
+        0 0 80px rgba(0,180,255,0.4),
+        0 0 120px rgba(0,180,255,0.2);
 }
 
 /* ÃÂ£ÃÂÃÂÃÂ£ÃÂÃÂªÃÂ£ÃÂÃÂ³ÃÂ¦ÃÂÃÂ ÃÂ£ÃÂÃÂ®ÃÂ¥ÃÂÃÂÃÂ¥ÃÂ½ÃÂ©ÃÂ¥ÃÂÃÂ¹ÃÂ¦ÃÂÃÂÃÂ£ÃÂÃÂÃÂ¥ÃÂÃÂÃÂ©ÃÂÃÂ¤ÃÂ¯ÃÂ¼ÃÂÃÂ¦ÃÂÃÂ ÃÂ£ÃÂÃÂªÃÂ£ÃÂÃÂÃÂ£ÃÂÃÂ®ÃÂ£ÃÂÃÂ·ÃÂ£ÃÂÃÂ³ÃÂ£ÃÂÃÂÃÂ£ÃÂÃÂ«ÃÂ£ÃÂÃÂªÃÂ£ÃÂÃÂÃÂ£ÃÂÃÂ¶ÃÂ£ÃÂÃÂ¤ÃÂ£ÃÂÃÂ³ÃÂ¯ÃÂ¼ÃÂ */
@@ -440,7 +460,12 @@ body:has(.chat-screen.active) .user-counter {
     .room-card:hover {
         transform: translateY(-5px) scale(1.02);
         filter: brightness(1.2);
-        border-width: 3px;
+        border-width: 6px;
+        box-shadow: 
+            inset 0 0 40px rgba(255,255,255,0.1),
+            0 0 30px currentColor,
+            0 0 60px currentColor,
+            0 0 90px currentColor;
     }
 }
 
@@ -767,41 +792,51 @@ body:has(.chat-screen.active) .user-counter {
 
 /* ÃÂ£ÃÂÃÂÃÂ£ÃÂÃÂ¼ÃÂ£ÃÂÃÂÃÂ£ÃÂÃÂ¼ÃÂ£ÃÂÃÂ¨ÃÂ£ÃÂÃÂÃÂ£ÃÂÃÂÃÂ£ÃÂÃÂ¯ÃÂ£ÃÂÃÂ¹ÃÂ£ÃÂÃÂ·ÃÂ£ÃÂÃÂ£ÃÂ£ÃÂÃÂÃÂ£ÃÂÃÂ¦ÃÂ£ÃÂÃÂ®ÃÂ¦ÃÂÃÂÃÂ©ÃÂÃÂÃÂ¥ÃÂ¤ÃÂÃÂ¥ÃÂÃÂ */
 .room-card.inactive:nth-child(4n+1) {
-    border-color: rgba(0,255,65,0.4);
+    border-color: rgba(0,255,65,0.6);
+    border-style: dashed;
     box-shadow: 
         inset 0 0 10px rgba(0,255,65,0.1),
-        0 0 15px rgba(0,255,65,0.3);
+        0 0 15px rgba(0,255,65,0.3),
+        0 0 30px rgba(0,255,65,0.15);
 }
 
 .room-card.inactive:nth-child(4n+2) {
-    border-color: rgba(255,0,110,0.4);
+    border-color: rgba(255,0,110,0.6);
+    border-style: dashed;
     box-shadow: 
         inset 0 0 10px rgba(255,0,110,0.1),
-        0 0 15px rgba(255,0,110,0.3);
+        0 0 15px rgba(255,0,110,0.3),
+        0 0 30px rgba(255,0,110,0.15);
 }
 
 .room-card.inactive:nth-child(4n+3) {
-    border-color: rgba(255,170,0,0.4);
+    border-color: rgba(255,170,0,0.6);
+    border-style: dashed;
     box-shadow: 
         inset 0 0 10px rgba(255,170,0,0.1),
-        0 0 15px rgba(255,170,0,0.3);
+        0 0 15px rgba(255,170,0,0.3),
+        0 0 30px rgba(255,170,0,0.15);
 }
 
 .room-card.inactive:nth-child(4n) {
-    border-color: rgba(0,180,255,0.4);
+    border-color: rgba(0,180,255,0.6);
+    border-style: dashed;
     box-shadow: 
         inset 0 0 10px rgba(0,180,255,0.1),
-        0 0 15px rgba(0,180,255,0.3);
+        0 0 15px rgba(0,180,255,0.3),
+        0 0 30px rgba(0,180,255,0.15);
 }
 
 .room-card.abandoned:nth-child(4n+1),
 .room-card.abandoned:nth-child(4n+2),
 .room-card.abandoned:nth-child(4n+3),
 .room-card.abandoned:nth-child(4n) {
-    border-color: rgba(100,100,100,0.3);
+    border-color: rgba(100,100,100,0.4);
+    border-style: dotted;
     box-shadow: 
         inset 0 0 5px rgba(0,0,0,0.5),
         0 0 8px rgba(100,100,100,0.2);
+    animation: none;
 }
 
 /* ÃÂ¦ÃÂÃÂÃÂ©ÃÂÃÂÃÂ£ÃÂÃÂÃÂ£ÃÂÃÂ¼ÃÂ£ÃÂÃÂ¹ÃÂ£ÃÂÃÂ®ÃÂ¦ÃÂÃÂÃÂ£ÃÂÃÂÃÂ£ÃÂÃÂÃÂ§ÃÂÃÂ¶ÃÂ¦ÃÂÃÂ */
@@ -2311,5 +2346,90 @@ body:has(.chat-screen.active) .user-counter {
     text-shadow: 0 0 1px #85d6ff, 0 0 3px #85d6ff, 0 0 5px #85d6ff;
     border-color: #85d6ff !important;
     animation: glow 3s infinite;
+}
+
+/* ネオングロー アニメーション - 夜の街の怪しい雰囲気 */
+@keyframes neonGlow1 {
+    0%, 100% { 
+        border-color: #00ff41;
+        box-shadow: 
+            inset 0 0 30px rgba(0,0,0,0.8),
+            0 0 20px rgba(0,255,65,0.4),
+            0 0 40px rgba(0,255,65,0.2),
+            0 0 60px rgba(0,255,65,0.1),
+            0 0 80px rgba(0,255,65,0.05);
+    }
+    50% { 
+        border-color: rgba(0,255,65,0.8);
+        box-shadow: 
+            inset 0 0 30px rgba(0,0,0,0.8),
+            0 0 30px rgba(0,255,65,0.6),
+            0 0 60px rgba(0,255,65,0.3),
+            0 0 90px rgba(0,255,65,0.15),
+            0 0 120px rgba(0,255,65,0.08);
+    }
+}
+
+@keyframes neonGlow2 {
+    0%, 100% { 
+        border-color: #ff006e;
+        box-shadow: 
+            inset 0 0 30px rgba(0,0,0,0.8),
+            0 0 20px rgba(255,0,110,0.4),
+            0 0 40px rgba(255,0,110,0.2),
+            0 0 60px rgba(255,0,110,0.1),
+            0 0 80px rgba(255,0,110,0.05);
+    }
+    50% { 
+        border-color: rgba(255,0,110,0.8);
+        box-shadow: 
+            inset 0 0 30px rgba(0,0,0,0.8),
+            0 0 30px rgba(255,0,110,0.6),
+            0 0 60px rgba(255,0,110,0.3),
+            0 0 90px rgba(255,0,110,0.15),
+            0 0 120px rgba(255,0,110,0.08);
+    }
+}
+
+@keyframes neonGlow3 {
+    0%, 100% { 
+        border-color: #ffaa00;
+        box-shadow: 
+            inset 0 0 30px rgba(0,0,0,0.8),
+            0 0 20px rgba(255,170,0,0.4),
+            0 0 40px rgba(255,170,0,0.2),
+            0 0 60px rgba(255,170,0,0.1),
+            0 0 80px rgba(255,170,0,0.05);
+    }
+    50% { 
+        border-color: rgba(255,170,0,0.8);
+        box-shadow: 
+            inset 0 0 30px rgba(0,0,0,0.8),
+            0 0 30px rgba(255,170,0,0.6),
+            0 0 60px rgba(255,170,0,0.3),
+            0 0 90px rgba(255,170,0,0.15),
+            0 0 120px rgba(255,170,0,0.08);
+    }
+}
+
+@keyframes neonGlow4 {
+    0%, 100% { 
+        border-color: #00b4ff;
+        box-shadow: 
+            inset 0 0 30px rgba(0,0,0,0.8),
+            0 0 20px rgba(0,180,255,0.4),
+            0 0 40px rgba(0,180,255,0.2),
+            0 0 60px rgba(0,180,255,0.1),
+            0 0 80px rgba(0,180,255,0.05);
+    }
+    50% { 
+        border-color: rgba(0,180,255,0.8);
+        box-shadow: 
+            inset 0 0 30px rgba(0,0,0,0.8),
+            0 0 30px rgba(0,180,255,0.6),
+            0 0 60px rgba(0,180,255,0.3),
+            0 0 90px rgba(0,180,255,0.15),
+            0 0 120px rgba(0,180,255,0.08);
+    }
 }
 
