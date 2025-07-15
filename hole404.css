@@ -63,7 +63,7 @@ input, textarea, .message-content {
 
 
 :root {
-    --primary-color: #ff6b35;
+    --primary-color: rgba(200,80,30,0.8);
     --secondary-color: #f7931e;
     --background-dark: #0a0a0a;
     --background-light: #1a1a1a;
@@ -556,7 +556,7 @@ body:has(.chat-screen.active) .user-counter {
 }
 .create-room-btn {
     background: #0a0a0a;
-    border: 3px solid #bf00ff;
+    border: 3px solid rgba(150,0,200,0.5);
     border-radius: 8px;
     padding: 40px 30px;
     cursor: pointer;
@@ -567,32 +567,32 @@ body:has(.chat-screen.active) .user-counter {
     justify-content: center;
     min-height: 200px;
     box-shadow: 
-        inset 0 0 30px rgba(191,0,255,0.2),
-        0 0 30px rgba(191,0,255,0.4),
-        0 0 50px rgba(191,0,255,0.2);
-    background: radial-gradient(ellipse at center, rgba(191,0,255,0.1) 0%, #0a0a0a 70%);
+        inset 0 0 20px rgba(0,0,0,0.9),
+        0 0 15px rgba(150,0,200,0.3),
+        0 0 30px rgba(150,0,200,0.1);
+    background: radial-gradient(ellipse at center, rgba(191,0,255,0.05) 0%, #0a0a0a 70%);
     position: relative;
 }
 .create-room-btn:hover {
     transform: scale(1.05);
-    filter: brightness(1.3);
+    filter: brightness(1.1);
     box-shadow: 
-        inset 0 0 40px rgba(191,0,255,0.3),
-        0 0 40px rgba(191,0,255,0.6),
-        0 0 70px rgba(191,0,255,0.4);
+        inset 0 0 20px rgba(191,0,255,0.2),
+        0 0 20px rgba(150,0,200,0.4),
+        0 0 40px rgba(150,0,200,0.2);
 }
 .create-room-btn .icon {
     font-size: 3em;
     margin-bottom: 15px;
-    color: #bf00ff;
+    color: rgba(150,0,200,0.8);
     text-shadow: 
-        0 0 10px #bf00ff,
-        0 0 20px #bf00ff,
-        0 0 40px #bf00ff;
-    animation: neonPulse 2s infinite;
+        0 0 8px rgba(150,0,200,0.6),
+        0 0 15px rgba(150,0,200,0.3),
+        0 0 25px rgba(150,0,200,0.15);
+    animation: neonPulse 3s infinite;
 }
 .create-room-btn div {
-    color: #bf00ff;
+    color: rgba(150,0,200,0.8);
     font-size: 1.2em;
     font-weight: 700;
     text-transform: uppercase;
@@ -645,18 +645,17 @@ body:has(.chat-screen.active) .user-counter {
 /* ÃÂ¥ÃÂÃÂ¶ÃÂ¦ÃÂ¥ÃÂ­ÃÂ¤ÃÂ¸ÃÂ­ÃÂ£ÃÂÃÂ®ÃÂ¦ÃÂÃÂÃÂ£ÃÂÃÂÃÂ£ÃÂÃÂÃÂ£ÃÂÃÂÃÂ£ÃÂÃÂªÃÂ£ÃÂÃÂ³ */
 .vertical-neon.active {
     /* ÃÂ¥ÃÂ¸ÃÂ¸ÃÂ¦ÃÂÃÂÃÂ§ÃÂÃÂ¹ÃÂ§ÃÂÃÂ¯ - ÃÂ£ÃÂÃÂÃÂ£ÃÂÃÂ«ÃÂ§ÃÂÃÂ¹ÃÂ§ÃÂÃÂ¯ */
-    filter: brightness(1.2) !important;
-    opacity: 1 !important;
-    color: #00ff00 !important;
-    border-color: #00ff00 !important;
+    filter: brightness(1.05) !important;
+    opacity: 0.95 !important;
+    color: rgba(0,200,50,0.8) !important;
+    border-color: rgba(0,200,50,0.6) !important;
     text-shadow: 
-        0 0 10px #00ff00,
-        0 0 20px #00ff00,
-        0 0 30px #00ff00,
-        0 0 40px #00ff00 !important;
+        0 0 8px rgba(0,200,50,0.6),
+        0 0 15px rgba(0,200,50,0.4),
+        0 0 20px rgba(0,200,50,0.2) !important;
     box-shadow: 
-        inset 0 0 20px rgba(0,255,0,0.5),
-        0 0 30px rgba(0,255,0,0.8) !important;
+        inset 0 0 15px rgba(0,0,0,0.8),
+        0 0 15px rgba(0,200,50,0.3) !important;
 }
 
 @keyframes activePulse {
@@ -876,15 +875,14 @@ body:has(.chat-screen.active) .user-counter {
 
 /* ÃÂ©ÃÂÃÂÃÂ¨ÃÂµÃÂ°ÃÂ¤ÃÂ¸ÃÂ­ÃÂ¯ÃÂ¼ÃÂÃÂ©ÃÂ»ÃÂÃÂ¨ÃÂÃÂ²ÃÂ¯ÃÂ¼ÃÂ */
 .vertical-neon.abandoned-yellow {
-    color: #ffff00 !important;
-    border-color: #ffff00 !important;
+    color: rgba(200,200,0,0.7) !important;
+    border-color: rgba(200,200,0,0.5) !important;
     text-shadow: 
-        0 0 10px #ffff00,
-        0 0 20px #ffff00,
-        0 0 30px #ffff00 !important;
+        0 0 8px rgba(200,200,0,0.5),
+        0 0 15px rgba(200,200,0,0.3) !important;
     filter: none !important;
-    opacity: 1 !important;
-    animation: runawayFlash 2s infinite;
+    opacity: 0.8 !important;
+    animation: runawayFlash 3s infinite;
 }
 
 @keyframes runawayFlash {
@@ -894,16 +892,15 @@ body:has(.chat-screen.active) .user-counter {
 
 /* ÃÂ¤ÃÂºÃÂÃÂ¤ÃÂ»ÃÂ¶ÃÂ¯ÃÂ¼ÃÂÃÂ¨ÃÂµÃÂ¤ÃÂ¯ÃÂ¼ÃÂ */
 .vertical-neon.abandoned-red {
-    color: #ff0000 !important;
-    border-color: #ff0000 !important;
+    color: rgba(200,0,0,0.7) !important;
+    border-color: rgba(200,0,0,0.5) !important;
     text-shadow: 
-        0 0 10px #ff0000,
-        0 0 20px #ff0000,
-        0 0 30px #ff0000,
-        0 0 40px #ff0000 !important;
+        0 0 8px rgba(200,0,0,0.5),
+        0 0 15px rgba(200,0,0,0.3),
+        0 0 20px rgba(200,0,0,0.2) !important;
     filter: none !important;
-    opacity: 1 !important;
-    animation: incidentPulse 1s infinite;
+    opacity: 0.8 !important;
+    animation: incidentPulse 2s infinite;
 }
 
 @keyframes incidentPulse {
@@ -1168,23 +1165,23 @@ body:has(.chat-screen.active) .user-counter {
 }
 
 .room-card:nth-child(4n+1) .chinese-sign {
-    color: rgba(0,255,65,0.8);
-    text-shadow: 0 0 10px rgba(0,255,65,0.5);
+    color: rgba(0,200,50,0.6);
+    text-shadow: 0 0 8px rgba(0,200,50,0.3);
 }
 
 .room-card:nth-child(4n+2) .chinese-sign {
-    color: rgba(255,0,110,0.8);
-    text-shadow: 0 0 10px rgba(255,0,110,0.5);
+    color: rgba(200,0,80,0.6);
+    text-shadow: 0 0 8px rgba(200,0,80,0.3);
 }
 
 .room-card:nth-child(4n+3) .chinese-sign {
-    color: rgba(255,170,0,0.8);
-    text-shadow: 0 0 10px rgba(255,170,0,0.5);
+    color: rgba(200,130,0,0.6);
+    text-shadow: 0 0 8px rgba(200,130,0,0.3);
 }
 
 .room-card:nth-child(4n) .chinese-sign {
-    color: rgba(0,180,255,0.8);
-    text-shadow: 0 0 10px rgba(0,180,255,0.5);
+    color: rgba(0,140,200,0.6);
+    text-shadow: 0 0 8px rgba(0,140,200,0.3);
 }
 
 .room-card.abandoned .chinese-sign {
@@ -2050,54 +2047,54 @@ body:has(.chat-screen.active) .user-counter {
 
 /* ÃÂ¥ÃÂÃÂ¶ÃÂ¦ÃÂ¥ÃÂ­ÃÂ¤ÃÂ¸ÃÂ­ÃÂ¯ÃÂ¼ÃÂlighting-brightÃÂ¯ÃÂ¼ÃÂÃÂ£ÃÂÃÂ®ÃÂ¦ÃÂÃÂÃÂ£ÃÂÃÂÃÂ£ÃÂÃÂÃÂ£ÃÂÃÂÃÂ£ÃÂÃÂªÃÂ£ÃÂÃÂ³ - ÃÂ¦ÃÂÃÂÃÂ£ÃÂÃÂÃÂ©ÃÂ®ÃÂ®ÃÂ£ÃÂÃÂÃÂ£ÃÂÃÂ */
 .room-card.lighting-bright:nth-child(4n+1) .neon-sign {
-    filter: brightness(1.2) !important;
-    opacity: 1 !important;
-    color: #00ff41;
+    filter: brightness(1.05) !important;
+    opacity: 0.9 !important;
+    color: rgba(0,200,50,0.8);
     text-shadow: 
-        0 0 15px #00ff41,
-        0 0 30px #00ff41,
-        0 0 60px #00ff41;
+        0 0 10px rgba(0,200,50,0.6),
+        0 0 20px rgba(0,200,50,0.3),
+        0 0 30px rgba(0,200,50,0.2);
 }
 
 .room-card.lighting-bright:nth-child(4n+2) .neon-sign {
-    filter: brightness(1.2) !important;
-    opacity: 1 !important;
-    color: #ff006e;
+    filter: brightness(1.05) !important;
+    opacity: 0.9 !important;
+    color: rgba(200,0,80,0.8);
     text-shadow: 
-        0 0 15px #ff006e,
-        0 0 30px #ff006e,
-        0 0 60px #ff006e;
+        0 0 10px rgba(200,0,80,0.6),
+        0 0 20px rgba(200,0,80,0.3),
+        0 0 30px rgba(200,0,80,0.2);
 }
 
 .room-card.lighting-bright:nth-child(4n+3) .neon-sign {
-    filter: brightness(1.2) !important;
-    opacity: 1 !important;
-    color: #ffaa00;
+    filter: brightness(1.05) !important;
+    opacity: 0.9 !important;
+    color: rgba(200,130,0,0.8);
     text-shadow: 
-        0 0 15px #ffaa00,
-        0 0 30px #ffaa00,
-        0 0 60px #ffaa00;
+        0 0 10px rgba(200,130,0,0.6),
+        0 0 20px rgba(200,130,0,0.3),
+        0 0 30px rgba(200,130,0,0.2);
 }
 
 .room-card.lighting-bright:nth-child(4n) .neon-sign {
-    filter: brightness(1.2) !important;
-    opacity: 1 !important;
-    color: #00b4ff;
+    filter: brightness(1.05) !important;
+    opacity: 0.9 !important;
+    color: rgba(0,140,200,0.8);
     text-shadow: 
-        0 0 15px #00b4ff,
-        0 0 30px #00b4ff,
-        0 0 60px #00b4ff;
+        0 0 10px rgba(0,140,200,0.6),
+        0 0 20px rgba(0,140,200,0.3),
+        0 0 30px rgba(0,140,200,0.2);
 }
 
 /* ÃÂ¤ÃÂ¸ÃÂ­ÃÂ¥ÃÂÃÂ½ÃÂ¨ÃÂªÃÂÃÂ§ÃÂÃÂÃÂ¦ÃÂÃÂ¿ÃÂ£ÃÂÃÂ®ÃÂ£ÃÂÃÂ«ÃÂ£ÃÂÃÂ©ÃÂ£ÃÂÃÂÃÂ£ÃÂÃÂ«ÃÂ£ÃÂÃÂÃÂ£ÃÂÃÂªÃÂ£ÃÂÃÂ³ÃÂ¯ÃÂ¼ÃÂ0-3ÃÂ¦ÃÂÃÂÃÂ©ÃÂÃÂÃÂ¯ÃÂ¼ÃÂ */
 .room-card.lighting-recent-3h:nth-child(4n+1) .chinese-sign {
-    color: #00ff41 !important;
-    text-shadow: 0 0 5px #00ff41;
+    color: rgba(0,200,50,0.7) !important;
+    text-shadow: 0 0 5px rgba(0,200,50,0.4);
 }
 
 .room-card.lighting-recent-3h:nth-child(4n+2) .chinese-sign {
-    color: #ff006e !important;
-    text-shadow: 0 0 5px #ff006e;
+    color: rgba(200,0,80,0.7) !important;
+    text-shadow: 0 0 5px rgba(200,0,80,0.4);
 }
 
 .room-card.lighting-recent-3h:nth-child(4n+3) .chinese-sign {
