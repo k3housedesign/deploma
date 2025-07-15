@@ -694,15 +694,15 @@ body:has(.chat-screen.active) .user-counter {
 }
 
 .vertical-neon.new {
-    color: #ffd700 !important;
-    border-color: #ffd700 !important;
+    color: rgba(255,215,0,0.9) !important;
+    border-color: rgba(255,215,0,0.7) !important;
     text-shadow: 
-        0 0 10px #ffd700,
-        0 0 20px #ffd700,
-        0 0 30px #ffd700,
-        0 0 40px #ffd700 !important;
+        0 0 8px rgba(255,215,0,0.6),
+        0 0 15px rgba(255,215,0,0.4),
+        0 0 25px rgba(255,215,0,0.2) !important;
     /* ÃÂ¦ÃÂÃÂ°ÃÂ¨ÃÂ¦ÃÂÃÂ©ÃÂÃÂÃÂ¥ÃÂºÃÂÃÂ£ÃÂÃÂ®ÃÂ¦ÃÂ¼ÃÂÃÂ¥ÃÂÃÂº */
-    animation: newShopPulse 1.5s infinite;
+    animation: newShopPulse 2s infinite;
+    opacity: 0.9 !important;
 }
 
 @keyframes newShopPulse {
@@ -2395,3 +2395,134 @@ body:has(.chat-screen.active) .user-counter {
     }
 }
 
+/* 縦書きネオンの新しいカラー定義 */
+
+/* 準備中：水色 */
+.vertical-neon.preparation {
+    color: rgba(0,180,200,0.8) !important;
+    border-color: rgba(0,180,200,0.6) !important;
+    text-shadow: 
+        0 0 8px rgba(0,180,200,0.5),
+        0 0 15px rgba(0,180,200,0.3) !important;
+    filter: none !important;
+    opacity: 0.85 !important;
+}
+
+/* 空室：落ち着いたピンク */
+.vertical-neon.vacant {
+    color: rgba(200,100,150,0.8) !important;
+    border-color: rgba(200,100,150,0.6) !important;
+    text-shadow: 
+        0 0 8px rgba(200,100,150,0.5),
+        0 0 15px rgba(200,100,150,0.3) !important;
+    filter: none !important;
+    opacity: 0.8 !important;
+}
+
+/* 静寂：パープル */
+.vertical-neon.silent {
+    color: rgba(150,100,200,0.8) !important;
+    border-color: rgba(150,100,200,0.6) !important;
+    text-shadow: 
+        0 0 8px rgba(150,100,200,0.5),
+        0 0 15px rgba(150,100,200,0.3) !important;
+    filter: none !important;
+    opacity: 0.75 !important;
+}
+
+/* 無人：オレンジ */
+.vertical-neon.unmanned {
+    color: rgba(220,140,0,0.8) !important;
+    border-color: rgba(220,140,0,0.6) !important;
+    text-shadow: 
+        0 0 8px rgba(220,140,0,0.5),
+        0 0 15px rgba(220,140,0,0.3) !important;
+    filter: none !important;
+    opacity: 0.7 !important;
+}
+
+/* 逃走：レモンイエロー */
+.vertical-neon.runaway {
+    color: rgba(230,230,100,0.8) !important;
+    border-color: rgba(230,230,100,0.6) !important;
+    text-shadow: 
+        0 0 8px rgba(230,230,100,0.5),
+        0 0 15px rgba(230,230,100,0.3) !important;
+    filter: none !important;
+    opacity: 0.75 !important;
+    animation: runawayFlash 3s infinite;
+}
+
+/* 廃業：ワインレッド */
+.vertical-neon.abandoned {
+    color: rgba(140,20,60,0.8) !important;
+    border-color: rgba(140,20,60,0.6) !important;
+    text-shadow: 
+        0 0 8px rgba(140,20,60,0.5),
+        0 0 15px rgba(140,20,60,0.3) !important;
+    filter: none !important;
+    opacity: 0.7 !important;
+}
+
+/* 事件：レッド */
+.vertical-neon.incident {
+    color: rgba(200,0,0,0.8) !important;
+    border-color: rgba(200,0,0,0.6) !important;
+    text-shadow: 
+        0 0 8px rgba(200,0,0,0.5),
+        0 0 15px rgba(200,0,0,0.3),
+        0 0 20px rgba(200,0,0,0.2) !important;
+    filter: none !important;
+    opacity: 0.8 !important;
+    animation: incidentPulse 2s infinite;
+}
+
+/* 酩酊：紫色の怪しいグロー */
+.vertical-neon.intoxicated {
+    color: rgba(180,50,220,0.9) !important;
+    border-color: rgba(180,50,220,0.7) !important;
+    text-shadow: 
+        0 0 10px rgba(180,50,220,0.7),
+        0 0 20px rgba(180,50,220,0.5),
+        0 0 30px rgba(180,50,220,0.3),
+        0 0 40px rgba(180,50,220,0.2) !important;
+    filter: none !important;
+    opacity: 0.9 !important;
+    animation: intoxicatedWave 4s ease-in-out infinite;
+}
+
+/* アニメーション定義 */
+@keyframes runawayFlash {
+    0%, 100% { opacity: 0.75; }
+    50% { opacity: 0.5; }
+}
+
+@keyframes incidentPulse {
+    0%, 100% { 
+        opacity: 0.8; 
+        transform: scale(1);
+    }
+    50% { 
+        opacity: 0.6; 
+        transform: scale(1.02);
+    }
+}
+
+@keyframes intoxicatedWave {
+    0%, 100% { 
+        transform: translateY(0) scale(1);
+        filter: hue-rotate(0deg) brightness(1);
+    }
+    25% { 
+        transform: translateY(-2px) scale(1.02);
+        filter: hue-rotate(10deg) brightness(1.1);
+    }
+    50% { 
+        transform: translateY(0) scale(1);
+        filter: hue-rotate(-10deg) brightness(0.9);
+    }
+    75% { 
+        transform: translateY(2px) scale(0.98);
+        filter: hue-rotate(5deg) brightness(1.05);
+    }
+}

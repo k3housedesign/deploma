@@ -584,28 +584,34 @@ function renderRooms() {
             verticalText = '<div class="vertical-neon new">新規開店</div>';
             roomState = 'new';
             lightingClass = 'lighting-new';  // 新規開店は明るく
-        } else if (daysSinceLastAccess > 3) {
-            // 3日以上アクセスがない
-            const abandonedStates = [
-                '<div class="vertical-neon abandoned-gray">廃業中</div>',
-                '<div class="vertical-neon abandoned-yellow">逃走中</div>',
-                '<div class="vertical-neon abandoned-red">事件</div>'
-            ];
-            // 完全にランダムに選択
-            verticalText = abandonedStates[Math.floor(Math.random() * abandonedStates.length)];
+        } else if (hoursSinceLastAccess < 24) {
+            // 準備中：24時間以内
+            verticalText = '<div class="vertical-neon preparation">準備中</div>';
+            roomState = 'inactive';
+        } else if (hoursSinceLastAccess < 48) {
+            // 空室：24-48時間
+            verticalText = '<div class="vertical-neon vacant">空室</div>';
+            roomState = 'inactive';
+        } else if (hoursSinceLastAccess < 72) {
+            // 静寂：48-72時間
+            verticalText = '<div class="vertical-neon silent">静寂</div>';
+            roomState = 'inactive';
+        } else if (daysSinceLastAccess < 7) {
+            // 無人：72時間-1週間
+            verticalText = '<div class="vertical-neon unmanned">無人</div>';
+            roomState = 'abandoned';
+        } else if (daysSinceLastAccess < 14) {
+            // 逃走：1-2週間
+            verticalText = '<div class="vertical-neon runaway">逃走</div>';
+            roomState = 'abandoned';
+        } else if (daysSinceLastAccess < 30) {
+            // 廃業：2週間-1ヶ月
+            verticalText = '<div class="vertical-neon abandoned">廃業</div>';
             roomState = 'abandoned';
         } else {
-            // 1-3日の間誰も入っていない
-            const inactiveStates = [
-                '<div class="vertical-neon inactive-white">準備中</div>',
-                '<div class="vertical-neon inactive-white">空室</div>',
-                '<div class="vertical-neon inactive-white">静寂</div>',
-                '<div class="vertical-neon inactive-white">酩酊</div>',
-                '<div class="vertical-neon inactive-white">陶酔</div>'
-            ];
-            // 完全にランダムに選択
-            verticalText = inactiveStates[Math.floor(Math.random() * inactiveStates.length)];
-            roomState = 'inactive';
+            // 事件：1ヶ月以上
+            verticalText = '<div class="vertical-neon incident">事件</div>';
+            roomState = 'abandoned';
         }
         
         // 最終アクセス時刻に基づく照度の細かい制御
@@ -623,6 +629,18 @@ function renderRooms() {
                 lightingClass = 'lighting-recent-72h'; // 暗い
             } else {
                 lightingClass = 'lighting-off';        // 消灯
+            }
+        }
+        
+        // 酩酊状態の特別判定（土曜日の深夜〜日曜日の朝）
+        const now = new Date();
+        const day = now.getDay(); // 0=日曜, 6=土曜
+        const hour = now.getHours();
+        if (roomState === 'abandoned' && 
+            ((day === 6 && hour >= 22) || (day === 0 && hour <= 6))) {
+            // 土曜22時〜日曜6時の廃業部屋は10%の確率で酩酊状態
+            if (Math.random() < 0.1) {
+                verticalText = '<div class="vertical-neon intoxicated">酩酊</div>';
             }
         }
         
