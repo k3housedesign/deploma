@@ -579,8 +579,8 @@ function renderRooms() {
             verticalText = '<div class="vertical-neon active">営業中</div>';
             roomState = 'active';
             lightingClass = 'lighting-bright';  // 営業中は最も明るく
-        } else if (hoursSinceCreated < 24 && !room.hasBeenEntered) {
-            // 新規作成から24時間以内で誰も入ったことがない
+        } else if (hoursSinceCreated < 24) {
+            // 新規作成から24時間以内（入室状況に関わらず）
             verticalText = '<div class="vertical-neon new">新規開店</div>';
             roomState = 'new';
             lightingClass = 'lighting-new';  // 新規開店は明るく
